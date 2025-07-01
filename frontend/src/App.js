@@ -22,10 +22,12 @@ import Store from './pages/store';
 import FlashDeals from './pages/flashDeals'; 
 import Contact from './pages/contact';
 import FAQ from './pages/faq';
-import Shipping from './pages/shipping';   
+import Shipping from './pages/shipping';
+import Login from './pages/login'; 
+import Cart from './pages/cart'; 
+import Checkout from './pages/checkout';  
 // Import other pages as you create them
 // import Cart from './pages/Cart';
-// import Login from './pages/Login';
 // import Contact from './pages/Contact';
 
 // Define custom paths for specific links - maps display names to actual routes
@@ -43,8 +45,6 @@ const getLinkPath = (linkName) => {
       return '/contact'; // Future contact page
     case 'FAQ':
       return '/faq'; // Future FAQ page
-    case 'Returns':
-      return '/returns'; // Future returns page
     case 'Shipping Info':
       return '/shipping'; // Future shipping info page
     default:
@@ -120,6 +120,9 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/faq" element={<FAQ />} />
             <Route path="/shipping" element={<Shipping />} />
+             <Route path="/login" element={<Login />} />
+              <Route path="/cart" element={<Cart />} />
+                <Route path="/checkout" element={<Checkout />} />
           {/* Commented routes for future implementation */}
           {/* <Route path="/cart" element={<Cart />} /> */}
           {/* <Route path="/login" element={<Login />} /> */}
@@ -180,7 +183,7 @@ const App = () => {
             <div>
               <h3 className="text-lg font-semibold mb-4 text-blue-400">Customer Service</h3>
               <ul className="space-y-2">
-                {['Contact Us', 'FAQ', 'Returns', 'Shipping Info'].map((link) => (
+                {['Contact Us', 'FAQ', 'Shipping Info'].map((link) => (
                   <li key={link}>
                     <Link
                       to={getLinkPath(link)}
