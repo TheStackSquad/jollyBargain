@@ -1,53 +1,124 @@
 // backend/server.js
 
-import 'dotenv/config'; // Load environment variables from .env file FIRST
 import express from 'express';
+import mongoose from 'mongoose'; // Still needed for mongoose.connection.close() in graceful shutdown
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import dotenv from 'dotenv';
+
+// --- Load environment variables from .env file FIRST ---
+dotenv.config();
+
+// Import the database connection function
 import connectDB from './config/db.js';
 
-// --- Optional: For debugging env vars during setup ---
-console.log('Environment Variables Loaded:');
-console.log('MONGO_URI:', process.env.MONGO_URI);
-console.log('PORT:', process.env.PORT);
-// --- Remove these lines after confirming it works ---
-
-// --- Optional: For browser live reload (if needed later) ---
-// import livereload from 'livereload';
-// import connectLiveReload from 'connect-livereload';
-// import path from 'path';
-// import { fileURLToPath } from 'url';
-//
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
-//
-// if (process.env.NODE_ENV === 'development') {
-//   const liveReloadServer = livereload.createServer();
-//   liveReloadServer.watch(path.join(__dirname, 'public')); // Example path
-//   liveReloadServer.server.once('connection', () => {
-//     setTimeout(() => {
-//       liveReloadServer.refresh('/');
-//     }, 100);
-//   });
-//   app.use(connectLiveReload());
-// }
-// --- End browser live reload section ---
+// Import routes
+import authRoutes from './routes/auth.js';
+import adminRoutes from './routes/adminRoutes.js';
+import productRoutes from './routes/productRoutes.js';
 
 const app = express();
-// Use the PORT from environment variables or default to 5000
 const PORT = process.env.PORT || 5000;
 
-// Connect to MongoDB Atlas (moved to its own file)
-connectDB();
+// Security middleware
+app.use(helmet());
 
-// Middleware
-app.use(express.json()); // For parsing JSON request bodies (e.g., from POST requests)
-app.use(express.urlencoded({ extended: false })); // For parsing URL-encoded form data
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 1000, // limit each IP to 1000 requests per windowMs
+  message: 'Too many requests from this IP, please try again later'
+});
+app.use(limiter);
 
-// Define your routes here
-app.get('/', (req, res) => {
-  res.send('API is running...');
+// Logging
+app.use(morgan('combined'));
+
+// CORS configuration
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Body parsing middleware
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(cookieParser());
+
+// --- Database connection: Call the connectDB function ---
+connectDB(); // This will handle the connection and logging
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/products', productRoutes);
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Server is running',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
 });
 
-// Start the server
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'JollyBargain API Server',
+    version: '1.0.0',
+    endpoints: {
+      auth: '/api/auth',
+      admin: '/api/admin',
+      health: '/api/health'
+    }
+  });
+});
+
+// 404 handler
+app.use('/*any', (req, res) => {
+  res.status(404).json({
+    success: false,
+    message: 'Route not found'
+  });
+});
+
+// Global error handler
+app.use((error, req, res, next) => {
+  console.error('Global error:', error);
+
+  res.status(error.status || 500).json({
+    success: false,
+    message: error.message || 'Internal server error',
+    ...(process.env.NODE_ENV === 'development' && { stack: error.stack })
+  });
+});
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, shutting down gracefully');
+  mongoose.connection.close(() => { // Use mongoose.connection.close() here
+    console.log('MongoDB connection closed');
+    process.exit(0);
+  });
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT received, shutting down gracefully');
+  mongoose.connection.close(() => { // Use mongoose.connection.close() here
+    console.log('MongoDB connection closed');
+    process.exit(0);
+  });
+});
+
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });
