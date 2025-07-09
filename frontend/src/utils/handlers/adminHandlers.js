@@ -45,6 +45,9 @@ export const fetchProducts = async (setProducts, setProductsError, setLoadingPro
 export const handleCreateProduct = async (productData, fetchProducts, setCurrentView, setProductsError) => {
   setProductsError(null);
   try {
+    console.log('Product data received by handleCreateProduct (before createProduct call):', productData); // New log
+    console.log('Images array content received by handleCreateProduct:', productData.images); // New log
+
     const newProduct = await createProduct(productData);
     console.log('Product created:', newProduct);
     fetchProducts();
@@ -52,6 +55,9 @@ export const handleCreateProduct = async (productData, fetchProducts, setCurrent
   } catch (err) {
     console.error('Error creating product:', err);
     setProductsError(err.message || 'Failed to create product.');
+    // Keep these as they are good for debugging errors
+    console.log('Product data being sent (on error):', productData); 
+    console.log('Images array content (on error):', productData.images); 
   }
 };
 

@@ -1,13 +1,13 @@
 //frontend/src/components/storepage/dealGrid.js
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import DealCard from '../storepage/dealCard';
+import DealCard from '../storepage/dealCard'; // This is the next component to review!
 import { staggerContainer, staggerItem } from '../../animation/flashDealAnimate';
 
 const DealsGrid = ({ deals, onClaimDeal, currentPoolIndex, title = "More Amazing Deals" }) => {
   return (
     <div className="max-w-7xl mx-auto px-4 pb-12">
-      <motion.h2 
+      <motion.h2
         className="text-3xl font-bold text-center text-gray-900 mb-8"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -15,9 +15,9 @@ const DealsGrid = ({ deals, onClaimDeal, currentPoolIndex, title = "More Amazing
       >
         {title}
       </motion.h2>
-      
+
       {deals.length === 0 ? (
-        <motion.div 
+        <motion.div
           className="text-center py-12"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -29,7 +29,7 @@ const DealsGrid = ({ deals, onClaimDeal, currentPoolIndex, title = "More Amazing
         </motion.div>
       ) : (
         <AnimatePresence mode="wait">
-          <motion.div 
+          <motion.div
             key={currentPoolIndex}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             variants={staggerContainer}
@@ -39,12 +39,12 @@ const DealsGrid = ({ deals, onClaimDeal, currentPoolIndex, title = "More Amazing
           >
             {deals.map((deal, index) => (
               <motion.div
-                key={deal.id}
+                key={deal._id}
                 variants={staggerItem}
               >
-                <DealCard 
-                  deal={deal} 
-                  onClaimDeal={onClaimDeal} 
+                <DealCard
+                  deal={deal}
+                  onClaimDeal={onClaimDeal}
                   index={index}
                 />
               </motion.div>
@@ -52,10 +52,10 @@ const DealsGrid = ({ deals, onClaimDeal, currentPoolIndex, title = "More Amazing
           </motion.div>
         </AnimatePresence>
       )}
-      
+
       {/* Load More Button */}
       {deals.length > 0 && deals.length >= 6 && (
-        <motion.div 
+        <motion.div
           className="text-center mt-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

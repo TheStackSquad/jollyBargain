@@ -1,81 +1,43 @@
+
 // frontend/src/services/productService.js
 import api from '../utils/adminApi'; // Import the configured Axios instance
 
-/**
- * @typedef {Object} ProductFormData
- * @property {string} title
- * @property {number} price
- * @property {string} category
- * @property {string} description
- * @property {Array<File|{public_id: string, url: string}>} images - Can be File objects (new) or existing image objects.
- * @property {number} stock
- * @property {string} sku
- * @property {string} tags - Comma-separated string of tags
- * @property {string} status
- * @property {string} [_id] - Optional product ID for updates
- */
 
-/**
- * Creates a new product.
- * @param {ProductFormData} productData - The product data from the form, including image files.
- * @returns {Promise<Object>} The created product data from the backend.
- */
 export const createProduct = async (productData) => {
-  const formData = new FormData();
-
-  // Append all text fields
-  for (const key in productData) {
-    if (key !== 'images' && key !== 'tags' && key !== '_id') { // Exclude images, tags, and _id (for new product)
-      formData.append(key, productData[key]);
-    }
-  }
-
-  // Append tags as a comma-separated string (as expected by backend)
-  formData.append('tags', Array.isArray(productData.tags) ? productData.tags.join(',') : productData.tags);
-
-  // Append image files. Multer on backend expects 'images' field.
-  if (productData.images && productData.images.length > 0) {
-    productData.images.forEach((image) => {
-      if (image instanceof File) {
-        // Only append actual File objects for upload
-        formData.append('images', image);
-      }
-      // Note: For create, we don't send existing image URLs, only new files.
-      // The backend will handle the Cloudinary upload and return URLs.
-    });
-  }
-
+  console.log('Sending FormData to backend for creation...');
   try {
-    const response = await api.post('/products', formData, {
-      // Axios automatically sets Content-Type to 'multipart/form-data'
-      // with the correct boundary when FormData is used as data.
-      // No need to set headers['Content-Type'] manually.
+    const response = await api.post('/products', productData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     });
-    return response.data;
+    console.log('API response from createProduct:', response.data);
+    return response.data.data;
   } catch (error) {
     console.error('Error creating product:', error.response?.data || error.message);
-    throw error; // Re-throw to be caught by the calling component
+    throw error;
   }
 };
 
-/**
- * Updates an existing product.
- * @param {string} productId - The ID of the product to update.
- * @param {ProductFormData} productData - The updated product data from the form, including image files and existing image objects.
- * @returns {Promise<Object>} The updated product data from the backend.
- */
 export const updateProduct = async (productId, productData) => {
   const formData = new FormData();
 
   // Append all text fields
   for (const key in productData) {
     if (key !== 'images' && key !== 'tags' && key !== '_id') { // Exclude images, tags, and _id
-      formData.append(key, productData[key]);
+      // Ensure complex types are stringified if backend expects them as such in FormData
+      if (typeof productData[key] === 'object' && productData[key] !== null) {
+          formData.append(key, JSON.stringify(productData[key]));
+      } else {
+          formData.append(key, productData[key]);
+      }
     }
   }
 
-  // Append tags as a comma-separated string
-  formData.append('tags', Array.isArray(productData.tags) ? productData.tags.join(',') : productData.tags);
+  // Append tags as a JSON string (assuming backend parses it as array)
+  // Or, if backend expects comma-separated string for tags on update, use join(',')
+  formData.append('tags', JSON.stringify(Array.isArray(productData.tags) ? productData.tags : (productData.tags ? productData.tags.split(',').map(tag => tag.trim()).filter(Boolean) : [])));
+
 
   // Handle images for update:
   // The backend's updateProduct controller has logic to handle
@@ -89,8 +51,13 @@ export const updateProduct = async (productId, productData) => {
     // If there are new files, append them directly.
     // The backend will treat these as replacements for existing images.
     newFiles.forEach(file => {
-      formData.append('images', file);
+      formData.append('images', file); // Multer expects the field name 'images'
     });
+    // If you're sending new files, you generally don't send existing image info in a separate field
+    // unless your backend has specific logic to merge/compare them.
+    // If backend needs to know which old images to *keep*, you might need a separate field like 'imagesToKeep'
+    // or send public_ids of images to delete if they are explicitly removed by user.
+    // For now, assuming new files mean "replace all images".
   } else {
     // If no new files, send the current desired list of images (which includes
     // existing ones to keep) as a JSON string.
@@ -100,7 +67,11 @@ export const updateProduct = async (productId, productData) => {
 
 
   try {
-    const response = await api.put(`/products/${productId}`, formData);
+    const response = await api.put(`/products/${productId}`, formData, { // Use api.put
+      headers: {
+        'Content-Type': 'multipart/form-data', // Explicitly set for FormData
+      },
+    });
     return response.data;
   } catch (error) {
     console.error('Error updating product:', error.response?.data || error.message);
@@ -108,28 +79,19 @@ export const updateProduct = async (productId, productData) => {
   }
 };
 
-/**
- * Fetches all products.
- * @returns {Promise<Array<Object>>} An array of product objects.
- */
 export const getProducts = async () => {
   try {
-    const response = await api.get('/products');
-    return response.data.data; // Assuming your backend returns { success: true, data: [...] }
+    const response = await api.get('/products'); // Use api.get
+    return response.data.data;
   } catch (error) {
     console.error('Error fetching products:', error.response?.data || error.message);
     throw error;
   }
 };
 
-/**
- * Fetches a single product by ID.
- * @param {string} productId - The ID of the product to fetch.
- * @returns {Promise<Object>} The product object.
- */
 export const getProductById = async (productId) => {
   try {
-    const response = await api.get(`/products/${productId}`);
+    const response = await api.get(`/products/${productId}`); // Use api.get
     return response.data.data;
   } catch (error) {
     console.error('Error fetching product by ID:', error.response?.data || error.message);
@@ -137,14 +99,9 @@ export const getProductById = async (productId) => {
   }
 };
 
-/**
- * Deletes a product by ID.
- * @param {string} productId - The ID of the product to delete.
- * @returns {Promise<Object>} Success message from the backend.
- */
 export const deleteProduct = async (productId) => {
   try {
-    const response = await api.delete(`/products/${productId}`);
+    const response = await api.delete(`/products/${productId}`); // Use api.delete
     return response.data;
   } catch (error) {
     console.error('Error deleting product:', error.response?.data || error.message);

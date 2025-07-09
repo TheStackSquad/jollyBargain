@@ -1,5 +1,4 @@
-//frontend/src/components/storepage/dealCard.js
-
+// frontend/src/components/storepage/dealCard.js
 import React from 'react';
 import { motion } from 'framer-motion';
 import StockProgressBar from '../storepage/stockProgressBar';
@@ -11,17 +10,30 @@ const DealCard = ({ deal, onClaimDeal, index = 0 }) => {
       style: 'currency',
       currency: 'NGN',
       minimumFractionDigits: 0
-    }).format(price);
+    }).format(Number(price) || 0);
   };
 
   const getStockStatus = (stock, claimed) => {
-    const remaining = stock - claimed;
-    if (remaining <= 3) return { urgency: 'high' };
-    if ((claimed / stock) * 100 >= 70) return { urgency: 'medium' };
+    const remaining = (stock || 0) - (claimed || 0);
+    if (remaining <= 3 && remaining > 0) return { urgency: 'high' };
+    if (stock > 0 && (claimed / stock) * 100 >= 70) return { urgency: 'medium' };
     return { urgency: 'low' };
   };
 
+  // Handle missing deal data
+  if (!deal) return null;
+
   const stockStatus = getStockStatus(deal.stock, deal.claimed);
+
+  // Use the backend fields directly - no more schema mismatches
+  const imageUrl = deal.images && deal.images.length > 0 
+    ? deal.images[0].url 
+    : '/images/placeholder.jpg';
+
+  // Use the transformed fields from backend
+  const currentPrice = deal.salePrice || deal.price; // Use salePrice if available, fallback to price
+  const originalPrice = deal.originalPrice || (deal.price * 1.25);
+  const discount = deal.discount || 20;
 
   return (
     <motion.div
@@ -29,29 +41,32 @@ const DealCard = ({ deal, onClaimDeal, index = 0 }) => {
       {...dealCardHover}
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ 
-        duration: 0.5, 
+      transition={{
+        duration: 0.5,
         delay: index * 0.1,
         ease: "easeOut"
       }}
     >
       <div className="relative">
-        <img 
-          src={deal.image} 
-          alt={deal.name}
+        <img
+          src={imageUrl}
+          alt={deal.title || deal.name}
           className="w-full h-48 object-cover"
+          onError={(e) => {
+            e.target.src = '/images/placeholder.jpg'; // Fallback for broken images
+          }}
         />
-        
+
         {/* Discount Badge */}
         <div className="absolute top-3 left-3">
-          <motion.span 
+          <motion.span
             className="bg-red-500 text-white px-2 py-1 rounded-full text-sm font-bold shadow-lg"
             {...(stockStatus.urgency === 'high' ? urgencyBadge : {})}
           >
-            {deal.discount}% OFF
+            {discount}% OFF
           </motion.span>
         </div>
-        
+
         {/* Category Badge */}
         <div className="absolute top-3 right-3">
           <span className="bg-black bg-opacity-70 text-white px-2 py-1 rounded text-xs font-medium">
@@ -62,43 +77,43 @@ const DealCard = ({ deal, onClaimDeal, index = 0 }) => {
         {/* Savings Badge */}
         <div className="absolute bottom-3 left-3">
           <span className="bg-green-500 text-white px-2 py-1 rounded text-xs font-bold">
-            Save {formatPrice(deal.originalPrice - deal.salePrice)}
+            Save {formatPrice(originalPrice - currentPrice)}
           </span>
         </div>
       </div>
-      
+
       <div className="p-4">
         <h3 className="font-bold text-lg text-gray-900 mb-2 line-clamp-2">
-          {deal.name}
+          {deal.title || deal.name}
         </h3>
-        
+
         {/* Price Section */}
         <div className="flex items-center justify-between mb-3">
           <span className="text-xl font-bold text-red-500">
-            {formatPrice(deal.salePrice)}
+            {formatPrice(currentPrice)}
           </span>
           <div className="text-right">
             <span className="text-sm text-gray-500 line-through">
-              {formatPrice(deal.originalPrice)}
+              {formatPrice(originalPrice)}
             </span>
             <div className="text-xs text-green-600 font-medium">
-              You save {deal.discount}%
+              You save {discount}%
             </div>
           </div>
         </div>
-        
+
         {/* Stock Progress */}
         <div className="mb-4">
-          <StockProgressBar 
-            stock={deal.stock} 
-            claimed={deal.claimed} 
+          <StockProgressBar
+            stock={deal.stock}
+            claimed={deal.claimed || 0}
             size="medium"
             delay={index * 0.05}
           />
         </div>
-        
+
         {/* Action Button */}
-        <motion.button 
+        <motion.button
           onClick={() => onClaimDeal(deal)}
           className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold py-3 px-4 rounded-lg hover:shadow-lg transform transition-all duration-300 flex items-center justify-center gap-2"
           whileHover={{ scale: 1.02 }}
@@ -109,7 +124,7 @@ const DealCard = ({ deal, onClaimDeal, index = 0 }) => {
           </svg>
           Claim Deal
         </motion.button>
-        
+
         {/* Additional Info */}
         <div className="mt-3 flex justify-between items-center text-xs text-gray-500">
           <span>⭐ {deal.rating || '4.5'} rating</span>
