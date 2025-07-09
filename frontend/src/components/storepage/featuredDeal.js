@@ -1,5 +1,4 @@
-//frontend/src/components/storepage/featuredDeal.js
-
+// frontend/src/components/storepage/featuredDeal.js
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import StockProgressBar from '../storepage/stockProgressBar';
@@ -11,15 +10,25 @@ const FeaturedDeal = ({ deal, onClaimDeal }) => {
       style: 'currency',
       currency: 'NGN',
       minimumFractionDigits: 0
-    }).format(price);
+    }).format(Number(price) || 0);
   };
 
   if (!deal) return null;
 
+  // Use the transformed fields from backend
+  const displayPrice = deal.salePrice || deal.price;
+  const originalPrice = deal.originalPrice || (deal.price * 1.25);
+  const discountPercentage = deal.discount || 20;
+
+  // Handle image URL
+  const imageUrl = deal.images && deal.images.length > 0 
+    ? deal.images[0].url 
+    : '/images/placeholder.jpg';
+
   return (
     <AnimatePresence mode="wait">
-      <motion.div 
-        key={deal.id}
+      <motion.div
+        key={deal._id}
         className="max-w-6xl mx-auto px-4 mb-12"
         {...dealRefresh}
       >
@@ -30,56 +39,61 @@ const FeaturedDeal = ({ deal, onClaimDeal }) => {
           </h2>
           <p className="text-sm opacity-90 mt-1">Limited time offer - Don't miss out!</p>
         </div>
-        
+
         {/* Deal Content */}
         <div className="bg-white rounded-b-2xl shadow-2xl overflow-hidden">
           <div className="md:flex items-center">
             {/* Image Section */}
             <div className="md:w-1/2 p-8">
               <div className="relative">
-                <img 
-                  src={deal.image} 
-                  alt={deal.name}
+                <img
+                  src={imageUrl}
+                  alt={deal.title || deal.name}
                   className="w-full h-64 object-cover rounded-lg shadow-lg"
+                  onError={(e) => {
+                    e.target.src = '/images/placeholder.jpg';
+                  }}
                 />
-                
+
                 {/* Floating Savings Badge */}
                 <div className="absolute -top-3 -right-3 bg-yellow-400 text-black p-3 rounded-full font-bold text-center shadow-lg">
                   <div className="text-xs">SAVE</div>
-                  <div className="text-sm">{formatPrice(deal.originalPrice - deal.salePrice)}</div>
+                  <div className="text-sm">{formatPrice(originalPrice - displayPrice)}</div>
                 </div>
               </div>
             </div>
-            
+
             {/* Details Section */}
             <div className="md:w-1/2 p-8">
               <div className="flex items-center mb-4">
                 <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold mr-3">
-                  {deal.discount}% OFF
+                  {discountPercentage}% OFF
                 </span>
                 <span className="text-gray-500 text-sm bg-gray-100 px-2 py-1 rounded">
                   {deal.category}
                 </span>
               </div>
-              
-              <h3 className="text-3xl font-bold text-gray-900 mb-4">{deal.name}</h3>
-              
+
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">
+                {deal.title || deal.name}
+              </h3>
+
               {/* Price Section */}
               <div className="flex items-center mb-6">
                 <span className="text-3xl font-bold text-red-500 mr-4">
-                  {formatPrice(deal.salePrice)}
+                  {formatPrice(displayPrice)}
                 </span>
                 <div className="relative">
                   <span className="text-xl text-gray-500">
-                    {formatPrice(deal.originalPrice)}
+                    {formatPrice(originalPrice)}
                   </span>
-                  <motion.div 
+                  <motion.div
                     className="absolute top-1/2 left-0 h-0.5 bg-red-500"
                     {...priceStrike}
                   />
                 </div>
               </div>
-              
+
               {/* Features/Benefits */}
               <div className="mb-6">
                 <div className="grid grid-cols-2 gap-2 text-sm">
@@ -101,20 +115,20 @@ const FeaturedDeal = ({ deal, onClaimDeal }) => {
                   </div>
                 </div>
               </div>
-              
+
               {/* Stock Progress */}
               <div className="mb-6">
-                <StockProgressBar 
-                  stock={deal.stock} 
-                  claimed={deal.claimed} 
+                <StockProgressBar
+                  stock={deal.stock}
+                  claimed={deal.claimed || 0}
                   size="large"
                   delay={0.5}
                 />
               </div>
-              
+
               {/* Action Buttons */}
               <div className="space-y-3">
-                <motion.button 
+                <motion.button
                   onClick={() => onClaimDeal(deal)}
                   className="w-full bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold py-4 px-8 rounded-full text-xl shadow-lg hover:shadow-xl transform transition-all duration-300"
                   whileHover={{ scale: 1.05 }}
@@ -122,21 +136,21 @@ const FeaturedDeal = ({ deal, onClaimDeal }) => {
                 >
                   🛒 CLAIM THIS DEAL NOW
                 </motion.button>
-                
+
                 <div className="flex gap-2">
-                  <button 
+                  <button
                     className="flex-1 bg-gray-100 text-gray-700 font-medium py-2 px-4 rounded-lg hover:bg-gray-200 transition-colors duration-200"
                   >
                     ❤️ Add to Wishlist
                   </button>
-                  <button 
+                  <button
                     className="flex-1 bg-gray-100 text-gray-700 font-medium py-2 px-4 rounded-lg hover:bg-gray-200 transition-colors duration-200"
                   >
                     📤 Share Deal
                   </button>
                 </div>
               </div>
-              
+
               {/* Trust Indicators */}
               <div className="mt-4 pt-4 border-t border-gray-200">
                 <div className="flex items-center justify-between text-sm text-gray-600">

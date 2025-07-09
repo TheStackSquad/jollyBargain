@@ -24,6 +24,9 @@ import ProductPreview from '../components/adminpage/productPreview';
 import ProductList from '../components/adminpage/productList';
 import AdminLoginForm from '../components/adminpage/adminLoginForm';
 
+// NEW: Import the DeleteConfirmationModal
+import DeleteConfirmationModal from '../utils/modal/deleteConfirmationModal';
+
 const AdminPage = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(checkAuthStatus());
   const [authError, setAuthError] = useState('');
@@ -32,7 +35,9 @@ const AdminPage = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
-  const [deletingId, setDeletingId] = useState(null);
+  const [deletingId, setDeletingId] = useState(null); // The ID of the product being considered for deletion
+  const [productToDelete, setProductToDelete] = useState(null); // The actual product object for the modal
+  const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false); // Controls modal visibility
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [productsError, setProductsError] = useState(null);
 
@@ -54,6 +59,7 @@ const AdminPage = () => {
     'Health & Beauty', 'Toys', 'Automotive', 'Food & Beverage'
   ];
 
+  // Effect to reset form data based on view
   useEffect(() => {
     if (currentView === 'create') {
       setFormData({
@@ -75,7 +81,14 @@ const AdminPage = () => {
         category: editingProduct.category || '',
         description: editingProduct.description || '',
         stock: editingProduct.stock || '',
-        images: editingProduct.images || [],
+        // Ensure images are correctly formatted for ProductForm if they are objects {public_id, url}
+        images: editingProduct.images?.map(img => ({
+          id: img.public_id, // Use public_id as id for existing images
+          url: img.url,
+          public_id: img.public_id,
+          // original_filename is not stored in backend images, can derive or leave empty
+          original_filename: img.url.substring(img.url.lastIndexOf('/') + 1)
+        })) || [],
         specifications: editingProduct.specifications || {},
         tags: editingProduct.tags?.join(', ') || '',
         sku: editingProduct.sku || '',
@@ -84,6 +97,7 @@ const AdminPage = () => {
     }
   }, [currentView, editingProduct]);
 
+  // Effect to fetch products on authentication
   useEffect(() => {
     if (isAuthenticated) {
       fetchProducts(setProducts, setProductsError, setLoadingProducts);
@@ -93,6 +107,41 @@ const AdminPage = () => {
   const handleFormDataChange = (newFormData) => {
     setFormData(newFormData);
   };
+
+  // --- NEW: Delete Confirmation Handlers ---
+  const handleDeleteClick = (productId) => {
+    console.log(`AdminPage: Delete button clicked for product ID: ${productId}`);
+    // Find the product to display its details in the modal
+    const product = products.find(p => p._id === productId);
+    setProductToDelete(product); // Store the full product object
+    setDeletingId(productId); // Store the ID
+    setShowDeleteConfirmModal(true); // Show the modal
+  };
+
+  const handleConfirmDelete = async () => {
+    console.log(`AdminPage: User confirmed deletion for product ID: ${deletingId}`);
+    if (deletingId) {
+      // Call your actual delete handler here
+      await handleDeleteWithAnimation(
+        deletingId,
+        setProducts,
+        setDeletingId, // This handler already sets deletingId back to null on success or error
+        setProductsError
+      );
+      // Reset modal state
+      setShowDeleteConfirmModal(false);
+      setProductToDelete(null);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    console.log('AdminPage: User cancelled deletion.');
+    setDeletingId(null); // Clear the deleting ID
+    setShowDeleteConfirmModal(false); // Hide the modal
+    setProductToDelete(null); // Clear the product details
+  };
+  // --- END NEW: Delete Confirmation Handlers ---
+
 
   if (!isAuthenticated) {
     return (
@@ -161,7 +210,7 @@ const AdminPage = () => {
                 products={products}
                 categories={categories}
                 onEditProduct={(id) => handleEditProduct(id, products, setEditingProduct, setCurrentView, setProductsError)}
-                onDeleteProduct={(id) => handleDeleteWithAnimation(id, setProducts, setDeletingId, setProductsError)}
+                onDeleteProduct={handleDeleteClick}
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
                 filterCategory={filterCategory}
@@ -204,6 +253,15 @@ const AdminPage = () => {
           )}
         </AnimatePresence>
       </div>
+
+      {/* NEW: Place the DeleteConfirmationModal outside of currentView conditional blocks */}
+      {/* It needs to be available at all times, especially when currentView is 'list' */}
+      <DeleteConfirmationModal
+        isOpen={showDeleteConfirmModal}
+        productToDelete={productToDelete} // Pass the full product object
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      />
     </motion.div>
   );
 };

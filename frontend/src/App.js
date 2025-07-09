@@ -27,6 +27,7 @@ import Login from "./pages/login";
 import Cart from "./pages/cart";
 import Checkout from "./pages/checkout";
 import Admin from "./pages/admin";
+
 // Import other pages as you create them
 // import Cart from './pages/Cart';
 // import Contact from './pages/Contact';
@@ -37,7 +38,7 @@ const getLinkPath = (linkName) => {
     case "Home":
       return "/";
     case "Deals":
-      return "/store"; // Redirects to FlashDeals component
+      return "/flashDeals"; // Redirects to FlashDeals component
     case "Categories":
       return "/categories"; // Redirects to Store component
     case "About Us":
@@ -121,7 +122,8 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/categories" element={<Store />} />
-          <Route path="/store" element={<FlashDeals />} />
+          <Route path="/store" element={<Store />} />
+            <Route path="/flashDeals" element={<FlashDeals />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/shipping" element={<Shipping />} />

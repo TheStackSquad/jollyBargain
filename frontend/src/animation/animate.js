@@ -237,24 +237,31 @@ export default {
   ScrollSection
 };
 
-export const fadeIn = {
-  hidden: { opacity: 0, y: 20 },
+export const fadeIn = (direction, type, delay, duration) => ({
+  hidden: {
+    x: direction === 'left' ? 100 : direction === 'right' ? -100 : 0,
+    y: direction === 'up' ? 100 : direction === 'down' ? -100 : 0,
+    opacity: 0,
+  },
   show: {
-    opacity: 1,
+    x: 0,
     y: 0,
+    opacity: 1,
     transition: {
-      duration: 0.4,
-      ease: 'easeOut'
-    }
-  }
-};
+      type: type,
+      delay: delay,
+      duration: duration,
+      ease: 'easeOut',
+    },
+  },
+});
 
-export const staggerContainer = {
+export const staggerContainer = (staggerChildren, delayChildren) => ({
   hidden: {},
   show: {
     transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.2
-    }
-  }
-};
+      staggerChildren: staggerChildren,
+      delayChildren: delayChildren || 0,
+    },
+  },
+});

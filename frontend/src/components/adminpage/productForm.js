@@ -59,28 +59,63 @@ const ProductForm = ({ product, onSubmit, onCancel, formData, onFormDataChange }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+  
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  // ... (logs and validation) ...
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
+  setIsSubmitting(true);
+  try {
+    const submitData = { // This is for logging convenience, actual submission uses FormData
+      ...formData,
+      price: parseFloat(formData.price),
+      stock: parseInt(formData.stock, 10),
+      tags: formData.tags?.split(',').map(tag => tag.trim()).filter(tag => tag) || []
+    };
 
-    setIsSubmitting(true);
-    try {
-      const submitData = {
-        ...formData,
-        price: parseFloat(formData.price),
-        stock: parseInt(formData.stock, 10),
-        tags: formData.tags?.split(',').map(tag => tag.trim()).filter(tag => tag) || []
-      };
+    // Create FormData object
+    const formDataToSend = new FormData();
 
-      await onSubmit(submitData);
-    } catch (error) {
-      console.error('Submit failed:', error);
-      // You might want to set a global error message here
-    } finally {
-      setIsSubmitting(false);
+    // Append text fields
+    formDataToSend.append('title', submitData.title);
+    formDataToSend.append('price', submitData.price);
+    formDataToSend.append('category', submitData.category);
+    formDataToSend.append('description', submitData.description);
+    formDataToSend.append('stock', submitData.stock);
+    formDataToSend.append('sku', submitData.sku || '');
+    formDataToSend.append('status', submitData.status || 'active');
+    formDataToSend.append('specifications', JSON.stringify(submitData.specifications || {})); // Stringify objects
+    formDataToSend.append('tags', JSON.stringify(submitData.tags)); // Stringify arrays
+
+    // Append image files. This is the crucial part.
+    // Your formData.images contains objects like { id, url (base64), public_id, original_filename }.
+    // You need to convert the base64 URL back to a Blob/File to append it.
+    for (const image of submitData.images) {
+      if (image.url.startsWith('data:')) { // Only process if it's a base64 string
+        const blob = await fetch(image.url).then(res => res.blob());
+        formDataToSend.append('images', blob, image.original_filename || 'image.jpg'); // 'images' must match Multer field name
+      } else {
+        // If it's already an uploaded image with a public URL, you might send its public_id/url
+        // separately or handle updates differently. For creation, we expect new files.
+        // For updates, you'd send existing public_ids or URLs to retain them.
+        // For now, assume creation only handles new base64 images.
+      }
     }
-  };
+
+    // Log the FormData content (for debugging, won't show full file data)
+    for (const pair of formDataToSend.entries()) {
+      console.log(`${pair[0]}, ${pair[1]}`);
+    }
+
+    // Pass formDataToSend to onSubmit, which will then use axios with it
+    await onSubmit(formDataToSend); // onSubmit will now receive FormData
+    console.log('Submission successful!');
+  } catch (error) {
+    console.error('Submit failed:', error);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
