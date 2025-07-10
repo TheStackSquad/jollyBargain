@@ -1,6 +1,14 @@
 // frontend/src/pages/cart.js
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { AnimatePresence } from 'framer-motion';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  updateItemQuantity,
+  removeItemFromCart,
+  // clearCart // Uncomment if you want to clear cart on checkout
+} from '../reduxStore/cart/cartSlice';
+import { useNavigate } from 'react-router-dom';
+
 import {
   containerVariants,
   headerVariants,
@@ -11,83 +19,24 @@ import {
 import CartItem from '../components/cartpage/cartItem';
 import CartSummary from '../components/cartpage/cartSummary';
 import EmptyCartMessage from '../components/cartpage/emptyCartMessage';
-import ProductRecommendationCard from '../components/cartpage/productRecommendationCard';
-import MessageBox from '../components/cartpage/messageBox';
 
 // Lucide React Icons
-import { ShoppingCart, Zap } from 'lucide-react';
-
-// Placeholder data for demonstration
-const initialCartItems = [
-  {
-    id: '1',
-    name: 'Vintage Leather Backpack',
-    price: 89.99,
-    quantity: 1,
-     image: '',
-  },
-  {
-    id: '2',
-    name: 'Noise Cancelling Headphones',
-    price: 199.99,
-    quantity: 2,
-      image: '',
-  },
-  {
-    id: '3',
-    name: 'Smart Home Assistant',
-    price: 49.99,
-    quantity: 1,
-      image: '',
-  },
-];
-
-const recommendedProducts = [
-  {
-    id: 'rec1',
-    name: 'Portable Bluetooth Speaker',
-    price: 75.00,
-    image: '',
-  },
-  {
-    id: 'rec2',
-    name: 'Ergonomic Office Chair',
-    price: 250.00,
-     image: '',
-  },
-  {
-    id: 'rec3',
-    name: 'Stainless Steel Water Bottle',
-    price: 25.00,
-      image: '',
-  },
-];
+import { ShoppingCart } from 'lucide-react';
 
 const CartPage = () => {
-  const [cartItems, setCartItems] = useState(initialCartItems);
-  const [couponCode, setCouponCode] = useState('');
-  const [couponMessage, setCouponMessage] = useState({ type: '', text: '' });
-  const [shippingZipCode, setShippingZipCode] = useState('');
-  const [shippingCost, setShippingCost] = useState(0);
-  const [shippingMessage, setShippingMessage] = useState({ type: '', text: '' });
-  const [taxRate, setTaxRate] = useState(0.08); // 8% tax rate for demonstration
+  const cartItems = useSelector((state) => state.cart.items);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const [messageBoxProps, setMessageBoxProps] = useState(null); // State for MessageBox
+  // State for coupon and shipping remain local for now
+  const [couponCode, setCouponCode] = React.useState('');
+  const [couponMessage, setCouponMessage] = React.useState({ type: '', text: '' });
+  const [shippingZipCode, setShippingZipCode] = React.useState('');
+  const [shippingCost, setShippingCost] = React.useState(0);
+  const [shippingMessage, setShippingMessage] = React.useState({ type: '', text: '' });
+  const [taxRate, setTaxRate] = React.useState(0.08); // 8% tax rate for demonstration
 
-  // Function to show the message box
-  const showMessageBox = (title, message, callback = null) => {
-    setMessageBoxProps({ title, message, callback });
-  };
-
-  // Function to close the message box
-  const closeMessageBox = () => {
-    if (messageBoxProps && messageBoxProps.callback) {
-      messageBoxProps.callback(); // Execute callback if provided
-    }
-    setMessageBoxProps(null);
-  };
-
-  // Calculate cart totals
+  // Calculate cart totals - now depends on Redux cartItems
   const { subtotal, totalTax, grandTotal } = useMemo(() => {
     const calculatedSubtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const calculatedTax = calculatedSubtotal * taxRate;
@@ -95,28 +44,24 @@ const CartPage = () => {
     return {
       subtotal: calculatedSubtotal,
       totalTax: calculatedTax,
-      grandTotal: calculatedGrandTotal,
+      total: calculatedGrandTotal, // Renamed grandTotal to total for consistency with some APIs
     };
   }, [cartItems, shippingCost, taxRate]);
 
-  // Handle quantity change
+  // Handle quantity change - dispatch Redux action
   const handleQuantityChange = (id, delta) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, quantity: Math.max(1, item.quantity + delta) } : item
-      )
-    );
+    dispatch(updateItemQuantity({ id, delta }));
   };
 
-  // Handle item removal
+  // Handle item removal - dispatch Redux action
   const handleRemoveItem = (id) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    dispatch(removeItemFromCart(id));
   };
 
-  // Handle save for later (simulated)
+  // Handle save for later (simulated) - for now, just removes from cart and shows message
   const handleSaveForLater = (id) => {
-    // In a real app, you'd move this to a 'saved for later' list in your backend/state
-    handleRemoveItem(id);
+    dispatch(removeItemFromCart(id)); // Remove from cart
+    console.log(`Item ${id} removed from cart and simulated as saved for later.`);
     setCouponMessage({ type: 'success', text: 'Item moved to saved for later!' });
     setTimeout(() => setCouponMessage({ type: '', text: '' }), 3000);
   };
@@ -124,7 +69,6 @@ const CartPage = () => {
   // Apply coupon code (simulated logic)
   const handleApplyCoupon = () => {
     if (couponCode.trim().toLowerCase() === 'save20') {
-      // For simplicity, we'll just show a success message. In a real app, you'd adjust prices or totals.
       setCouponMessage({ type: 'success', text: 'Coupon "SAVE20" applied! 20% off your subtotal.' });
     } else if (couponCode.trim() === '') {
       setCouponMessage({ type: 'error', text: 'Please enter a coupon code.' });
@@ -149,22 +93,23 @@ const CartPage = () => {
     setTimeout(() => setShippingMessage({ type: '', text: '' }), 3000);
   };
 
-  // Handle checkout (simulated)
+  // Handle checkout (simulated) - now directly navigates
   const handleCheckout = () => {
-    // In a real app, you'd navigate to the checkout page
     console.log('Proceeding to checkout!');
+    // dispatch(clearCart()); // Optional: uncomment if you want to clear cart on checkout initiation
+    navigate('/checkout'); // Direct navigation
   };
 
-  // Handle continue shopping (simulated)
+  // Handle continue shopping (simulated) - now directly navigates
   const handleContinueShopping = () => {
-    // In a real app, you'd navigate to the products page
-    console.log('Navigating back to shopping!');
+    navigate('/store'); // Direct navigation to your store page
   };
 
-  // Handle add to cart for recommendations (simulated)
-  const handleAddToCartRecommendation = (productId) => {
-    console.log(`Adding recommended product ${productId} to cart.`);
-    // In a real app, you'd add the product to cart state/backend
+  // Handle show message box - add this function back
+  const handleShowMessageBox = (message) => {
+    // You can implement this however you want - could show a modal, toast, etc.
+    alert(message); // Simple implementation
+    // Or you could set a state for a custom modal/notification
   };
 
   return (
@@ -186,7 +131,7 @@ const CartPage = () => {
           {cartItems.length === 0 ? (
             <EmptyCartMessage
               onStartShopping={handleContinueShopping}
-              onShowMessageBox={showMessageBox}
+              onShowMessageBox={handleShowMessageBox} // Added back the prop
             />
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -198,7 +143,7 @@ const CartPage = () => {
                 <AnimatePresence>
                   {cartItems.map((item) => (
                     <CartItem
-                      key={item.id}
+                      key={item._id}
                       item={item}
                       onQuantityChange={handleQuantityChange}
                       onRemoveItem={handleRemoveItem}
@@ -213,7 +158,7 @@ const CartPage = () => {
                 subtotal={subtotal}
                 shippingCost={shippingCost}
                 totalTax={totalTax}
-                grandTotal={grandTotal}
+                total={grandTotal} // Passed as 'total'
                 taxRate={taxRate}
                 couponCode={couponCode}
                 setCouponCode={setCouponCode}
@@ -225,47 +170,11 @@ const CartPage = () => {
                 handleEstimateShipping={handleEstimateShipping}
                 handleCheckout={handleCheckout}
                 onContinueShopping={handleContinueShopping}
-                onShowMessageBox={showMessageBox} // Pass showMessageBox to CartSummary
               />
             </div>
           )}
-
-          {/* Product Recommendations */}
-          {cartItems.length > 0 && (
-            <MotionDiv variants={headerVariants} className="mt-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 pb-2 border-b border-gray-200 flex items-center">
-                <Zap className="w-6 h-6 text-purple-600 mr-2" /> You might also like
-              </h2>
-              <MotionDiv
-                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-              >
-                {recommendedProducts.map((product) => (
-                  <ProductRecommendationCard
-                    key={product.id}
-                    product={product}
-                    onAddToCart={handleAddToCartRecommendation}
-                    onShowMessageBox={showMessageBox} // Pass showMessageBox to ProductRecommendationCard
-                  />
-                ))}
-              </MotionDiv>
-            </MotionDiv>
-          )}
         </MotionDiv>
       </div>
-
-      {/* Render MessageBox if props are available */}
-      <AnimatePresence>
-        {messageBoxProps && (
-          <MessageBox
-            title={messageBoxProps.title}
-            message={messageBoxProps.message}
-            onClose={closeMessageBox}
-          />
-        )}
-      </AnimatePresence>
     </div>
   );
 };

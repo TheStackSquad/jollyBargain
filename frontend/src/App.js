@@ -5,6 +5,8 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { ShoppingCart, User } from "lucide-react";
+import { Provider } from 'react-redux';
+import { store } from './reduxStore/store';
 
 // Import animation components
 import {
@@ -58,6 +60,7 @@ const getLinkPath = (linkName) => {
 
 const App = () => {
   return (
+       <Provider store={store}>
     <Router>
       {/* Fixed Header - stays at top of viewport */}
       <AnimatedHeader
@@ -250,6 +253,7 @@ const App = () => {
         </div>
       </AnimatedFooter>
     </Router>
+    </Provider>
   );
 };
 
