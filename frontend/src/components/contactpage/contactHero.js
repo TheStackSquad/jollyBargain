@@ -1,6 +1,6 @@
 // frontend/src/components/contactpage/ContactHero.js
 import React from 'react';
-import { AnimatedH1, AnimatedP, animationVariants } from '../../animation/animate';
+import { AnimatedH1, AnimatedP } from '../../animation/animate';
 
 const ContactHero = () => {
   return (

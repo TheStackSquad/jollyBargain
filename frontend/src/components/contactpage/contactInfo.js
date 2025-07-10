@@ -4,33 +4,80 @@ import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 import { AnimatedP } from '../../animation/animate';
 
 const ContactInfo = () => {
-  // Contact information data
+  // Contact information data with types for dynamic linking
   const contactDetails = [
     {
       icon: MapPin,
       title: 'Our Location',
       details: ['1234 Commerce Street', 'Business District, Lagos', 'Nigeria'],
-      color: 'text-blue-600'
+      color: 'text-blue-600',
+      type: 'address'
     },
     {
       icon: Phone,
       title: 'Phone Number',
-      details: ['+234 (0) 123 456 7890', '+234 (0) 987 654 3210'],
-      color: 'text-green-600'
+      details: ['+234 8167118379', '+234 8155764221'],
+      color: 'text-green-600',
+      type: 'phone'
     },
     {
       icon: Mail,
       title: 'Email Address',
       details: ['support@jollybargain.com', 'sales@jollybargain.com'],
-      color: 'text-purple-600'
+      color: 'text-purple-600',
+      type: 'email'
     },
     {
       icon: Clock,
       title: 'Business Hours',
       details: ['Mon - Fri: 9:00 AM - 6:00 PM', 'Sat: 10:00 AM - 4:00 PM', 'Sun: Closed'],
-      color: 'text-orange-600'
+      color: 'text-orange-600',
+      type: 'hours'
     }
   ];
+
+  // Helper function to create appropriate links based on type
+  const createContactLink = (detail, type) => {
+    const baseClasses = "text-gray-600 text-sm font-roboto transition-colors duration-200";
+    
+    switch (type) {
+      case 'phone':
+        return (
+          <a 
+            href={`tel:${detail.replace(/\s/g, '')}`} 
+            className={`${baseClasses} hover:text-green-600 hover:underline cursor-pointer`}
+            aria-label={`Call ${detail}`}
+          >
+            {detail}
+          </a>
+        );
+      case 'email':
+        return (
+          <a 
+            href={`mailto:${detail}`} 
+            className={`${baseClasses} hover:text-purple-600 hover:underline cursor-pointer`}
+            aria-label={`Email ${detail}`}
+          >
+            {detail}
+          </a>
+        );
+      case 'address':
+        const addressQuery = encodeURIComponent(detail);
+        return (
+          <a 
+            href={`https://maps.google.com/maps?q=${addressQuery}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${baseClasses} hover:text-blue-600 hover:underline cursor-pointer`}
+            aria-label={`View ${detail} on map`}
+          >
+            {detail}
+          </a>
+        );
+      default:
+        return <p className={baseClasses}>{detail}</p>;
+    }
+  };
 
   return (
     <section className="py-16 bg-white">
@@ -58,9 +105,12 @@ const ContactInfo = () => {
           {contactDetails.map((item, index) => {
             const IconComponent = item.icon;
             return (
-              <div
+              <AnimatedP
                 key={index}
                 className="bg-gray-50 rounded-xl p-6 text-center hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
               >
                 <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-white shadow-md mb-4 ${item.color}`}>
                   <IconComponent size={32} />
@@ -70,49 +120,46 @@ const ContactInfo = () => {
                 </h3>
                 <div className="space-y-1">
                   {item.details.map((detail, detailIndex) => (
-                    <p key={detailIndex} className="text-gray-600 text-sm font-roboto">
-                      {detail}
-                    </p>
+                    <div key={detailIndex}>
+                      {createContactLink(detail, item.type)}
+                    </div>
                   ))}
                 </div>
-              </div>
+              </AnimatedP>
             );
           })}
         </div>
 
         {/* Additional Information */}
-        <div className="mt-12 bg-blue-50 rounded-2xl p-8 text-center">
-          <AnimatedP
-            className="text-xl font-semibold text-blue-800 mb-2 font-jetbrain"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
+        <AnimatedP
+          className="mt-12 bg-blue-50 rounded-2xl p-8 text-center"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+        >
+          <h3 className="text-xl font-semibold text-blue-800 mb-2 font-jetbrain">
             Need Immediate Help?
-          </AnimatedP>
-          <AnimatedP
-            className="text-blue-700 mb-4 font-roboto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
+          </h3>
+          <p className="text-blue-700 mb-4 font-roboto">
             Check out our FAQ section for quick answers to common questions, or browse our help center for detailed guides.
-          </AnimatedP>
+          </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="/faq"
-              className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-roboto font-medium"
+              className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-roboto font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              aria-label="Visit FAQ page"
             >
               Visit FAQ
             </a>
             <a
-              href="#"
-              className="inline-block px-6 py-3 bg-white text-blue-600 border-2 border-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition-all duration-200 font-roboto font-medium"
+              href="/help-center"
+              className="inline-block px-6 py-3 bg-white text-blue-600 border-2 border-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition-all duration-200 font-roboto font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              aria-label="Visit Help Center"
             >
               Help Center
             </a>
           </div>
-        </div>
+        </AnimatedP>
       </div>
     </section>
   );
