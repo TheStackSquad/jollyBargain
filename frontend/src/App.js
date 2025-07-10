@@ -27,6 +27,7 @@ import Login from "./pages/login";
 import Cart from "./pages/cart";
 import Checkout from "./pages/checkout";
 import Admin from "./pages/admin";
+import HelpCenter from "./pages/help-center";
 
 // Import other pages as you create them
 // import Cart from './pages/Cart';
@@ -131,6 +132,7 @@ const App = () => {
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/admin" element={<Admin />} />
+             <Route path="/help-center" element={<HelpCenter />} />
           {/* Commented routes for future implementation */}
           {/* <Route path="/cart" element={<Cart />} /> */}
           {/* <Route path="/login" element={<Login />} /> */}

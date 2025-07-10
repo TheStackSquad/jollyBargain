@@ -3,55 +3,85 @@ import { apiClient } from '../apiClient/apiClient';
 
 export const productService = {
   // Get products with filtering, sorting, and pagination
-  async getProducts({
-    page = 1,
-    limit = 12,
-    searchQuery = '',
-    category = 'all',
-    priceRange = [0, 1000],
-    brands = [],
-    sortBy = 'featured',
-    rating = 0,
-    inStock = false
-  }) {
-    const params = new URLSearchParams({
-      page: page.toString(),
-      limit: limit.toString(),
-      sortBy,
-    });
+async getProducts({
+  page = 1,
+  limit = 12,
+  searchQuery = '',
+  category = 'all',
+  priceRange = [0, 1000],
+  brands = [],
+  sortBy = 'featured',
+  rating = 0,
+  inStock = false
+}) {
+  // Log the initial parameters received
+  console.log('getProducts - Received parameters:', {
+    page,
+    limit,
+    searchQuery,
+    category,
+    priceRange,
+    brands,
+    sortBy,
+    rating,
+    inStock
+  });
 
-    if (searchQuery) params.append('search', searchQuery);
-    if (category !== 'all') params.append('category', category);
-    // Ensure priceRange values are only added if they are meaningful
-    if (priceRange[0] !== undefined && priceRange[0] !== null) params.append('minPrice', priceRange[0].toString());
-    if (priceRange[1] !== undefined && priceRange[1] !== null) params.append('maxPrice', priceRange[1].toString());
-    if (brands.length > 0) params.append('brands', brands.join(','));
-    if (rating > 0) params.append('minRating', rating.toString());
-    if (inStock) params.append('inStock', 'true');
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+    sortBy,
+  });
 
-    try {
-      // apiClient.get for /products now returns { products: [...], total: N, status: S }
-      // or { data: null, status: 304 } if not modified.
-      // We return this entire structured response directly.
-      const response = await apiClient.get(`/products?${params}`);
-      return response; // Return the full structured response from apiClient
-    } catch (error) {
-      console.error('Error in productService.getProducts:', error);
-      throw error; // Re-throw the error for the calling hook/component to handle
-    }
-  },
+  if (searchQuery) params.append('search', searchQuery);
+  if (category !== 'all') params.append('category', category);
+  // Ensure priceRange values are only added if they are meaningful
+  if (priceRange[0] !== undefined && priceRange[0] !== null) params.append('minPrice', priceRange[0].toString());
+  if (priceRange[1] !== undefined && priceRange[1] !== null) params.append('maxPrice', priceRange[1].toString());
+  if (brands.length > 0) params.append('brands', brands.join(','));
+  if (rating > 0) params.append('minRating', rating.toString());
+  if (inStock) params.append('inStock', 'true');
 
-  // Get a single product by ID
-  async getProduct(id) {
-    try {
-      // For single product, apiClient.get returns the raw data payload (response.data from axios)
-      const response = await apiClient.get(`/products/${id}`);
-      return response; // This will be the product object directly
-    } catch (error) {
-      console.error(`Error in productService.getProduct for ID ${id}:`, error);
-      throw error;
-    }
-  },
+  // Log the constructed URLSearchParams
+  console.log('getProducts - Constructed URLSearchParams:', params.toString());
+  // You can also log the full URL that will be requested
+  console.log('getProducts - Full API endpoint:', `/products?${params.toString()}`);
+
+
+  try {
+    // apiClient.get for /products now returns { products: [...], total: N, status: S }
+    // or { data: null, status: 304 } if not modified.
+    // We return this entire structured response directly.
+    const response = await apiClient.get(`/products?${params}`);
+
+    // Log the response received from the API
+    console.log('getProducts - API response:', response);
+
+    return response; // Return the full structured response from apiClient
+  } catch (error) {
+    console.error('Error in productService.getProducts:', error);
+    throw error; // Re-throw the error for the calling hook/component to handle
+  }
+},
+
+// Get a single product by ID
+async getProduct(id) {
+  // Log the ID for which the product is being fetched
+  console.log('getProduct - Fetching product with ID:', id);
+
+  try {
+    // For single product, apiClient.get returns the raw data payload (response.data from axios)
+    const response = await apiClient.get(`/products/${id}`);
+
+    // Log the response for a single product
+    console.log('getProduct - API response for product ID', id, ':', response);
+
+    return response; // This will be the product object directly
+  } catch (error) {
+    console.error(`Error in productService.getProduct for ID ${id}:`, error);
+    throw error;
+  }
+},
 
   // Search products
   async searchProducts(query) {

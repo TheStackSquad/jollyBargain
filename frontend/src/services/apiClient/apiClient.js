@@ -3,7 +3,6 @@ import axios from 'axios'; // Import axios
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-// Create an Axios instance
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -13,7 +12,8 @@ const axiosInstance = axios.create({
   // For 304 Not Modified, axios typically resolves successfully, but without data.
   // We'll handle 304 explicitly in the response interceptor or method.
   validateStatus: function (status) {
-    return status >= 200 && status < 300 || status === 304; // Allow 304 to be treated as a success
+    // Clarify the order of operations with parentheses
+    return (status >= 200 && status < 300) || status === 304; // Allow 304 to be treated as a success
   },
 });
 

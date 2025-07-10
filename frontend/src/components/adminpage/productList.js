@@ -1,6 +1,6 @@
 // frontend/src/components/adminpage/ProductList.js
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Search, Edit2, Trash2, Image as ImageIcon } from 'lucide-react';
 
 const ProductList = ({ products, categories, onEditProduct, onDeleteProduct, searchTerm, setSearchTerm, filterCategory, setFilterCategory }) => {
