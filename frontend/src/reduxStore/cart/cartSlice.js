@@ -1,91 +1,100 @@
 // frontend/src/reduxStore/cart/cartSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
-/**
- * Initial state for the cart slice.
- * The cart will be an array of product objects, where each product
- * will also have a 'quantity' property added to it when added to the cart.
- * Example item structure in cart: { _id: '...', title: '...', price: ..., quantity: 1, images: [...] }
- */
-const initialState = {
-  items: [], // Array to hold cart items
+// Function to load cart state from localStorage
+const loadCartState = () => {
+  try {
+    const serializedState = localStorage.getItem('cartState');
+    if (serializedState === null) {
+      return undefined; // Let Redux use its default initialState if nothing is in localStorage
+    }
+    // Parse the JSON string back into a JavaScript object
+    return JSON.parse(serializedState);
+  } catch (e) {
+    console.warn("Could not load cart state from localStorage", e);
+    return undefined; // Return undefined to use default initialState on error
+  }
 };
 
-/**
- * Creates a Redux slice for managing cart state.
- * Using `createSlice` from Redux Toolkit:
- * - Automatically generates action creators from reducer functions.
- * - Handles immutable updates internally using Immer.
- */
+// Function to save cart state to localStorage
+const saveCartState = (state) => {
+  try {
+    // Serialize the state object to a JSON string before saving
+    const serializedState = JSON.stringify(state);
+    localStorage.setItem('cartState', serializedState);
+  } catch (e) {
+    console.warn("Could not save cart state to localStorage", e);
+  }
+};
+
+// Initial state for the cart slice.
+// It tries to load from localStorage first, otherwise uses default empty state.
+const initialState = loadCartState() || {
+  items: [],
+  totalQuantity: 0,
+  totalAmount: 0,
+};
+
 const cartSlice = createSlice({
-  name: 'cart', // A name for the slice, used as a prefix for action types
+  name: 'cart',
   initialState,
   reducers: {
-    /**
-     * Adds a product to the cart or increments its quantity if it already exists.
-     * @param {object} state - The current cart state (managed by Immer, so direct mutation is safe).
-     * @param {object} action - The action object, action.payload should be the product object.
-     */
     addItemToCart: (state, action) => {
       const product = action.payload;
       const existingItem = state.items.find(item => item._id === product._id);
 
+      state.totalQuantity++;
+      state.totalAmount += product.price;
+
       if (existingItem) {
-        // If item exists, increment its quantity
         existingItem.quantity += 1;
       } else {
-        // If item is new, add it with quantity 1
         state.items.push({ ...product, quantity: 1 });
       }
+      // After any state change, save the entire cart state to localStorage
+      saveCartState(state);
     },
 
-    /**
-     * Updates the quantity of a specific item in the cart.
-     * @param {object} state - The current cart state.
-     * @param {object} action - The action object, action.payload should be { id, delta }.
-     * id: The _id of the product.
-     * delta: The amount to change the quantity by (e.g., 1 or -1).
-     */
     updateItemQuantity: (state, action) => {
       const { id, delta } = action.payload;
       const existingItem = state.items.find(item => item._id === id);
 
       if (existingItem) {
+        state.totalQuantity += delta;
+        state.totalAmount += (existingItem.price * delta);
+
         existingItem.quantity += delta;
-        // Remove item if quantity drops to 0 or below
+
         if (existingItem.quantity <= 0) {
           state.items = state.items.filter(item => item._id !== id);
         }
       }
+      // After any state change, save the entire cart state to localStorage
+      saveCartState(state);
     },
 
-    /**
-     * Removes an item completely from the cart.
-     * @param {object} state - The current cart state.
-     * @param {object} action - The action object, action.payload should be the _id of the product.
-     */
     removeItemFromCart: (state, action) => {
       const idToRemove = action.payload;
-      state.items = state.items.filter(item => item._id !== idToRemove);
+      const removedItem = state.items.find(item => item._id === idToRemove);
+
+      if (removedItem) {
+        state.totalQuantity -= removedItem.quantity;
+        state.totalAmount -= (removedItem.price * removedItem.quantity);
+        state.items = state.items.filter(item => item._id !== idToRemove);
+      }
+      // After any state change, save the entire cart state to localStorage
+      saveCartState(state);
     },
 
-    /**
-     * Clears all items from the cart.
-     * @param {object} state - The current cart state.
-     */
     clearCart: (state) => {
       state.items = [];
+      state.totalQuantity = 0;
+      state.totalAmount = 0;
+      // After clearing, save the empty state to localStorage
+      saveCartState(state);
     },
-
-    // Note: 'saveForLater' logic might involve moving an item to a different
-    // part of the state (e.g., a 'savedItems' array in the user slice, or a separate slice).
-    // For now, if it just means removing from cart, removeItemFromCart can be used.
-    // If it means moving to a 'saved for later' list, that state would need to be defined elsewhere.
   },
 });
 
-// Export the action creators generated by createSlice
 export const { addItemToCart, updateItemQuantity, removeItemFromCart, clearCart } = cartSlice.actions;
-
-// Export the reducer function to be combined in the store
 export default cartSlice.reducer;

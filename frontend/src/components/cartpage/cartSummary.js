@@ -1,6 +1,6 @@
+// frontend/src/components/cartpage/cartSummary.js
 import React from 'react';
 import { AnimatePresence } from 'framer-motion';
-// MessageBox import removed as it's no longer used
 import {
   MotionDiv,
   MotionButton,
@@ -9,15 +9,16 @@ import {
   buttonTapVariants,
   inputFocusVariants,
   messageVariants,
-} from '../../animation/cartAnimate'; // Adjusted path for cartAnimate
+} from '../../animation/cartAnimate';
 import { ChevronRight } from 'lucide-react';
 
 const CartSummary = ({
   subtotal,
   shippingCost,
-  totalTax,
+  totalVat, // Changed from totalTax to totalVat
   grandTotal,
-  taxRate,
+  vatRate, // Changed from taxRate to vatRate
+  discountAmount, // New prop for discount
   couponCode,
   setCouponCode,
   couponMessage,
@@ -26,20 +27,13 @@ const CartSummary = ({
   shippingMessage,
   handleApplyCoupon,
   handleEstimateShipping,
-  // onContinueShopping prop removed as it's no longer directly used for message box
+  handleCheckout,       // Now received as a prop
+  onContinueShopping,   // Now received as a prop
 }) => {
 
-  // handleCheckout now directly redirects to the checkout page
-  const handleCheckout = () => {
-    // In a real application, you might want to perform final checks or send data
-    // to the server before redirecting. For this example, we'll directly redirect.
-    window.location.href = '/checkout';
-  };
-
-  // handleContinueShopping now directly redirects to the store page
-  const handleContinueShopping = () => {
-    window.location.href = '/store';
-  };
+  // Removed local handleCheckout and handleContinueShopping as they are now props
+  // const handleCheckout = () => { /* ... */ };
+  // const handleContinueShopping = () => { /* ... */ };
 
   return (
     <>
@@ -51,19 +45,27 @@ const CartSummary = ({
         <div className="space-y-3 mb-6 text-lg">
           <div className="flex justify-between">
             <span>Subtotal:</span>
-            <span className="font-semibold">${subtotal.toFixed(2)}</span>
+           <span className="font-semibold">₦{subtotal.toFixed(2)}</span>
           </div>
+
+          {discountAmount > 0 && ( // Display discount if applied
+            <div className="flex justify-between text-green-600">
+              <span>Discount:</span>
+              <span className="font-semibold">-₦{discountAmount.toFixed(2)}</span>
+            </div>
+          )}
+
           <div className="flex justify-between">
             <span>Shipping:</span>
-            <span className="font-semibold">${shippingCost.toFixed(2)}</span>
+            <span className="font-semibold">₦{shippingCost.toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
-            <span>Tax ({taxRate * 100}%):</span>
-            <span className="font-semibold">${totalTax.toFixed(2)}</span>
+            <span>VAT ({vatRate * 100}%):</span> {/* Changed label to VAT */}
+            <span className="font-semibold">₦{totalVat.toFixed(2)}</span> {/* Changed to totalVat */}
           </div>
           <div className="border-t border-gray-300 pt-3 flex justify-between text-xl font-bold text-indigo-700">
             <span>Order Total:</span>
-            <span>${grandTotal.toFixed(2)}</span>
+            <span>₦{grandTotal.toFixed(2)}</span>
           </div>
         </div>
 
@@ -78,7 +80,7 @@ const CartSummary = ({
               id="coupon"
               name="coupon"
               className="flex-1 block w-full rounded-l-md border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 p-3 text-gray-900 transition-all duration-200 ease-in-out"
-              placeholder="Enter code (e.g., SAVE20)"
+              placeholder="Enter code (e.g., SAVE10)" // Updated example
               value={couponCode}
               onChange={(e) => setCouponCode(e.target.value)}
               variants={inputFocusVariants}
@@ -158,7 +160,7 @@ const CartSummary = ({
           variants={buttonTapVariants}
           whileHover="hover"
           whileTap="tap"
-          onClick={handleCheckout} // Now directly calls handleCheckout for redirection
+          onClick={handleCheckout} // Now calls the prop
           className="w-full flex items-center justify-center px-6 py-4 border border-transparent text-base font-bold rounded-full shadow-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out transform hover:-translate-y-0.5"
         >
           Proceed to Checkout <ChevronRight className="ml-2 w-5 h-5" />
@@ -167,15 +169,13 @@ const CartSummary = ({
         {/* Continue Shopping */}
         <div className="mt-4 text-center">
           <button
-            onClick={handleContinueShopping} // Now directly calls handleContinueShopping for redirection
+            onClick={onContinueShopping} // Now calls the prop
             className="text-indigo-600 hover:text-indigo-800 text-sm font-medium transition-colors duration-150 ease-in-out cursor-pointer"
           >
             Or continue shopping
           </button>
         </div>
       </div>
-
-      {/* MessageBox Modal - Removed as per request */}
     </>
   );
 };
