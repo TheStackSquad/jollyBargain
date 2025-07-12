@@ -1,7 +1,7 @@
 // backend/server.js
 
 import express from 'express';
-import mongoose from 'mongoose'; // Still needed for mongoose.connection.close() in graceful shutdown
+import mongoose from 'mongoose';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
@@ -15,10 +15,15 @@ dotenv.config();
 // Import the database connection function
 import connectDB from './config/db.js';
 
+// NEW: Import and initialize Cloudinary config AFTER dotenv is loaded
+import { initCloudinary } from './backendUtils/uploadHandler.js'; // Import the new function
+initCloudinary(); // CALL THIS FUNCTION HERE!
+
 // Import routes
 import authRoutes from './routes/auth.js';
 import adminRoutes from './routes/adminRoutes.js';
 import productRoutes from './routes/productRoutes.js';
+import flashDealRoutes from './routes/flashDealRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -45,9 +50,9 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Body parsing middleware
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// Body parsing middleware (keep these limits, they're appropriate for files)
+app.use(express.json({ limit: '50mb' })); // Changed from 10mb to 50mb, more suitable for large payloads
+app.use(express.urlencoded({ extended: true, limit: '50mb' })); // Changed from 10mb to 50mb
 app.use(cookieParser());
 
 // --- Database connection: Call the connectDB function ---
@@ -56,7 +61,8 @@ connectDB(); // This will handle the connection and logging
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/products', productRoutes);
+app.use('/api/products', productRoutes); // This route uses Multer
+app.use('/api/flashDeals', flashDealRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -104,7 +110,7 @@ app.use((error, req, res, next) => {
 // Graceful shutdown
 process.on('SIGTERM', () => {
   console.log('SIGTERM received, shutting down gracefully');
-  mongoose.connection.close(() => { // Use mongoose.connection.close() here
+  mongoose.connection.close(() => {
     console.log('MongoDB connection closed');
     process.exit(0);
   });
@@ -112,7 +118,7 @@ process.on('SIGTERM', () => {
 
 process.on('SIGINT', () => {
   console.log('SIGINT received, shutting down gracefully');
-  mongoose.connection.close(() => { // Use mongoose.connection.close() here
+  mongoose.connection.close(() => {
     console.log('MongoDB connection closed');
     process.exit(0);
   });
