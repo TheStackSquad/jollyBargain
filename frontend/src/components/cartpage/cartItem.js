@@ -3,14 +3,6 @@ import React from 'react';
 import { MotionDiv, MotionButton, itemVariants, buttonTapVariants } from '../../animation/cartAnimate';
 import { Trash2, Minus, Plus, Save } from 'lucide-react';
 
-/**
- * Renders a single item in the shopping cart.
- * @param {object} props - The component props.
- * @param {object} props.item - The cart item object.
- * @param {function} props.onQuantityChange - Callback for quantity adjustment.
- * @param {function} props.onRemoveItem - Callback for removing an item.
- * @param {function} props.onSaveForLater - Callback for saving an item for later.
- */
 const CartItem = ({ item, onQuantityChange, onRemoveItem, onSaveForLater }) => {
   return (
     <MotionDiv
