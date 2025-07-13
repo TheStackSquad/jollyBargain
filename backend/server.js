@@ -20,7 +20,7 @@ import { initCloudinary } from './backendUtils/uploadHandler.js'; // Import the 
 initCloudinary(); // CALL THIS FUNCTION HERE!
 
 // Import routes
-import authRoutes from './routes/auth.js';
+import authRoutes from './routes/authRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import flashDealRoutes from './routes/flashDealRoutes.js';
