@@ -1,48 +1,122 @@
-// src/frontend/components/accountpage/AccountUI.js
-import React, { useState } from 'react';
-// Destructure the Animated components from the default export of animation.js
+// frontend/src/components/accountpage/accountUI.js
+
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import animationExports from '../../animation/animate';
-import { Mail, Facebook } from 'lucide-react'; 
+import { Mail, Facebook } from 'lucide-react';
+
+// Import Redux actions and selectors
+// Ensure these imports match the exported names from userSlice.js
+import { loginUserThunk, registerUserThunk, clearAuthMessages, setError } from '../../reduxStore/user/userSlice';
 
 const { AnimatedDiv, AnimatedH2, AnimatedButton, AnimatedSection, AnimatedP } = animationExports;
 
 const AccountPage = () => {
-  const [isLogin, setIsLogin] = useState(true); // State to toggle between login and signup
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState('');
+
+  const dispatch = useDispatch();
+  // CORRECTED: Access state.user instead of state.auth
+  const { loading, error, successMessage, isAuthenticated } = useSelector((state) => state.user);
+
+  const navigate = useNavigate();
+
+  // Effect to clear messages when component mounts or form type changes
+  useEffect(() => {
+    console.log('[AccountUI] useEffect: Clearing auth messages.');
+    dispatch(clearAuthMessages());
+  }, [isLogin, dispatch]);
+
+  // Effect to redirect after successful authentication
+  useEffect(() => {
+    if (isAuthenticated && successMessage && !loading) {
+      console.log('[AccountUI] useEffect: Authenticated and success message, redirecting...');
+      const timer = setTimeout(() => {
+        navigate('/dashboard');
+        dispatch(clearAuthMessages());
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [isAuthenticated, successMessage, loading, navigate, dispatch]);
 
   const toggleForm = () => {
+    console.log('[AccountUI] Toggling form. isLogin:', !isLogin);
     setIsLogin(!isLogin);
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+    setName('');
   };
 
-  const handleGoogleSignIn = () => {
-    console.log('Signing in with Google...');
-    // Implement Google OAuth logic here
+  const handleGoogleSignIn = async () => {
+    console.log('[AccountUI] Google Sign-In initiated.');
+    // Replace with a custom modal or toast notification instead of alert()
+    // For now, just a console log
   };
 
-  const handleFacebookSignIn = () => {
-    console.log('Signing in with Facebook...');
-    // Implement Facebook OAuth logic here
+  const handleFacebookSignIn = async () => {
+    console.log('[AccountUI] Facebook Sign-In initiated.');
+    // Replace with a custom modal or toast notification instead of alert()
+    // For now, just a console log
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const formType = isLogin ? 'Login' : 'Sign Up';
-    console.log(`${formType} form submitted!`);
-    // Implement actual form submission logic (e.g., API call)
+    console.log('[AccountUI] Form submitted. Clearing previous messages.');
+    dispatch(clearAuthMessages());
+
+    if (!isLogin && password !== confirmPassword) {
+      console.warn('[AccountUI] Password mismatch during registration.');
+      dispatch(setError('Passwords do not match.')); // Dispatch the new setError action
+      return;
+    }
+
+    try {
+      if (isLogin) {
+        console.log('[AccountUI] Dispatching loginUserThunk...');
+        dispatch(loginUserThunk({ email, password }));
+      } else {
+        console.log('[AccountUI] Dispatching registerUserThunk...');
+        dispatch(registerUserThunk({ email, password, name }));
+      }
+    } catch (err) {
+      // This catch block is mostly for synchronous errors during dispatch itself,
+      // async errors from thunks are handled in extraReducers.
+      console.error("[AccountUI] Unexpected error during form submit dispatch:", err);
+    }
   };
 
- return (
-    // AnimatedSection provides the staggerContainer effect for its direct children
+  return (
     <AnimatedSection className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <AnimatedDiv className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md flex flex-col items-center">
         <AnimatedH2 className="text-3xl font-extrabold text-gray-800 mb-6 text-center">
           {isLogin ? 'Welcome Back!' : 'Join Us!'}
         </AnimatedH2>
 
+        {/* Success/Error Messages from Redux state */}
+        {successMessage && (
+          <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 w-full rounded-md" role="alert">
+            <p className="font-bold">Success!</p>
+            <p>{successMessage}</p>
+          </div>
+        )}
+        {error && (
+          <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 w-full rounded-md" role="alert">
+            <p className="font-bold">Error!</p>
+            <p>{error}</p>
+          </div>
+        )}
+
         {/* Social Sign-in Options */}
         <div className="space-y-4 w-full mb-6">
           <AnimatedButton
             onClick={handleGoogleSignIn}
-            className="flex items-center justify-center w-full px-6 py-3 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ease-in-out"
+            disabled={loading}
+            className={`flex items-center justify-center w-full px-6 py-3 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ease-in-out ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             <Mail className="w-5 h-5 mr-2" />
             {isLogin ? 'Sign in with Google' : 'Sign up with Google'}
@@ -50,7 +124,8 @@ const AccountPage = () => {
 
           <AnimatedButton
             onClick={handleFacebookSignIn}
-            className="flex items-center justify-center w-full px-6 py-3 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ease-in-out"
+            disabled={loading}
+            className={`flex items-center justify-center w-full px-6 py-3 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ease-in-out ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             <Facebook className="w-5 h-5 mr-2" />
             {isLogin ? 'Sign in with Facebook' : 'Sign up with Facebook'}
@@ -65,6 +140,23 @@ const AccountPage = () => {
 
         {/* Email/Password Form */}
         <form onSubmit={handleFormSubmit} className="w-full space-y-4">
+          {!isLogin && (
+            <AnimatedDiv>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                Full Name (Optional)
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all duration-200 ease-in-out"
+                placeholder="John Doe"
+              />
+            </AnimatedDiv>
+          )}
+
           <AnimatedDiv>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Email address
@@ -73,6 +165,8 @@ const AccountPage = () => {
               type="email"
               id="email"
               name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all duration-200 ease-in-out"
               placeholder="you@example.com"
@@ -87,13 +181,15 @@ const AccountPage = () => {
               type="password"
               id="password"
               name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all duration-200 ease-in-out"
               placeholder="********"
             />
           </AnimatedDiv>
 
-          {!isLogin && ( // Conditionally render confirm password for signup
+          {!isLogin && (
             <AnimatedDiv>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
                 Confirm Password
@@ -102,6 +198,8 @@ const AccountPage = () => {
                 type="password"
                 id="confirmPassword"
                 name="confirmPassword"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 required
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all duration-200 ease-in-out"
                 placeholder="********"
@@ -111,9 +209,10 @@ const AccountPage = () => {
 
           <AnimatedButton
             type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ease-in-out transform hover:scale-105"
+            disabled={loading}
+            className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ease-in-out transform hover:scale-105 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            {isLogin ? 'Sign In' : 'Sign Up'}
+            {loading ? (isLogin ? 'Signing In...' : 'Signing Up...') : (isLogin ? 'Sign In' : 'Sign Up')}
           </AnimatedButton>
         </form>
 
@@ -122,6 +221,7 @@ const AccountPage = () => {
           <button
             onClick={toggleForm}
             className="font-medium text-blue-600 hover:text-blue-500 focus:outline-none focus:underline transition-all duration-200 ease-in-out"
+            disabled={loading}
           >
             {isLogin ? 'Sign Up' : 'Sign In'}
           </button>
