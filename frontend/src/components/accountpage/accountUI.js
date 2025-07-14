@@ -7,8 +7,12 @@ import animationExports from '../../animation/animate';
 import { Mail, Facebook } from 'lucide-react';
 
 // Import Redux actions and selectors
-// Ensure these imports match the exported names from userSlice.js
-import { loginUserThunk, registerUserThunk, clearAuthMessages, setError } from '../../reduxStore/user/userSlice';
+import { clearAuthMessages } from '../../reduxStore/user/userSlice'; // Still need clearAuthMessages for useEffect
+// Import the handler functions
+import { handleGoogleSignIn,
+  handleFacebookSignIn,
+  handleFormSubmit as sharedHandleFormSubmit } from '../../utils/handlers/authHandlers';
+
 
 const { AnimatedDiv, AnimatedH2, AnimatedButton, AnimatedSection, AnimatedP } = animationExports;
 
@@ -20,7 +24,6 @@ const AccountPage = () => {
   const [name, setName] = useState('');
 
   const dispatch = useDispatch();
-  // CORRECTED: Access state.user instead of state.auth
   const { loading, error, successMessage, isAuthenticated } = useSelector((state) => state.user);
 
   const navigate = useNavigate();
@@ -52,43 +55,19 @@ const AccountPage = () => {
     setName('');
   };
 
-  const handleGoogleSignIn = async () => {
-    console.log('[AccountUI] Google Sign-In initiated.');
-    // Replace with a custom modal or toast notification instead of alert()
-    // For now, just a console log
-  };
-
-  const handleFacebookSignIn = async () => {
-    console.log('[AccountUI] Facebook Sign-In initiated.');
-    // Replace with a custom modal or toast notification instead of alert()
-    // For now, just a console log
-  };
-
-  const handleFormSubmit = async (e) => {
+  // Local handler for form submission that calls the shared handler
+  const localHandleFormSubmit = (e) => {
     e.preventDefault();
-    console.log('[AccountUI] Form submitted. Clearing previous messages.');
-    dispatch(clearAuthMessages());
-
-    if (!isLogin && password !== confirmPassword) {
-      console.warn('[AccountUI] Password mismatch during registration.');
-      dispatch(setError('Passwords do not match.')); // Dispatch the new setError action
-      return;
-    }
-
-    try {
-      if (isLogin) {
-        console.log('[AccountUI] Dispatching loginUserThunk...');
-        dispatch(loginUserThunk({ email, password }));
-      } else {
-        console.log('[AccountUI] Dispatching registerUserThunk...');
-        dispatch(registerUserThunk({ email, password, name }));
-      }
-    } catch (err) {
-      // This catch block is mostly for synchronous errors during dispatch itself,
-      // async errors from thunks are handled in extraReducers.
-      console.error("[AccountUI] Unexpected error during form submit dispatch:", err);
-    }
+    sharedHandleFormSubmit({
+      isLogin,
+      email,
+      password,
+      confirmPassword,
+      name,
+      dispatch,
+    });
   };
+
 
   return (
     <AnimatedSection className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
@@ -114,7 +93,7 @@ const AccountPage = () => {
         {/* Social Sign-in Options */}
         <div className="space-y-4 w-full mb-6">
           <AnimatedButton
-            onClick={handleGoogleSignIn}
+            onClick={handleGoogleSignIn} // Use the imported handler directly
             disabled={loading}
             className={`flex items-center justify-center w-full px-6 py-3 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ease-in-out ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
@@ -123,7 +102,7 @@ const AccountPage = () => {
           </AnimatedButton>
 
           <AnimatedButton
-            onClick={handleFacebookSignIn}
+            onClick={handleFacebookSignIn} // Use the imported handler directly
             disabled={loading}
             className={`flex items-center justify-center w-full px-6 py-3 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ease-in-out ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
@@ -139,7 +118,7 @@ const AccountPage = () => {
         </div>
 
         {/* Email/Password Form */}
-        <form onSubmit={handleFormSubmit} className="w-full space-y-4">
+        <form onSubmit={localHandleFormSubmit} className="w-full space-y-4">
           {!isLogin && (
             <AnimatedDiv>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700">
