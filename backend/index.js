@@ -1,4 +1,4 @@
-// backend/server.js
+// backend/index.js (Renamed from server.js)
 
 import express from 'express';
 import mongoose from 'mongoose';
@@ -42,9 +42,36 @@ app.use(limiter);
 // Logging
 app.use(morgan('combined'));
 
-// CORS configuration
+// CORS configuration - Enhanced for Vercel dynamic URLs
+const allowedOrigins = [
+  process.env.FRONTEND_URL || 'http://localhost:3000', // Your primary frontend URL (local or production)
+];
+
+// Add Vercel's dynamic preview URLs to allowed origins
+// VERCEL_URL is automatically provided by Vercel for preview deployments
+if (process.env.VERCEL_URL) {
+  // For production, VERCEL_URL is the production domain (e.g., your-app.vercel.app)
+  // For preview, it's the preview domain (e.g., your-app-git-branch-sha.vercel.app)
+  allowedOrigins.push(`https://${process.env.VERCEL_URL}`);
+  // If you have a custom production domain, you'd also add it here:
+  // allowedOrigins.push('https://your-custom-domain.com');
+}
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    }
+    // Additionally, allow any *.vercel.app subdomain for flexibility in previews
+    if (origin.endsWith('.vercel.app')) {
+      return callback(null, true);
+    }
+    const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
+    console.error(msg); // Log the blocked origin for debugging
+    return callback(new Error(msg), false);
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -75,6 +102,10 @@ app.get('/api/health', (req, res) => {
 });
 
 // Root endpoint
+// This will be hit if Vercel routes a non-/api request to the backend.
+// In your vercel.json, all non-/api requests go to the frontend,
+// so this '/' route on the backend will likely only be hit if you
+// explicitly navigate to the backend URL without '/api'.
 app.get('/', (req, res) => {
   res.json({
     success: true,
@@ -89,6 +120,8 @@ app.get('/', (req, res) => {
 });
 
 // 404 handler
+// This will catch any /api/* routes that don't match your defined routes.
+// The vercel.json routes ensure that only /api/* goes to the backend.
 app.use('/*any', (req, res) => {
   res.status(404).json({
     success: false,
@@ -107,7 +140,7 @@ app.use((error, req, res, next) => {
   });
 });
 
-// Graceful shutdown
+// Graceful shutdown (less critical for serverless, but good practice)
 process.on('SIGTERM', () => {
   console.log('SIGTERM received, shutting down gracefully');
   mongoose.connection.close(() => {

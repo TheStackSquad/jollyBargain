@@ -28,7 +28,7 @@ import Cart from "./pages/cart";
 import Checkout from "./pages/checkout";
 import Admin from "./pages/admin";
 import HelpCenter from "./pages/help-center";
-
+import Dashboard from './pages/dashboard';
 // Import the new CartIconWithCount component
 import CartIconWithCount from './components/common/cartIconWithCount';
 
@@ -125,6 +125,7 @@ const App = () => {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/help-center" element={<HelpCenter />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             {/* Commented routes for future implementation */}
             {/* <Route path="/cart" element={<Cart />} /> */}
             {/* <Route path="/login" element={<Login />} /> */}

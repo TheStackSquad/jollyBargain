@@ -37,7 +37,7 @@ export const upload = multer({
     storage: storage,
     fileFilter: fileFilter,
     limits: {
-        fileSize: 5 * 1024 * 1024, // 5 MB
+        fileSize: 3 * 1024 * 1024, // 5 MB
     },
 });
 console.log('Multer upload middleware configured.');
