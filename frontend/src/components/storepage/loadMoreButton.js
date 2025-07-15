@@ -1,12 +1,14 @@
 // frontend/src/components/storepage/loadMoreButton.js
-import React from 'react';
-import { Loader2 } from 'lucide-react';
+import React from "react";
+import { Loader2 } from "lucide-react";
 
-const LoadMoreButton = ({ onLoadMore, hasMore, isLoading }) => {
+function LoadMoreButton({ onLoadMore, hasMore, isLoading }) {
   if (!hasMore) {
     return (
       <div className="text-center mt-8">
-        <p className="text-gray-500 text-sm">You've reached the end of the products</p>
+        <p className="text-gray-500 text-sm">
+          You've reached the end of the products
+        </p>
       </div>
     );
   }
@@ -24,11 +26,11 @@ const LoadMoreButton = ({ onLoadMore, hasMore, isLoading }) => {
             Loading...
           </>
         ) : (
-          'Load More Products'
+          "Load More Products"
         )}
       </button>
     </div>
   );
-};
+}
 
 export default LoadMoreButton;

@@ -1,34 +1,37 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Search, 
-  Book, 
- // CreditCard, 
-//  Truck, 
-//  Shield, 
-//  User, 
-//  MessageCircle, 
+import React, { useState, useEffect } from "react";
+import {
+  Search,
+  Book,
+  // CreditCard,
+  //  Truck,
+  //  Shield,
+  //  User,
+  //  MessageCircle,
   ChevronRight,
   ChevronDown,
-//  ArrowLeft,
-//  ExternalLink,
-//  Clock,
+  //  ArrowLeft,
+  //  ExternalLink,
+  //  Clock,
   CheckCircle,
-  AlertCircle
-} from 'lucide-react';
-import { AnimatedP } from '../animation/animate';
-import HelpHeader from '../components/help-center/helpHeader';
-import HelpHero from '../components/help-center/helpHero';
-import SearchResults from '../components/help-center/searchResult';
-import HelpCategories from '../components/help-center/helpCategories';
-import PopularArticles from '../components/help-center/popularArticles';
-import QuickLinks from '../components/help-center/quickLinks';
-import SidebarContact from '../components/help-center/sidebarContacts';
-import SidebarSystemStatus from '../components/help-center/sidebarSystemStatus';
-import SidebarRecentUpdates from '../components/help-center/sidebarRecentUpdates';
-import { helpCategoriesData, quickLinksData } from '../components/common/helpData';
+  AlertCircle,
+} from "lucide-react";
+import { AnimatedP } from "../animation/animate";
+import HelpHeader from "../components/help-center/helpHeader";
+import HelpHero from "../components/help-center/helpHero";
+import SearchResults from "../components/help-center/searchResult";
+import HelpCategories from "../components/help-center/helpCategories";
+import PopularArticles from "../components/help-center/popularArticles";
+import QuickLinks from "../components/help-center/quickLinks";
+import SidebarContact from "../components/help-center/sidebarContacts";
+import SidebarSystemStatus from "../components/help-center/sidebarSystemStatus";
+import SidebarRecentUpdates from "../components/help-center/sidebarRecentUpdates";
+import {
+  helpCategoriesData,
+  quickLinksData,
+} from "../components/common/helpData";
 
-const HelpCenter = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+function HelpCenter() {
+  const [searchQuery, setSearchQuery] = useState("");
   const [expandedSection, setExpandedSection] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -36,13 +39,13 @@ const HelpCenter = () => {
   // Get popular articles across all categories
   const getPopularArticles = () => {
     const popular = [];
-    helpCategoriesData.forEach(category => {
-      category.articles.forEach(article => {
+    helpCategoriesData.forEach((category) => {
+      category.articles.forEach((article) => {
         if (article.popular) {
           popular.push({
             ...article,
             category: category.title,
-            categoryId: category.id
+            categoryId: category.id,
           });
         }
       });
@@ -54,7 +57,7 @@ const HelpCenter = () => {
 
   // Search functionality
   useEffect(() => {
-    if (searchQuery.trim() === '') {
+    if (searchQuery.trim() === "") {
       setSearchResults([]);
       setIsSearching(false);
       return;
@@ -65,29 +68,29 @@ const HelpCenter = () => {
       const results = [];
       const query = searchQuery.toLowerCase();
 
-      helpCategoriesData.forEach(category => {
+      helpCategoriesData.forEach((category) => {
         // Search in category title
         if (category.title.toLowerCase().includes(query)) {
           results.push({
-            type: 'category',
+            type: "category",
             id: category.id,
             title: category.title,
             description: category.description,
             icon: category.icon,
-            color: category.color
+            color: category.color,
           });
         }
 
         // Search in articles
-        category.articles.forEach(article => {
+        category.articles.forEach((article) => {
           if (article.title.toLowerCase().includes(query)) {
             results.push({
-              type: 'article',
+              type: "article",
               title: article.title,
               url: article.url,
               category: category.title,
               categoryId: category.id,
-              popular: article.popular
+              popular: article.popular,
             });
           }
         });
@@ -112,18 +115,18 @@ const HelpCenter = () => {
     <div className="min-h-screen bg-gray-50">
       <HelpHeader onBackClick={handleBackToHome} />
 
-      <HelpHero 
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery} 
-        AnimatedP={AnimatedP} 
-        SearchIcon={Search} 
+      <HelpHero
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        AnimatedP={AnimatedP}
+        SearchIcon={Search}
       />
 
       <div className="max-w-6xl mx-auto px-6 py-12">
         {searchQuery && (
-          <SearchResults 
-            searchResults={searchResults} 
-            isSearching={isSearching} 
+          <SearchResults
+            searchResults={searchResults}
+            isSearching={isSearching}
             toggleSection={toggleSection}
             BookIcon={Book}
             AlertCircleIcon={AlertCircle}
@@ -134,10 +137,10 @@ const HelpCenter = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             {!searchQuery && (
-              <HelpCategories 
-                helpCategories={helpCategoriesData} 
-                expandedSection={expandedSection} 
-                toggleSection={toggleSection} 
+              <HelpCategories
+                helpCategories={helpCategoriesData}
+                expandedSection={expandedSection}
+                toggleSection={toggleSection}
                 AnimatedP={AnimatedP}
                 ChevronRightIcon={ChevronRight}
                 ChevronDownIcon={ChevronDown}
@@ -145,8 +148,8 @@ const HelpCenter = () => {
             )}
 
             {!searchQuery && (
-              <PopularArticles 
-                popularArticles={popularArticles} 
+              <PopularArticles
+                popularArticles={popularArticles}
                 AnimatedP={AnimatedP}
                 ChevronRightIcon={ChevronRight}
               />
@@ -163,6 +166,6 @@ const HelpCenter = () => {
       </div>
     </div>
   );
-};
+}
 
 export default HelpCenter;

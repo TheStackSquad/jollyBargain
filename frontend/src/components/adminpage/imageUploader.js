@@ -1,10 +1,10 @@
 // frontend/src/components/adminpage/ImageUploader.js
 
-import React, { useState } from 'react';
-import { Upload, AlertCircle, X } from 'lucide-react';
+import React, { useState } from "react";
+import { Upload, AlertCircle, X } from "lucide-react";
 
 // Image Uploader Component
-const ImageUploader = ({ images, onImagesChange, error }) => {
+function ImageUploader({ images, onImagesChange, error }) {
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
 
@@ -12,25 +12,26 @@ const ImageUploader = ({ images, onImagesChange, error }) => {
     setUploading(true);
     try {
       // Simulate Cloudinary upload - replace with actual Cloudinary integration
-      const uploadPromises = Array.from(files).map(async (file) => {
-        return new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            resolve({
-              id: Date.now() + Math.random(), // Unique ID for key prop
-              url: reader.result, // Base64 URL for preview
-              public_id: `temp_${Date.now()}`, // Placeholder for Cloudinary public_id
-              original_filename: file.name
-            });
-          };
-          reader.readAsDataURL(file);
-        });
-      });
+      const uploadPromises = Array.from(files).map(
+        async (file) =>
+          new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              resolve({
+                id: Date.now() + Math.random(), // Unique ID for key prop
+                url: reader.result, // Base64 URL for preview
+                public_id: `temp_${Date.now()}`, // Placeholder for Cloudinary public_id
+                original_filename: file.name,
+              });
+            };
+            reader.readAsDataURL(file);
+          }),
+      );
 
       const uploadedImages = await Promise.all(uploadPromises);
       onImagesChange([...images, ...uploadedImages]);
     } catch (error) {
-      console.error('Upload failed:', error);
+      console.error("Upload failed:", error);
     } finally {
       setUploading(false);
     }
@@ -39,7 +40,7 @@ const ImageUploader = ({ images, onImagesChange, error }) => {
   const handleDrop = (e) => {
     e.preventDefault();
     setDragActive(false);
-    const files = e.dataTransfer.files;
+    const { files } = e.dataTransfer;
     if (files.length > 0) {
       handleImageUpload(files);
     }
@@ -55,7 +56,7 @@ const ImageUploader = ({ images, onImagesChange, error }) => {
   };
 
   const removeImage = (imageId) => {
-    onImagesChange(images.filter(img => img.id !== imageId));
+    onImagesChange(images.filter((img) => img.id !== imageId));
   };
 
   const moveImage = (fromIndex, toIndex) => {
@@ -70,10 +71,10 @@ const ImageUploader = ({ images, onImagesChange, error }) => {
       <div
         className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
           dragActive
-            ? 'border-blue-400 bg-blue-50'
+            ? "border-blue-400 bg-blue-50"
             : error
-              ? 'border-red-300 bg-red-50'
-              : 'border-gray-300 hover:border-gray-400'
+              ? "border-red-300 bg-red-50"
+              : "border-gray-300 hover:border-gray-400"
         }`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
@@ -91,7 +92,7 @@ const ImageUploader = ({ images, onImagesChange, error }) => {
         <label htmlFor="image-upload" className="cursor-pointer">
           <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
           <p className="text-lg font-medium text-gray-900">
-            {uploading ? 'Uploading...' : 'Upload Images'}
+            {uploading ? "Uploading..." : "Upload Images"}
           </p>
           <p className="text-sm text-gray-500">
             Drag and drop or click to select files
@@ -155,6 +156,6 @@ const ImageUploader = ({ images, onImagesChange, error }) => {
       )}
     </div>
   );
-};
+}
 
 export default ImageUploader;

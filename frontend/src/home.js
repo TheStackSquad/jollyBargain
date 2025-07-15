@@ -1,19 +1,16 @@
-//frontend/src/home
+// frontend/src/home
 
-import React from 'react';
-import {
-  PageWrapper,
-  useScrollAnimation,
-} from './animation/animate'; // Keep essential animation imports
+import React from "react";
+import { PageWrapper, useScrollAnimation } from "./animation/animate"; // Keep essential animation imports
 
 // Import your new subcomponents
-import HeroSection from './components/homepage/heroSection';
-import FeaturesSection from './components/homepage/featureSection';
-import StatsSection from './components/homepage/statSection';
-import CategoriesPreviewSection from './components/homepage/categoriesPreviewSection';
-import CTASection from './components/homepage/ctaSection';
+import HeroSection from "./components/homepage/heroSection";
+import FeaturesSection from "./components/homepage/featureSection";
+import StatsSection from "./components/homepage/statSection";
+import CategoriesPreviewSection from "./components/homepage/categoriesPreviewSection";
+import CTASection from "./components/homepage/ctaSection";
 
-const Home = () => {
+function Home() {
   const scrollAnimation = useScrollAnimation();
 
   return (
@@ -34,6 +31,6 @@ const Home = () => {
       <CTASection scrollAnimation={scrollAnimation} />
     </PageWrapper>
   );
-};
+}
 
 export default Home;

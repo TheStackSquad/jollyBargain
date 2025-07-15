@@ -1,14 +1,24 @@
 // frontend/src/components/adminpage/ProductList.js
 
-import React from 'react';
-import { Search, Edit2, Trash2, Image as ImageIcon } from 'lucide-react';
+import React from "react";
+import { Search, Edit2, Trash2, Image as ImageIcon } from "lucide-react";
 
-const ProductList = ({ products, categories, onEditProduct, onDeleteProduct, searchTerm, setSearchTerm, filterCategory, setFilterCategory }) => {
-
-  const filteredProducts = products.filter(product => {
-    const matchesSearch = product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          product.sku.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = !filterCategory || product.category === filterCategory;
+function ProductList({
+  products,
+  categories,
+  onEditProduct,
+  onDeleteProduct,
+  searchTerm,
+  setSearchTerm,
+  filterCategory,
+  setFilterCategory,
+}) {
+  const filteredProducts = products.filter((product) => {
+    const matchesSearch =
+      product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.sku.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      !filterCategory || product.category === filterCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -36,8 +46,10 @@ const ProductList = ({ products, categories, onEditProduct, onDeleteProduct, sea
             className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">All Categories</option>
-            {categories.map(cat => (
-              <option key={cat} value={cat}>{cat}</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
             ))}
           </select>
         </div>
@@ -48,12 +60,13 @@ const ProductList = ({ products, categories, onEditProduct, onDeleteProduct, sea
         {filteredProducts.length === 0 ? (
           <div className="p-8 text-center">
             <ImageIcon className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No products found</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No products found
+            </h3>
             <p className="text-gray-500">
               {products.length === 0
                 ? "Get started by creating your first product."
-                : "Try adjusting your search or filter criteria."
-              }
+                : "Try adjusting your search or filter criteria."}
             </p>
           </div>
         ) : (
@@ -113,17 +126,21 @@ const ProductList = ({ products, categories, onEditProduct, onDeleteProduct, sea
                       {product.category}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                   ₦{product.price.toFixed(2)}
+                      ₦{product.price.toFixed(2)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {product.stock}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        product.status === 'active' ? 'bg-green-100 text-green-800' :
-                        product.status === 'draft' ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-gray-100 text-gray-800'
-                      }`}>
+                      <span
+                        className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          product.status === "active"
+                            ? "bg-green-100 text-green-800"
+                            : product.status === "draft"
+                              ? "bg-yellow-100 text-yellow-800"
+                              : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
                         {product.status}
                       </span>
                     </td>
@@ -154,6 +171,6 @@ const ProductList = ({ products, categories, onEditProduct, onDeleteProduct, sea
       </div>
     </div>
   );
-};
+}
 
 export default ProductList;

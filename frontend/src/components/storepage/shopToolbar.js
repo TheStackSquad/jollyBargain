@@ -1,16 +1,16 @@
 // frontend/src/components/shop/shopToolbar.js
-import React from 'react';
-import { Filter, Grid, List, ChevronDown } from 'lucide-react';
+import React from "react";
+import { Filter, Grid, List, ChevronDown } from "lucide-react";
 
-const ShopToolbar = ({ 
-  viewMode, 
-  onViewModeChange, 
-  sortBy, 
-  onSortChange, 
-  productsCount, 
-  totalProducts, 
-  onShowFilters 
-}) => {
+function ShopToolbar({
+  viewMode,
+  onViewModeChange,
+  sortBy,
+  onSortChange,
+  productsCount,
+  totalProducts,
+  onShowFilters,
+}) {
   return (
     <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
       <div className="flex items-center justify-between">
@@ -23,10 +23,9 @@ const ShopToolbar = ({
             Filters
           </button>
           <span className="text-sm text-gray-600">
-            {productsCount === totalProducts 
-              ? `${productsCount} products` 
-              : `${productsCount} of ${totalProducts} products`
-            }
+            {productsCount === totalProducts
+              ? `${productsCount} products`
+              : `${productsCount} of ${totalProducts} products`}
           </span>
         </div>
 
@@ -45,31 +44,31 @@ const ShopToolbar = ({
               <option value="rating">Highest Rated</option>
               <option value="popularity">Most Popular</option>
             </select>
-            <ChevronDown 
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" 
-              size={16} 
+            <ChevronDown
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
+              size={16}
             />
           </div>
 
           {/* View Mode Toggle */}
           <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
             <button
-              onClick={() => onViewModeChange('grid')}
+              onClick={() => onViewModeChange("grid")}
               className={`p-2 transition-colors ${
-                viewMode === 'grid' 
-                  ? 'bg-indigo-600 text-white' 
-                  : 'text-gray-600 hover:bg-gray-100'
+                viewMode === "grid"
+                  ? "bg-indigo-600 text-white"
+                  : "text-gray-600 hover:bg-gray-100"
               }`}
               title="Grid view"
             >
               <Grid size={16} />
             </button>
             <button
-              onClick={() => onViewModeChange('list')}
+              onClick={() => onViewModeChange("list")}
               className={`p-2 transition-colors ${
-                viewMode === 'list' 
-                  ? 'bg-indigo-600 text-white' 
-                  : 'text-gray-600 hover:bg-gray-100'
+                viewMode === "list"
+                  ? "bg-indigo-600 text-white"
+                  : "text-gray-600 hover:bg-gray-100"
               }`}
               title="List view"
             >
@@ -80,6 +79,6 @@ const ShopToolbar = ({
       </div>
     </div>
   );
-};
+}
 
 export default ShopToolbar;

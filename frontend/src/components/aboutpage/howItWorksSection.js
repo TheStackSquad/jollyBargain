@@ -1,6 +1,6 @@
-//frontend/src/components/aboutpage/HowItWorksSection.js
+// frontend/src/components/aboutpage/HowItWorksSection.js
 
-import React from 'react';
+import React from "react";
 import {
   AnimatedDiv,
   AnimatedH2,
@@ -8,34 +8,34 @@ import {
   AnimatedP,
   ScrollSection,
   animationVariants,
-} from '../../animation/animate'; // Adjust path
+} from "../../animation/animate"; // Adjust path
 
-const HowItWorksSection = ({ scrollAnimation }) => {
+function HowItWorksSection({ scrollAnimation }) {
   const steps = [
     {
       step: "1",
       title: "Browse",
       description: "Explore thousands of products across multiple categories",
-      icon: "🔍"
+      icon: "🔍",
     },
     {
       step: "2",
       title: "Compare",
       description: "See real-time prices and read authentic reviews",
-      icon: "⚖️"
+      icon: "⚖️",
     },
     {
       step: "3",
       title: "Purchase",
       description: "Secure checkout with multiple payment options",
-      icon: "💳"
+      icon: "💳",
     },
     {
       step: "4",
       title: "Enjoy",
       description: "Fast delivery straight to your doorstep",
-      icon: "📦"
-    }
+      icon: "📦",
+    },
   ];
 
   return (
@@ -77,6 +77,6 @@ const HowItWorksSection = ({ scrollAnimation }) => {
       </div>
     </ScrollSection>
   );
-};
+}
 
 export default HowItWorksSection;

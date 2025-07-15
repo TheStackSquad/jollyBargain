@@ -1,10 +1,9 @@
 // frontend/src/App.js
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { User } from "lucide-react";
-import { Provider } from 'react-redux';
-import { store } from './reduxStore/store';
+import { Provider } from "react-redux";
+import { store } from "./reduxStore/store";
 
 // Import animation components
 import {
@@ -28,9 +27,9 @@ import Cart from "./pages/cart";
 import Checkout from "./pages/checkout";
 import Admin from "./pages/admin";
 import HelpCenter from "./pages/help-center";
-import Dashboard from './pages/dashboard';
+import Dashboard from "./pages/dashboard";
 // Import the new CartIconWithCount component
-import CartIconWithCount from './components/common/cartIconWithCount';
+import CartIconWithCount from "./components/common/cartIconWithCount";
 
 // Define custom paths for specific links - maps display names to actual routes
 const getLinkPath = (linkName) => {
@@ -55,20 +54,26 @@ const getLinkPath = (linkName) => {
   }
 };
 
-const App = () => {
+function App() {
   return (
     <Provider store={store}>
       <Router>
         {/* Fixed Header - stays at top of viewport */}
         <AnimatedHeader
-          className="fixed top-0 left-0 right-0 z-50 bg-blue-600 text-white p-4 text-center flex justify-between items-center shadow-lg"
-          {...animationVariants.headerSlide}
+          className="fixed top-0 left-0 right-0 z-50 bg-blue-600 text-white p-4
+                     text-center flex justify-between items-center shadow-lg"
+          initial={animationVariants.headerSlide.initial}
+          animate={animationVariants.headerSlide.animate}
+          transition={animationVariants.headerSlide.transition}
         >
           {/* Logo/Brand - links to home page */}
           <Link to="/">
             {/* Show 'JollyBargain' on medium screens and up */}
             <AnimatedH1
-              className="hidden md:block text-3xl font-extrabold font-jetbrain bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent cursor-pointer transition-transform duration-200 hover:scale-105 active:scale-95"
+              className="hidden md:block text-3xl font-extrabold font-jetbrain
+                         bg-gradient-to-r from-white to-blue-100 bg-clip-text
+                         text-transparent cursor-pointer transition-transform
+                         duration-200 hover:scale-105 active:scale-95"
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
@@ -77,7 +82,10 @@ const App = () => {
             </AnimatedH1>
             {/* Show 'JB' on small screens (mobile) */}
             <AnimatedH1
-              className="block md:hidden text-3xl font-extrabold font-jetbrain bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent cursor-pointer transition-transform duration-200 hover:scale-105 active:scale-95"
+              className="block md:hidden text-3xl font-extrabold font-jetbrain
+                         bg-gradient-to-r from-white to-blue-100 bg-clip-text
+                         text-transparent cursor-pointer transition-transform
+                         duration-200 hover:scale-105 active:scale-95"
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
@@ -96,7 +104,9 @@ const App = () => {
               <li>
                 <Link
                   to="/login"
-                  className="flex items-center text-white hover:text-blue-200 font-roboto transition-colors duration-300 hover:scale-105 transform"
+                  className="flex items-center text-white hover:text-blue-200
+                             font-roboto transition-colors duration-300
+                             hover:scale-105 transform"
                 >
                   <User size={20} className="md:mr-2" />{" "}
                   {/* Optional: remove margin on mobile */}
@@ -135,13 +145,19 @@ const App = () => {
             <Route
               path="*"
               element={
-                <div className="flex items-center justify-center min-h-screen bg-gray-50">
+                <div
+                  className="flex items-center justify-center
+                                min-h-screen bg-gray-50"
+                >
                   <div className="text-center">
-                    <h2 className="text-6xl font-bold text-gray-800 mb-4">404</h2>
+                    <h2 className="text-6xl font-bold text-gray-800 mb-4">
+                      404
+                    </h2>
                     <p className="text-xl text-gray-600 mb-8">Page not found</p>
                     <Link
                       to="/"
-                      className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-300"
+                      className="bg-blue-600 text-white px-6 py-3 rounded-lg
+                                 hover:bg-blue-700 transition-colors duration-300"
                     >
                       Go Home
                     </Link>
@@ -155,7 +171,9 @@ const App = () => {
         {/* Footer - contains company info and navigation links */}
         <AnimatedFooter
           className="bg-gray-800 text-white p-8"
-          {...animationVariants.footerSlide}
+          initial={animationVariants.footerSlide.initial}
+          animate={animationVariants.footerSlide.animate}
+          transition={animationVariants.footerSlide.transition}
         >
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
@@ -179,7 +197,8 @@ const App = () => {
                     <li key={link}>
                       <Link
                         to={getLinkPath(link)}
-                        className="text-gray-300 hover:text-white transition-colors duration-300 font-roboto"
+                        className="text-gray-300 hover:text-white
+                                   transition-colors duration-300 font-roboto"
                       >
                         {link}
                       </Link>
@@ -198,7 +217,8 @@ const App = () => {
                     <li key={link}>
                       <Link
                         to={getLinkPath(link)}
-                        className="text-gray-300 hover:text-white transition-colors duration-300 font-roboto"
+                        className="text-gray-300 hover:text-white
+                                   transition-colors duration-300 font-roboto"
                       >
                         {link}
                       </Link>
@@ -218,12 +238,13 @@ const App = () => {
                       <li key={social}>
                         <a
                           href={`#${social.toLowerCase()}`}
-                          className="text-gray-300 hover:text-white transition-colors duration-300 font-roboto"
+                          className="text-gray-300 hover:text-white
+                                     transition-colors duration-300 font-roboto"
                         >
                           {social}
                         </a>
                       </li>
-                    )
+                    ),
                   )}
                 </ul>
               </div>
@@ -245,6 +266,6 @@ const App = () => {
       </Router>
     </Provider>
   );
-};
+}
 
 export default App;

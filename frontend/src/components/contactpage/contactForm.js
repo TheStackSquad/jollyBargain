@@ -1,22 +1,22 @@
 // frontend/src/components/contactpage/ContactForm.js
-import React, { useState } from 'react';
-import { Send } from 'lucide-react';
-import { AnimatedP } from '../../animation/animate';
+import React, { useState } from "react";
+import { Send } from "lucide-react";
+import { AnimatedP } from "../../animation/animate";
 
-const ContactForm = () => {
+function ContactForm() {
   // Form state management
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
   });
 
   // Handle input changes
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -24,10 +24,10 @@ const ContactForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // TODO: Implement form submission logic
-    console.log('Form submitted:', formData);
+    console.log("Form submitted:", formData);
     // Reset form after submission
-    setFormData({ name: '', email: '', subject: '', message: '' });
-    alert('Thank you for your message! We\'ll get back to you soon.');
+    setFormData({ name: "", email: "", subject: "", message: "" });
+    alert("Thank you for your message! We'll get back to you soon.");
   };
 
   return (
@@ -56,7 +56,10 @@ const ContactForm = () => {
               {/* Name and Email Row */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Full Name *
                   </label>
                   <input
@@ -71,7 +74,10 @@ const ContactForm = () => {
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Email Address *
                   </label>
                   <input
@@ -89,7 +95,10 @@ const ContactForm = () => {
 
               {/* Subject */}
               <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="subject"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Subject *
                 </label>
                 <input
@@ -106,7 +115,10 @@ const ContactForm = () => {
 
               {/* Message */}
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="message"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Message *
                 </label>
                 <textarea
@@ -137,6 +149,6 @@ const ContactForm = () => {
       </div>
     </section>
   );
-};
+}
 
 export default ContactForm;

@@ -1,70 +1,75 @@
 // frontend/src/components/contactpage/ContactInfo.js
-import React from 'react';
-import { MapPin, Phone, Mail, Clock } from 'lucide-react';
-import { AnimatedP } from '../../animation/animate';
+import React from "react";
+import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { AnimatedP } from "../../animation/animate";
 
-const ContactInfo = () => {
+function ContactInfo() {
   // Contact information data with types for dynamic linking
   const contactDetails = [
     {
       icon: MapPin,
-      title: 'Our Location',
-      details: ['1234 Commerce Street', 'Business District, Lagos', 'Nigeria'],
-      color: 'text-blue-600',
-      type: 'address'
+      title: "Our Location",
+      details: ["1234 Commerce Street", "Business District, Lagos", "Nigeria"],
+      color: "text-blue-600",
+      type: "address",
     },
     {
       icon: Phone,
-      title: 'Phone Number',
-      details: ['+234 8167118379', '+234 8155764221'],
-      color: 'text-green-600',
-      type: 'phone'
+      title: "Phone Number",
+      details: ["+234 8167118379", "+234 8155764221"],
+      color: "text-green-600",
+      type: "phone",
     },
     {
       icon: Mail,
-      title: 'Email Address',
-      details: ['support@jollybargain.com', 'sales@jollybargain.com'],
-      color: 'text-purple-600',
-      type: 'email'
+      title: "Email Address",
+      details: ["support@jollybargain.com", "sales@jollybargain.com"],
+      color: "text-purple-600",
+      type: "email",
     },
     {
       icon: Clock,
-      title: 'Business Hours',
-      details: ['Mon - Fri: 9:00 AM - 6:00 PM', 'Sat: 10:00 AM - 4:00 PM', 'Sun: Closed'],
-      color: 'text-orange-600',
-      type: 'hours'
-    }
+      title: "Business Hours",
+      details: [
+        "Mon - Fri: 9:00 AM - 6:00 PM",
+        "Sat: 10:00 AM - 4:00 PM",
+        "Sun: Closed",
+      ],
+      color: "text-orange-600",
+      type: "hours",
+    },
   ];
 
   // Helper function to create appropriate links based on type
   const createContactLink = (detail, type) => {
-    const baseClasses = "text-gray-600 text-sm font-roboto transition-colors duration-200";
-    
+    const baseClasses =
+      "text-gray-600 text-sm font-roboto transition-colors duration-200";
+
     switch (type) {
-      case 'phone':
+      case "phone":
         return (
-          <a 
-            href={`tel:${detail.replace(/\s/g, '')}`} 
+          <a
+            href={`tel:${detail.replace(/\s/g, "")}`}
             className={`${baseClasses} hover:text-green-600 hover:underline cursor-pointer`}
             aria-label={`Call ${detail}`}
           >
             {detail}
           </a>
         );
-      case 'email':
+      case "email":
         return (
-          <a 
-            href={`mailto:${detail}`} 
+          <a
+            href={`mailto:${detail}`}
             className={`${baseClasses} hover:text-purple-600 hover:underline cursor-pointer`}
             aria-label={`Email ${detail}`}
           >
             {detail}
           </a>
         );
-      case 'address':
+      case "address":
         const addressQuery = encodeURIComponent(detail);
         return (
-          <a 
+          <a
             href={`https://maps.google.com/maps?q=${addressQuery}`}
             target="_blank"
             rel="noopener noreferrer"
@@ -97,7 +102,8 @@ const ContactInfo = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            We're always here to help. Choose the best way to reach us based on your needs.
+            We're always here to help. Choose the best way to reach us based on
+            your needs.
           </AnimatedP>
         </div>
 
@@ -112,7 +118,9 @@ const ContactInfo = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
               >
-                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-white shadow-md mb-4 ${item.color}`}>
+                <div
+                  className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-white shadow-md mb-4 ${item.color}`}
+                >
                   <IconComponent size={32} />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-3 font-jetbrain">
@@ -141,7 +149,8 @@ const ContactInfo = () => {
             Need Immediate Help?
           </h3>
           <p className="text-blue-700 mb-4 font-roboto">
-            Check out our FAQ section for quick answers to common questions, or browse our help center for detailed guides.
+            Check out our FAQ section for quick answers to common questions, or
+            browse our help center for detailed guides.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
@@ -163,6 +172,6 @@ const ContactInfo = () => {
       </div>
     </section>
   );
-};
+}
 
 export default ContactInfo;

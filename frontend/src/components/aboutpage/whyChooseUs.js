@@ -1,6 +1,6 @@
-//frontend/src/components/aboutpage/whyChooseUs.js
+// frontend/src/components/aboutpage/whyChooseUs.js
 
-import React from 'react';
+import React from "react";
 import {
   AnimatedDiv,
   AnimatedH2,
@@ -8,40 +8,46 @@ import {
   AnimatedP,
   ScrollSection,
   animationVariants,
-} from '../../animation/animate'; // Adjust path
+} from "../../animation/animate"; // Adjust path
 
-const WhyChooseUsSection = ({ scrollAnimation }) => {
+function WhyChooseUsSection({ scrollAnimation }) {
   const features = [
     {
       icon: "💰",
       title: "Unbeatable Prices",
-      description: "Our price-matching guarantee and exclusive partnerships ensure you always get the best deal. We track prices across multiple platforms to bring you savings of up to 70%."
+      description:
+        "Our price-matching guarantee and exclusive partnerships ensure you always get the best deal. We track prices across multiple platforms to bring you savings of up to 70%.",
     },
     {
       icon: "🔒",
       title: "Secure & Safe",
-      description: "Your security is our priority. We use bank-level encryption, secure payment processing, and never store your sensitive information. Shop with complete peace of mind."
+      description:
+        "Your security is our priority. We use bank-level encryption, secure payment processing, and never store your sensitive information. Shop with complete peace of mind.",
     },
     {
       icon: "🚚",
       title: "Lightning Fast Delivery",
-      description: "With our network of fulfillment centers and trusted shipping partners, most orders reach you within 24-48 hours. Free shipping on orders over $50."
+      description:
+        "With our network of fulfillment centers and trusted shipping partners, most orders reach you within 24-48 hours. Free shipping on orders over $50.",
     },
     {
       icon: "⭐",
       title: "Quality Guaranteed",
-      description: "Every product is carefully vetted by our quality team. We partner only with verified sellers and offer a 30-day money-back guarantee on all purchases."
+      description:
+        "Every product is carefully vetted by our quality team. We partner only with verified sellers and offer a 30-day money-back guarantee on all purchases.",
     },
     {
       icon: "🎧",
       title: "24/7 Support",
-      description: "Our dedicated customer service team is here to help around the clock. Get instant support via chat, email, or phone whenever you need assistance."
+      description:
+        "Our dedicated customer service team is here to help around the clock. Get instant support via chat, email, or phone whenever you need assistance.",
     },
     {
       icon: "📱",
       title: "Easy Shopping",
-      description: "Our intuitive platform makes finding and buying products effortless. Advanced search, personalized recommendations, and one-click checkout streamline your experience."
-    }
+      description:
+        "Our intuitive platform makes finding and buying products effortless. Advanced search, personalized recommendations, and one-click checkout streamline your experience.",
+    },
   ];
 
   return (
@@ -81,6 +87,6 @@ const WhyChooseUsSection = ({ scrollAnimation }) => {
       </div>
     </ScrollSection>
   );
-};
+}
 
 export default WhyChooseUsSection;

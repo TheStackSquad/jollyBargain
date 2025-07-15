@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-const HelpHero = ({ searchQuery, setSearchQuery, AnimatedP, SearchIcon }) => {
+function HelpHero({ searchQuery, setSearchQuery, AnimatedP, SearchIcon }) {
   return (
     <section className="bg-gradient-to-br from-blue-600 to-blue-800 text-white py-16">
       <div className="max-w-4xl mx-auto px-6 text-center">
@@ -20,14 +20,17 @@ const HelpHero = ({ searchQuery, setSearchQuery, AnimatedP, SearchIcon }) => {
         >
           Search for answers or browse our help categories below
         </AnimatedP>
-        
+
         <AnimatedP
           className="relative max-w-2xl mx-auto"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <SearchIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <SearchIcon
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={20}
+          />
           <input
             type="text"
             placeholder="Search for help articles, topics, or questions..."
@@ -39,6 +42,6 @@ const HelpHero = ({ searchQuery, setSearchQuery, AnimatedP, SearchIcon }) => {
       </div>
     </section>
   );
-};
+}
 
 export default HelpHero;

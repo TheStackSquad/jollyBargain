@@ -1,8 +1,12 @@
 // frontend/src/components/cartpage/MessageBox.js
-import React from 'react';
-import { MotionDiv, MotionButton, buttonTapVariants } from '../../animation/cartAnimate';
+import React from "react";
+import {
+  MotionDiv,
+  MotionButton,
+  buttonTapVariants,
+} from "../../animation/cartAnimate";
 
-const MessageBox = ({ title, message, onClose }) => {
+function MessageBox({ title, message, onClose }) {
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
       <MotionDiv
@@ -26,6 +30,6 @@ const MessageBox = ({ title, message, onClose }) => {
       </MotionDiv>
     </div>
   );
-};
+}
 
 export default MessageBox;

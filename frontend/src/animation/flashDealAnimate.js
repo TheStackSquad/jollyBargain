@@ -5,9 +5,9 @@ export const pulseAnimation = {
     transition: {
       duration: 2,
       repeat: Infinity,
-      ease: "easeInOut"
-    }
-  }
+      ease: "easeInOut",
+    },
+  },
 };
 
 export const dealCardHover = {
@@ -17,12 +17,12 @@ export const dealCardHover = {
     boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
     transition: {
       duration: 0.3,
-      ease: "easeOut"
-    }
+      ease: "easeOut",
+    },
   },
   whileTap: {
-    scale: 0.98
-  }
+    scale: 0.98,
+  },
 };
 
 export const progressBarFill = {
@@ -31,8 +31,8 @@ export const progressBarFill = {
   transition: {
     duration: 1.5,
     ease: "easeOut",
-    delay: 0.5
-  }
+    delay: 0.5,
+  },
 };
 
 export const urgencyBadge = {
@@ -42,37 +42,37 @@ export const urgencyBadge = {
     transition: {
       duration: 1.5,
       repeat: Infinity,
-      ease: "easeInOut"
-    }
-  }
+      ease: "easeInOut",
+    },
+  },
 };
 
 export const staggerContainer = {
   hidden: {
-    opacity: 0
+    opacity: 0,
   },
   visible: {
     opacity: 1,
     transition: {
       staggerChildren: 0.1,
-      delayChildren: 0.2
-    }
-  }
+      delayChildren: 0.2,
+    },
+  },
 };
 
 export const staggerItem = {
   hidden: {
     opacity: 0,
-    y: 20
+    y: 20,
   },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
       duration: 0.5,
-      ease: "easeOut"
-    }
-  }
+      ease: "easeOut",
+    },
+  },
 };
 
 export const timerFlip = {
@@ -80,23 +80,23 @@ export const timerFlip = {
     rotateX: [0, -90, 0],
     transition: {
       duration: 0.6,
-      ease: "easeInOut"
-    }
-  }
+      ease: "easeInOut",
+    },
+  },
 };
 
 export const dealRefresh = {
   initial: { opacity: 1, scale: 1 },
-  exit: { 
-    opacity: 0, 
+  exit: {
+    opacity: 0,
     scale: 0.95,
-    transition: { duration: 0.3 }
+    transition: { duration: 0.3 },
   },
-  enter: { 
-    opacity: 1, 
+  enter: {
+    opacity: 1,
     scale: 1,
-    transition: { duration: 0.4, delay: 0.2 }
-  }
+    transition: { duration: 0.4, delay: 0.2 },
+  },
 };
 
 export const loadingSpinner = {
@@ -105,31 +105,31 @@ export const loadingSpinner = {
     transition: {
       duration: 1,
       repeat: Infinity,
-      ease: "linear"
-    }
-  }
+      ease: "linear",
+    },
+  },
 };
 
 export const heroSection = {
   initial: { opacity: 0, y: -30 },
-  animate: { 
-    opacity: 1, 
+  animate: {
+    opacity: 1,
     y: 0,
     transition: {
       duration: 0.8,
-      ease: "easeOut"
-    }
-  }
+      ease: "easeOut",
+    },
+  },
 };
 
 export const priceStrike = {
   initial: { width: 0 },
-  animate: { 
+  animate: {
     width: "100%",
     transition: {
       duration: 0.8,
       delay: 0.5,
-      ease: "easeOut"
-    }
-  }
+      ease: "easeOut",
+    },
+  },
 };

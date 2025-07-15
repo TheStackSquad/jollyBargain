@@ -1,0 +1,104 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "airbnb",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": ["react", "react-hooks", "jsx-a11y", "import", "prettier"],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "no-console": "warn",
+    "react-hooks/exhaustive-deps": "warn",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": [
+          "**/*.test.js",
+          "**/*.spec.js",
+          "**/*.stories.js",
+          "src/setupTests.js"
+        ]
+      }
+    ],
+    "import/prefer-default-export": "off",
+    "react/prop-types": "off",
+    "jsx-a11y/anchor-is-valid": [
+      "error",
+      {
+        "components": ["Link"],
+        "specialLink": ["hrefLeft", "hrefRight"],
+        "aspects": ["invalidHref", "preferButton"]
+      }
+    ],
+    "linebreak-style": "off",
+    "prettier/prettier": "error",
+    "react/self-closing-comp": "error",
+    "arrow-body-style": ["error", "as-needed"],
+    "no-trailing-spaces": "error",
+    "eol-last": "error",
+    "no-param-reassign": [
+      "error",
+      { "props": true, "ignorePropertyModificationsFor": ["state"] }
+    ],
+    "max-len": [
+      "warn",
+      {
+        "code": 100,
+        "ignoreComments": true,
+        "ignoreTrailingComments": true,
+        "ignoreUrls": true,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true,
+        "ignoreRegExpLiterals": true
+      }
+    ],
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "ForInStatement",
+        "message": "for..in loops iterate over enumerable properties of an object; consider a `for (const key of Object.keys(obj))` loop instead."
+      },
+      {
+        "selector": "LabeledStatement",
+        "message": "Labels are a form of GOTO; consider using `break` or `continue` instead."
+      },
+      {
+        "selector": "WithStatement",
+        "message": "`with` statements add properties of an object to the scope chain; use object destructuring or spread instead."
+      }
+    ],
+    "no-await-in-loop": "off",
+    "jsx-a11y/label-has-associated-control": [
+      "warn",
+      {
+        "labelComponents": ["Label"],
+        "labelAttributes": ["htmlFor"],
+        "controlComponents": ["Input", "Select", "Textarea", "ImageUploader"],
+        "depth": 25
+      }
+    ],
+    "no-underscore-dangle": ["error", { "allow": ["_id"] }],
+    "react/no-unescaped-entities": "warn"
+  },
+  "ignorePatterns": ["build/", "node_modules/", "public/", ".next/"]
+}
