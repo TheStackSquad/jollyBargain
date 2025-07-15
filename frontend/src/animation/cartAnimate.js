@@ -1,5 +1,5 @@
 // frontend/src/components/motion/cartAnimate.js
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
 // Variants for individual cart items entering/exiting
 export const itemVariants = {
@@ -61,8 +61,11 @@ export const headerVariants = {
 
 // Variants for input field focus
 export const inputFocusVariants = {
-  focus: { borderColor: '#6366F1', boxShadow: '0 0 0 3px rgba(99, 102, 241, 0.5)' },
-  initial: { borderColor: '#D1D5DB', boxShadow: 'none' },
+  focus: {
+    borderColor: "#6366F1",
+    boxShadow: "0 0 0 3px rgba(99, 102, 241, 0.5)",
+  },
+  initial: { borderColor: "#D1D5DB", boxShadow: "none" },
 };
 
 // Variants for product recommendation cards

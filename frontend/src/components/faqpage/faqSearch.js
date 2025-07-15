@@ -1,15 +1,15 @@
 // frontend/src/components/faqpage/FAQSearch.js
-import React, { useState } from 'react';
-import { Search } from 'lucide-react';
-import { AnimatedP } from '../../animation/animate';
+import React, { useState } from "react";
+import { Search } from "lucide-react";
+import { AnimatedP } from "../../animation/animate";
 
-const FAQSearch = ({ onSearch }) => {
+function FAQSearch({ onSearch }) {
   // Search state management
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Handle search input changes
   const handleSearchChange = (e) => {
-    const value = e.target.value;
+    const { value } = e.target;
     setSearchTerm(value);
     onSearch(value); // Pass search term to parent component
   };
@@ -51,16 +51,19 @@ const FAQSearch = ({ onSearch }) => {
         </div>
 
         {/* Search Tips */}
-        {searchTerm === '' && (
+        {searchTerm === "" && (
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-500 font-roboto">
-              Popular searches: <span className="font-medium">shipping times</span>, <span className="font-medium">return policy</span>, <span className="font-medium">payment methods</span>
+              Popular searches:{" "}
+              <span className="font-medium">shipping times</span>,{" "}
+              <span className="font-medium">return policy</span>,{" "}
+              <span className="font-medium">payment methods</span>
             </p>
           </div>
         )}
       </div>
     </section>
   );
-};
+}
 
 export default FAQSearch;

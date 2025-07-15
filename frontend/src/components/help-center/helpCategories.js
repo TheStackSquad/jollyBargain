@@ -1,14 +1,23 @@
-import React from 'react';
+import React from "react";
 
-const HelpCategories = ({ helpCategories, expandedSection, toggleSection, AnimatedP, ChevronRightIcon, ChevronDownIcon }) => {
+function HelpCategories({
+  helpCategories,
+  expandedSection,
+  toggleSection,
+  AnimatedP,
+  ChevronRightIcon,
+  ChevronDownIcon,
+}) {
   return (
     <div className="mb-12">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6 font-jetbrain">Help Categories</h2>
+      <h2 className="text-2xl font-bold text-gray-800 mb-6 font-jetbrain">
+        Help Categories
+      </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {helpCategories.map((category, index) => {
           const IconComponent = category.icon;
           const isExpanded = expandedSection === category.id;
-          
+
           return (
             <AnimatedP
               key={category.id}
@@ -17,7 +26,7 @@ const HelpCategories = ({ helpCategories, expandedSection, toggleSection, Animat
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
             >
-              <div 
+              <div
                 className="flex items-center justify-between cursor-pointer"
                 onClick={() => toggleSection(category.id)}
               >
@@ -34,19 +43,21 @@ const HelpCategories = ({ helpCategories, expandedSection, toggleSection, Animat
                     </p>
                   </div>
                 </div>
-                {isExpanded ? 
-                  <ChevronDownIcon size={20} className="text-gray-600" /> : 
+                {isExpanded ? (
+                  <ChevronDownIcon size={20} className="text-gray-600" />
+                ) : (
                   <ChevronRightIcon size={20} className="text-gray-600" />
-                }
+                )}
               </div>
-              
+
               {isExpanded && (
                 <div className="mt-4 space-y-2">
                   {category.articles.map((article, articleIndex) => (
                     <a
                       key={articleIndex}
                       href={article.url}
-                      className="flex items-center justify-between p-3 text-gray-700 hover:text-blue-600 hover:bg-white rounded-lg transition-colors font-roboto"
+                      className="flex items-center justify-between p-3 text-gray-700 hover:text-blue-600
+                      hover:bg-white rounded-lg transition-colors font-roboto"
                     >
                       <span className="flex items-center gap-2">
                         {article.title}
@@ -67,6 +78,6 @@ const HelpCategories = ({ helpCategories, expandedSection, toggleSection, Animat
       </div>
     </div>
   );
-};
+}
 
 export default HelpCategories;

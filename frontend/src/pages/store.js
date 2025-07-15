@@ -17,14 +17,14 @@ import { useFilters } from "../utils/hooks/useFilters";
 import { useCart } from "../utils/hooks/useCart";
 import { useWishlist } from "../utils/hooks/useWishlist";
 
-const ShopNowPage = () => {
+function ShopNowPage() {
   // State management
   const [viewMode, setViewMode] = useState("grid");
   const [showFilters, setShowFilters] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   // Custom hooks
   const {
     products,
@@ -63,7 +63,7 @@ const ShopNowPage = () => {
         await loadProducts({
           page: 1,
           limit: 12,
-          filters: filters,
+          filters,
         });
         setCurrentPage(1);
       } catch (err) {
@@ -84,7 +84,7 @@ const ShopNowPage = () => {
       await loadMoreProducts({
         page: nextPage,
         limit: 12,
-        filters: filters,
+        filters,
       });
       setCurrentPage(nextPage);
     } catch (err) {
@@ -99,7 +99,7 @@ const ShopNowPage = () => {
       addToCart(product);
       console.log(`Added ${product.name} to cart`);
     },
-    [addToCart]
+    [addToCart],
   );
 
   // Handle remove from cart
@@ -108,7 +108,7 @@ const ShopNowPage = () => {
       removeFromCart(productId);
       console.log(`Removed product with ID: ${productId} from cart`);
     },
-    [removeFromCart]
+    [removeFromCart],
   );
 
   // Handle wishlist toggle
@@ -116,7 +116,7 @@ const ShopNowPage = () => {
     (productId) => {
       toggleWishlist(productId);
     },
-    [toggleWishlist]
+    [toggleWishlist],
   );
 
   if (isLoading && filteredProducts.length === 0) {
@@ -133,9 +133,9 @@ const ShopNowPage = () => {
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
               className="h-16 w-16 border-4 border-indigo-500 border-t-transparent rounded-full"
-            ></motion.div>
+            />
           </div>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
@@ -143,7 +143,7 @@ const ShopNowPage = () => {
           >
             Loading our finest products...
           </motion.p>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
@@ -169,7 +169,7 @@ const ShopNowPage = () => {
         onSearchChange={(query) => updateFilter("searchQuery", query)}
         cartCount={cart.length}
       />
-      
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex gap-8">
           {/* Filters Sidebar with enhanced animation */}
@@ -218,8 +218,16 @@ const ShopNowPage = () => {
               >
                 <div className="flex">
                   <div className="flex-shrink-0">
-                    <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    <svg
+                      className="h-5 w-5 text-red-500"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                   </div>
                   <div className="ml-3">
@@ -239,7 +247,7 @@ const ShopNowPage = () => {
 
             {filteredProducts && filteredProducts.length > 0 ? (
               <>
-                <motion.div 
+                <motion.div
                   variants={fadeIn("up", "tween", 0.2, 0.75)}
                   className="mb-8"
                 >
@@ -279,7 +287,7 @@ const ShopNowPage = () => {
                       value &&
                       value !== "all" &&
                       value !== "" &&
-                      (Array.isArray(value) ? value.length > 0 : true)
+                      (Array.isArray(value) ? value.length > 0 : true),
                   )}
                 />
               </motion.div>
@@ -289,6 +297,6 @@ const ShopNowPage = () => {
       </div>
     </motion.div>
   );
-};
+}
 
 export default ShopNowPage;

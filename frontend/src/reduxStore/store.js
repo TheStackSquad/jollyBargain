@@ -1,7 +1,7 @@
 // frontend/src/reduxStore/store.js
-import { configureStore } from '@reduxjs/toolkit';
-import cartReducer from './cart/cartSlice';
-import userReducer from './user/userSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import cartReducer from "./cart/cartSlice";
+import userReducer from "./user/userSlice";
 
 export const store = configureStore({
   reducer: {
@@ -9,4 +9,3 @@ export const store = configureStore({
     user: userReducer,
   },
 });
-

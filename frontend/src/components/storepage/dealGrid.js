@@ -1,10 +1,18 @@
-//frontend/src/components/storepage/dealGrid.js
-import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import DealCard from '../storepage/dealCard'; // This is the next component to review!
-import { staggerContainer, staggerItem } from '../../animation/flashDealAnimate';
+// frontend/src/components/storepage/dealGrid.js
+import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import DealCard from "./dealCard"; // This is the next component to review!
+import {
+  staggerContainer,
+  staggerItem,
+} from "../../animation/flashDealAnimate";
 
-const DealsGrid = ({ deals, onClaimDeal, currentPoolIndex, title = "More Amazing Deals" }) => {
+function DealsGrid({
+  deals,
+  onClaimDeal,
+  currentPoolIndex,
+  title = "More Amazing Deals",
+}) {
   return (
     <div className="max-w-7xl mx-auto px-4 pb-12">
       <motion.h2
@@ -24,7 +32,9 @@ const DealsGrid = ({ deals, onClaimDeal, currentPoolIndex, title = "More Amazing
           transition={{ delay: 0.5 }}
         >
           <div className="text-6xl mb-4">🔍</div>
-          <h3 className="text-xl font-semibold text-gray-700 mb-2">No deals found</h3>
+          <h3 className="text-xl font-semibold text-gray-700 mb-2">
+            No deals found
+          </h3>
           <p className="text-gray-500">Try adjusting your search filters</p>
         </motion.div>
       ) : (
@@ -38,15 +48,8 @@ const DealsGrid = ({ deals, onClaimDeal, currentPoolIndex, title = "More Amazing
             exit="hidden"
           >
             {deals.map((deal, index) => (
-              <motion.div
-                key={deal._id}
-                variants={staggerItem}
-              >
-                <DealCard
-                  deal={deal}
-                  onClaimDeal={onClaimDeal}
-                  index={index}
-                />
+              <motion.div key={deal._id} variants={staggerItem}>
+                <DealCard deal={deal} onClaimDeal={onClaimDeal} index={index} />
               </motion.div>
             ))}
           </motion.div>
@@ -68,6 +71,6 @@ const DealsGrid = ({ deals, onClaimDeal, currentPoolIndex, title = "More Amazing
       )}
     </div>
   );
-};
+}
 
 export default DealsGrid;

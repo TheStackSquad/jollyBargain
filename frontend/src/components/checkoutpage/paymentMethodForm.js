@@ -1,6 +1,10 @@
 // frontend/src/components/checkoutpage/PaymentMethodForm.js
-import React, { useState } from 'react';
-import { MotionDiv, MotionButton, buttonTapVariants } from '../../animation/cartAnimate';
+import React, { useState } from "react";
+import {
+  MotionDiv,
+  MotionButton,
+  buttonTapVariants,
+} from "../../animation/cartAnimate";
 
 /**
  * Renders the payment method input form.
@@ -9,12 +13,12 @@ import { MotionDiv, MotionButton, buttonTapVariants } from '../../animation/cart
  * @param {function} props.onPrevStep - Callback to go back to the previous step.
  * @param {object} props.initialData - Initial form data.
  */
-const PaymentMethodForm = ({ onNextStep, onPrevStep, initialData = {} }) => {
+function PaymentMethodForm({ onNextStep, onPrevStep, initialData = {} }) {
   const [formData, setFormData] = useState({
-    cardName: initialData.cardName || '',
-    cardNumber: initialData.cardNumber || '',
-    expiryDate: initialData.expiryDate || '',
-    cvc: initialData.cvc || '',
+    cardName: initialData.cardName || "",
+    cardNumber: initialData.cardNumber || "",
+    expiryDate: initialData.expiryDate || "",
+    cvc: initialData.cvc || "",
   });
 
   const handleChange = (e) => {
@@ -25,11 +29,16 @@ const PaymentMethodForm = ({ onNextStep, onPrevStep, initialData = {} }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Basic validation
-    if (formData.cardName && formData.cardNumber && formData.expiryDate && formData.cvc) {
+    if (
+      formData.cardName &&
+      formData.cardNumber &&
+      formData.expiryDate &&
+      formData.cvc
+    ) {
       onNextStep(formData);
     } else {
       // Using a simple alert here; in a real app, you'd use a more integrated message system or MessageBox
-      alert('Please fill in all required payment fields.');
+      alert("Please fill in all required payment fields.");
     }
   };
 
@@ -46,7 +55,10 @@ const PaymentMethodForm = ({ onNextStep, onPrevStep, initialData = {} }) => {
       </h2>
       <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-6">
         <div>
-          <label htmlFor="cardName" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="cardName"
+            className="block text-sm font-medium text-gray-700"
+          >
             Name on Card
           </label>
           <input
@@ -55,12 +67,16 @@ const PaymentMethodForm = ({ onNextStep, onPrevStep, initialData = {} }) => {
             id="cardName"
             value={formData.cardName}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500
+            focus:ring-indigo-500 p-2"
             required
           />
         </div>
         <div>
-          <label htmlFor="cardNumber" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="cardNumber"
+            className="block text-sm font-medium text-gray-700"
+          >
             Card Number
           </label>
           <input
@@ -69,7 +85,9 @@ const PaymentMethodForm = ({ onNextStep, onPrevStep, initialData = {} }) => {
             id="cardNumber"
             value={formData.cardNumber}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"
+            className="mt-1 block w-full rounded-md border-gray-300
+            shadow-sm focus:border-indigo-500
+            focus:ring-indigo-500 p-2"
             placeholder="XXXX XXXX XXXX XXXX"
             maxLength="19" // Max length for typical card numbers with spaces
             required
@@ -77,7 +95,10 @@ const PaymentMethodForm = ({ onNextStep, onPrevStep, initialData = {} }) => {
         </div>
         <div className="grid grid-cols-2 gap-6">
           <div>
-            <label htmlFor="expiryDate" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="expiryDate"
+              className="block text-sm font-medium text-gray-700"
+            >
               Expiry Date (MM/YY)
             </label>
             <input
@@ -86,14 +107,19 @@ const PaymentMethodForm = ({ onNextStep, onPrevStep, initialData = {} }) => {
               id="expiryDate"
               value={formData.expiryDate}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm
+              focus:border-indigo-500
+              focus:ring-indigo-500 p-2"
               placeholder="MM/YY"
               maxLength="5"
               required
             />
           </div>
           <div>
-            <label htmlFor="cvc" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="cvc"
+              className="block text-sm font-medium text-gray-700"
+            >
               CVC
             </label>
             <input
@@ -102,7 +128,9 @@ const PaymentMethodForm = ({ onNextStep, onPrevStep, initialData = {} }) => {
               id="cvc"
               value={formData.cvc}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm
+              focus:border-indigo-500
+              focus:ring-indigo-500 p-2"
               placeholder="XXX"
               maxLength="4"
               required
@@ -116,7 +144,9 @@ const PaymentMethodForm = ({ onNextStep, onPrevStep, initialData = {} }) => {
             whileHover="hover"
             whileTap="tap"
             onClick={onPrevStep}
-            className="px-6 py-3 bg-gray-200 text-gray-700 font-medium rounded-full shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition duration-150 ease-in-out"
+            className="px-6 py-3 bg-gray-200 text-gray-700 font-medium rounded-full shadow-md
+            hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2
+            focus:ring-gray-400 transition duration-150 ease-in-out"
           >
             Back to Shipping
           </MotionButton>
@@ -125,7 +155,9 @@ const PaymentMethodForm = ({ onNextStep, onPrevStep, initialData = {} }) => {
             variants={buttonTapVariants}
             whileHover="hover"
             whileTap="tap"
-            className="px-6 py-3 bg-indigo-600 text-white font-medium rounded-full shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+            className="px-6 py-3 bg-indigo-600 text-white font-medium rounded-full shadow-md
+            hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2
+            focus:ring-indigo-500 transition duration-150 ease-in-out"
           >
             Continue to Review
           </MotionButton>
@@ -133,6 +165,6 @@ const PaymentMethodForm = ({ onNextStep, onPrevStep, initialData = {} }) => {
       </form>
     </MotionDiv>
   );
-};
+}
 
 export default PaymentMethodForm;

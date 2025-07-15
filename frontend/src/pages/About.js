@@ -1,21 +1,18 @@
-//frontend/src/pages/About.js
+// frontend/src/pages/About.js
 
-import React from 'react';
-import {
-  PageWrapper,
-  useScrollAnimation,
-} from '../animation/animate'; // Keep essential animation imports
+import React from "react";
+import { PageWrapper, useScrollAnimation } from "../animation/animate"; // Keep essential animation imports
 
 // Import your new subcomponents for the About page
-import AboutHeroSection from '../components/aboutpage/aboutHeroSection';
-import OurStorySection from '../components/aboutpage/ourStorySection';
-import WhyChooseUsSection from '../components/aboutpage/whyChooseUs';
-import HowItWorksSection from '../components/aboutpage/howItWorksSection';
-import AboutStatsSection from '../components/aboutpage/aboutStatSection';
-import TestimonialsSection from '../components/aboutpage/testimonialSection';
-import AboutCTASection from '../components/aboutpage/aboutCTASection';
+import AboutHeroSection from "../components/aboutpage/aboutHeroSection";
+import OurStorySection from "../components/aboutpage/ourStorySection";
+import WhyChooseUsSection from "../components/aboutpage/whyChooseUs";
+import HowItWorksSection from "../components/aboutpage/howItWorksSection";
+import AboutStatsSection from "../components/aboutpage/aboutStatSection";
+import TestimonialsSection from "../components/aboutpage/testimonialSection";
+import AboutCTASection from "../components/aboutpage/aboutCTASection";
 
-const About = () => {
+function About() {
   const scrollAnimation = useScrollAnimation();
 
   return (
@@ -42,6 +39,6 @@ const About = () => {
       <AboutCTASection scrollAnimation={scrollAnimation} />
     </PageWrapper>
   );
-};
+}
 
 export default About;

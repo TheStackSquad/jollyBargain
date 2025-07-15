@@ -1,23 +1,23 @@
 // frontend/src/components/storepage/dealCard.js
-import React from 'react';
-import { motion } from 'framer-motion';
-import StockProgressBar from '../storepage/stockProgressBar';
-import { dealCardHover, urgencyBadge } from '../../animation/flashDealAnimate';
+import React from "react";
+import { motion } from "framer-motion";
+import StockProgressBar from "./stockProgressBar";
+import { dealCardHover, urgencyBadge } from "../../animation/flashDealAnimate";
 
-const DealCard = ({ deal, onClaimDeal, index = 0 }) => {
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat('en-NG', {
-      style: 'currency',
-      currency: 'NGN',
-      minimumFractionDigits: 0
+function DealCard({ deal, onClaimDeal, index = 0 }) {
+  const formatPrice = (price) =>
+    new Intl.NumberFormat("en-NG", {
+      style: "currency",
+      currency: "NGN",
+      minimumFractionDigits: 0,
     }).format(Number(price) || 0);
-  };
 
   const getStockStatus = (stock, claimed) => {
     const remaining = (stock || 0) - (claimed || 0);
-    if (remaining <= 3 && remaining > 0) return { urgency: 'high' };
-    if (stock > 0 && (claimed / stock) * 100 >= 70) return { urgency: 'medium' };
-    return { urgency: 'low' };
+    if (remaining <= 3 && remaining > 0) return { urgency: "high" };
+    if (stock > 0 && (claimed / stock) * 100 >= 70)
+      return { urgency: "medium" };
+    return { urgency: "low" };
   };
 
   // Handle missing deal data
@@ -26,13 +26,14 @@ const DealCard = ({ deal, onClaimDeal, index = 0 }) => {
   const stockStatus = getStockStatus(deal.stock, deal.claimed);
 
   // Use the backend fields directly - no more schema mismatches
-  const imageUrl = deal.images && deal.images.length > 0 
-    ? deal.images[0].url 
-    : '/images/placeholder.jpg';
+  const imageUrl =
+    deal.images && deal.images.length > 0
+      ? deal.images[0].url
+      : "/images/placeholder.jpg";
 
   // Use the transformed fields from backend
   const currentPrice = deal.salePrice || deal.price; // Use salePrice if available, fallback to price
-  const originalPrice = deal.originalPrice || (deal.price * 1.25);
+  const originalPrice = deal.originalPrice || deal.price * 1.25;
   const discount = deal.discount || 20;
 
   return (
@@ -44,7 +45,7 @@ const DealCard = ({ deal, onClaimDeal, index = 0 }) => {
       transition={{
         duration: 0.5,
         delay: index * 0.1,
-        ease: "easeOut"
+        ease: "easeOut",
       }}
     >
       <div className="relative">
@@ -53,7 +54,7 @@ const DealCard = ({ deal, onClaimDeal, index = 0 }) => {
           alt={deal.title || deal.name}
           className="w-full h-48 object-cover"
           onError={(e) => {
-            e.target.src = '/images/placeholder.jpg'; // Fallback for broken images
+            e.target.src = "/images/placeholder.jpg"; // Fallback for broken images
           }}
         />
 
@@ -61,7 +62,7 @@ const DealCard = ({ deal, onClaimDeal, index = 0 }) => {
         <div className="absolute top-3 left-3">
           <motion.span
             className="bg-red-500 text-white px-2 py-1 rounded-full text-sm font-bold shadow-lg"
-            {...(stockStatus.urgency === 'high' ? urgencyBadge : {})}
+            {...(stockStatus.urgency === "high" ? urgencyBadge : {})}
           >
             {discount}% OFF
           </motion.span>
@@ -119,20 +120,30 @@ const DealCard = ({ deal, onClaimDeal, index = 0 }) => {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"
+            />
           </svg>
           Claim Deal
         </motion.button>
 
         {/* Additional Info */}
         <div className="mt-3 flex justify-between items-center text-xs text-gray-500">
-          <span>⭐ {deal.rating || '4.5'} rating</span>
+          <span>⭐ {deal.rating || "4.5"} rating</span>
           <span>🚚 Free delivery</span>
         </div>
       </div>
     </motion.div>
   );
-};
+}
 
 export default DealCard;

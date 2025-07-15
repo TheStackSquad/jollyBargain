@@ -1,19 +1,21 @@
-//frontend/src/components/homepage/statSection
+// frontend/src/components/homepage/statSection
 
-import React from 'react';
+import React from "react";
 import {
   AnimatedDiv,
   AnimatedCounter,
   ScrollSection,
   animationVariants,
-} from '../../animation/animate'; // Adjust path based on your animation file location
+} from "../../animation/animate"; // Adjust path based on your animation file location
 
-const StatsSection = () => {
+function StatsSection() {
   const stats = [
-    { number: 500, suffix: "K+", label: "Happy Customers" },
-    { number: 1, suffix: "M+", label: "Products Sold" },
-    { number: 50, suffix: "K+", label: "Daily Deals" },
-    { number: 99.9, suffix: "%", label: "Uptime" }
+    // FIX: Added a unique 'id' to each stat object.
+    // If you were fetching this data, a backend-provided ID would be ideal.
+    { id: "customers", number: 500, suffix: "K+", label: "Happy Customers" },
+    { id: "products", number: 1, suffix: "M+", label: "Products Sold" },
+    { id: "daily-deals", number: 50, suffix: "K+", label: "Daily Deals" },
+    { id: "uptime", number: 99.9, suffix: "%", label: "Uptime" },
   ];
 
   return (
@@ -26,9 +28,12 @@ const StatsSection = () => {
           whileInView="animate"
           viewport={{ once: true, amount: 0.3 }}
         >
-          {stats.map((stat, index) => (
+          {stats.map((stat) => (
             <AnimatedDiv
-              key={index}
+              // FIX: Use a unique and stable property as the key.
+              // 'stat.id' is preferred if available, otherwise 'stat.label' is a good fallback
+              // since these labels appear unique and static.
+              key={stat.id || stat.label}
               variants={animationVariants.statsItem}
               className="text-center"
             >
@@ -46,6 +51,6 @@ const StatsSection = () => {
       </div>
     </ScrollSection>
   );
-};
+}
 
 export default StatsSection;

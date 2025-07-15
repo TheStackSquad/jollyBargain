@@ -1,12 +1,17 @@
 // frontend/src/components/storepage/searchBar.js
-import React, { useState, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { debounce } from 'lodash';
+import React, { useState, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
+import { debounce } from "lodash";
 
-const SearchBar = ({ onSearch, onFilterChange, categories = [], isLoading = false }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [priceRange, setPriceRange] = useState({ min: '', max: '' });
+function SearchBar({
+  onSearch,
+  onFilterChange,
+  categories = [],
+  isLoading = false,
+}) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [priceRange, setPriceRange] = useState({ min: "", max: "" });
   const [showFilters, setShowFilters] = useState(false);
 
   // Debounced search function to avoid too many API calls
@@ -14,7 +19,7 @@ const SearchBar = ({ onSearch, onFilterChange, categories = [], isLoading = fals
     debounce((filters) => {
       onSearch(filters);
     }, 500),
-    [onSearch]
+    [onSearch],
   );
 
   // Handle immediate filter changes
@@ -23,23 +28,23 @@ const SearchBar = ({ onSearch, onFilterChange, categories = [], isLoading = fals
       searchTerm,
       category: selectedCategory,
       priceRange,
-      [filterType]: value
+      [filterType]: value,
     };
-    
-    if (filterType === 'category') {
+
+    if (filterType === "category") {
       setSelectedCategory(value);
       filters.category = value;
-    } else if (filterType === 'priceRange') {
+    } else if (filterType === "priceRange") {
       setPriceRange(value);
       filters.priceRange = value;
-    } else if (filterType === 'searchTerm') {
+    } else if (filterType === "searchTerm") {
       setSearchTerm(value);
       filters.searchTerm = value;
     }
-    
+
     // Call onFilterChange immediately for UI updates
     onFilterChange(filters);
-    
+
     // Debounced search for API calls
     debouncedSearch(filters);
   };
@@ -50,38 +55,45 @@ const SearchBar = ({ onSearch, onFilterChange, categories = [], isLoading = fals
     const filters = {
       searchTerm,
       category: selectedCategory,
-      priceRange
+      priceRange,
     };
     onSearch(filters);
   };
 
   // Clear all filters
   const clearFilters = () => {
-    setSearchTerm('');
-    setSelectedCategory('all');
-    setPriceRange({ min: '', max: '' });
+    setSearchTerm("");
+    setSelectedCategory("all");
+    setPriceRange({ min: "", max: "" });
     const filters = {
-      searchTerm: '',
-      category: 'all',
-      priceRange: { min: '', max: '' }
+      searchTerm: "",
+      category: "all",
+      priceRange: { min: "", max: "" },
     };
     onFilterChange(filters);
     onSearch(filters);
   };
 
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat('en-NG', {
-      style: 'currency',
-      currency: 'NGN',
-      minimumFractionDigits: 0
+  const formatPrice = (price) =>
+    new Intl.NumberFormat("en-NG", {
+      style: "currency",
+      currency: "NGN",
+      minimumFractionDigits: 0,
     }).format(price);
-  };
 
   const quickPriceFilters = [
-    { label: `Under ${formatPrice(10000)}`, min: '', max: '10000' },
-    { label: `${formatPrice(10000)} - ${formatPrice(50000)}`, min: '10000', max: '50000' },
-    { label: `${formatPrice(50000)} - ${formatPrice(100000)}`, min: '50000', max: '100000' },
-    { label: `Above ${formatPrice(100000)}`, min: '100000', max: '' }
+    { label: `Under ${formatPrice(10000)}`, min: "", max: "10000" },
+    {
+      label: `${formatPrice(10000)} - ${formatPrice(50000)}`,
+      min: "10000",
+      max: "50000",
+    },
+    {
+      label: `${formatPrice(50000)} - ${formatPrice(100000)}`,
+      min: "50000",
+      max: "100000",
+    },
+    { label: `Above ${formatPrice(100000)}`, min: "100000", max: "" },
   ];
 
   return (
@@ -94,23 +106,33 @@ const SearchBar = ({ onSearch, onFilterChange, categories = [], isLoading = fals
               type="text"
               placeholder="Search for products..."
               value={searchTerm}
-              onChange={(e) => handleFilterChange('searchTerm', e.target.value)}
+              onChange={(e) => handleFilterChange("searchTerm", e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-lg"
             />
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
               {isLoading ? (
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"></div>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500" />
               ) : (
-                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <svg
+                  className="w-5 h-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
                 </svg>
               )}
             </div>
           </div>
-          
+
           <select
             value={selectedCategory}
-            onChange={(e) => handleFilterChange('category', e.target.value)}
+            onChange={(e) => handleFilterChange("category", e.target.value)}
             className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
           >
             <option value="all">All Categories</option>
@@ -120,31 +142,54 @@ const SearchBar = ({ onSearch, onFilterChange, categories = [], isLoading = fals
               </option>
             ))}
           </select>
-          
+
           <button
             type="button"
             onClick={() => setShowFilters(!showFilters)}
             className={`px-6 py-3 rounded-lg transition-colors duration-200 flex items-center gap-2 ${
-              showFilters 
-                ? 'bg-blue-500 text-white' 
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              showFilters
+                ? "bg-blue-500 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"
+              />
             </svg>
             Filters
           </button>
 
           {/* Clear Filters Button */}
-          {(searchTerm || selectedCategory !== 'all' || priceRange.min || priceRange.max) && (
+          {(searchTerm ||
+            selectedCategory !== "all" ||
+            priceRange.min ||
+            priceRange.max) && (
             <button
               type="button"
               onClick={clearFilters}
               className="px-4 py-3 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors duration-200 flex items-center gap-2"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
               Clear
             </button>
@@ -154,9 +199,9 @@ const SearchBar = ({ onSearch, onFilterChange, categories = [], isLoading = fals
         {/* Advanced Filters */}
         <motion.div
           initial={{ height: 0, opacity: 0 }}
-          animate={{ 
-            height: showFilters ? 'auto' : 0, 
-            opacity: showFilters ? 1 : 0 
+          animate={{
+            height: showFilters ? "auto" : 0,
+            opacity: showFilters ? 1 : 0,
           }}
           transition={{ duration: 0.3 }}
           className="overflow-hidden"
@@ -173,7 +218,12 @@ const SearchBar = ({ onSearch, onFilterChange, categories = [], isLoading = fals
                     type="number"
                     placeholder="Min"
                     value={priceRange.min}
-                    onChange={(e) => handleFilterChange('priceRange', { ...priceRange, min: e.target.value })}
+                    onChange={(e) =>
+                      handleFilterChange("priceRange", {
+                        ...priceRange,
+                        min: e.target.value,
+                      })
+                    }
                     className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                   />
                   <span className="text-gray-500">-</span>
@@ -181,7 +231,12 @@ const SearchBar = ({ onSearch, onFilterChange, categories = [], isLoading = fals
                     type="number"
                     placeholder="Max"
                     value={priceRange.max}
-                    onChange={(e) => handleFilterChange('priceRange', { ...priceRange, max: e.target.value })}
+                    onChange={(e) =>
+                      handleFilterChange("priceRange", {
+                        ...priceRange,
+                        max: e.target.value,
+                      })
+                    }
                     className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                   />
                 </div>
@@ -197,11 +252,17 @@ const SearchBar = ({ onSearch, onFilterChange, categories = [], isLoading = fals
                     <button
                       key={index}
                       type="button"
-                      onClick={() => handleFilterChange('priceRange', { min: filter.min, max: filter.max })}
+                      onClick={() =>
+                        handleFilterChange("priceRange", {
+                          min: filter.min,
+                          max: filter.max,
+                        })
+                      }
                       className={`px-3 py-2 rounded-lg text-sm transition-colors ${
-                        priceRange.min === filter.min && priceRange.max === filter.max
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                        priceRange.min === filter.min &&
+                        priceRange.max === filter.max
+                          ? "bg-blue-500 text-white"
+                          : "bg-blue-100 text-blue-700 hover:bg-blue-200"
                       }`}
                     >
                       {filter.label}
@@ -220,13 +281,23 @@ const SearchBar = ({ onSearch, onFilterChange, categories = [], isLoading = fals
               >
                 {isLoading ? (
                   <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
                     Searching...
                   </>
                 ) : (
                   <>
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      />
                     </svg>
                     Search Products
                   </>
@@ -238,6 +309,6 @@ const SearchBar = ({ onSearch, onFilterChange, categories = [], isLoading = fals
       </form>
     </div>
   );
-};
+}
 
 export default SearchBar;

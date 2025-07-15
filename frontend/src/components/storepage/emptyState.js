@@ -1,8 +1,8 @@
 // frontend/src/components/storepage/emptyState.js
-import React from 'react';
-import { Search, RefreshCw } from 'lucide-react';
+import React from "react";
+import { Search, RefreshCw } from "lucide-react";
 
-const EmptyState = ({ onClearFilters, hasFilters }) => {
+function EmptyState({ onClearFilters, hasFilters }) {
   return (
     <div className="text-center py-12">
       <div className="text-gray-400 mb-4">
@@ -12,12 +12,11 @@ const EmptyState = ({ onClearFilters, hasFilters }) => {
         No products found
       </h3>
       <p className="text-gray-500 mb-6 max-w-md mx-auto">
-        {hasFilters 
+        {hasFilters
           ? "We couldn't find any products matching your current filters. Try adjusting your search criteria or clearing some filters."
-          : "We couldn't find any products. Please try again later or contact support if the problem persists."
-        }
+          : "We couldn't find any products. Please try again later or contact support if the problem persists."}
       </p>
-      
+
       {hasFilters && (
         <button
           onClick={onClearFilters}
@@ -29,6 +28,6 @@ const EmptyState = ({ onClearFilters, hasFilters }) => {
       )}
     </div>
   );
-};
+}
 
 export default EmptyState;

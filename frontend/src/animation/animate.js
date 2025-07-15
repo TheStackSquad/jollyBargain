@@ -1,6 +1,6 @@
 // frontend/src/animation/animate.js
-import React from 'react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { motion } from "framer-motion";
 
 // Animation variants for different use cases
 export const animationVariants = {
@@ -9,26 +9,26 @@ export const animationVariants = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
     exit: { opacity: 0, y: -20 },
-    transition: { duration: 0.5, ease: "easeOut" }
+    transition: { duration: 0.5, ease: "easeOut" },
   },
 
   // Hero section animations
   heroTitle: {
     initial: { opacity: 0, y: 30 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.8, ease: "easeOut" }
+    transition: { duration: 0.8, ease: "easeOut" },
   },
 
   heroSubtitle: {
     initial: { opacity: 0, y: 30 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.8, delay: 0.2, ease: "easeOut" }
+    transition: { duration: 0.8, delay: 0.2, ease: "easeOut" },
   },
 
   heroButtons: {
     initial: { opacity: 0, y: 30 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.8, delay: 0.4, ease: "easeOut" }
+    transition: { duration: 0.8, delay: 0.4, ease: "easeOut" },
   },
 
   // Card animations
@@ -36,49 +36,49 @@ export const animationVariants = {
     initial: {},
     animate: {
       transition: {
-        staggerChildren: 0.2
-      }
-    }
+        staggerChildren: 0.2,
+      },
+    },
   },
 
   cardItem: {
     initial: { opacity: 0, scale: 0.8 },
     animate: { opacity: 1, scale: 1 },
-    transition: { duration: 0.6, ease: "easeOut" }
+    transition: { duration: 0.6, ease: "easeOut" },
   },
 
   // Slide animations
   slideInLeft: {
     initial: { opacity: 0, x: -50 },
     animate: { opacity: 1, x: 0 },
-    transition: { duration: 0.8, ease: "easeOut" }
+    transition: { duration: 0.8, ease: "easeOut" },
   },
 
   slideInRight: {
     initial: { opacity: 0, x: 50 },
     animate: { opacity: 1, x: 0 },
-    transition: { duration: 0.8, ease: "easeOut" }
+    transition: { duration: 0.8, ease: "easeOut" },
   },
 
   // Scale animations
   scaleIn: {
     initial: { opacity: 0, scale: 0.8 },
     animate: { opacity: 1, scale: 1 },
-    transition: { duration: 0.6, ease: "easeOut" }
+    transition: { duration: 0.6, ease: "easeOut" },
   },
 
   // Header animations
   headerSlide: {
     initial: { opacity: 0, y: -20 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.5, ease: "easeOut" }
+    transition: { duration: 0.5, ease: "easeOut" },
   },
 
   // Footer animations
   footerSlide: {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
-    transition: { delay: 0.4, duration: 0.5, ease: "easeOut" }
+    transition: { delay: 0.4, duration: 0.5, ease: "easeOut" },
   },
 
   // Stats counter animation
@@ -86,52 +86,49 @@ export const animationVariants = {
     initial: {},
     animate: {
       transition: {
-        staggerChildren: 0.1
-      }
-    }
+        staggerChildren: 0.1,
+      },
+    },
   },
 
   statsItem: {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6, ease: "easeOut" }
+    transition: { duration: 0.6, ease: "easeOut" },
   },
 
   // Hover animations
   buttonHover: {
-    whileHover: { 
-      scale: 1.05, 
+    whileHover: {
+      scale: 1.05,
       y: -2,
-      transition: { duration: 0.2 }
+      transition: { duration: 0.2 },
     },
-    whileTap: { scale: 0.95 }
+    whileTap: { scale: 0.95 },
   },
 
   cardHover: {
-    whileHover: { 
+    whileHover: {
       y: -10,
-      transition: { duration: 0.3, ease: "easeOut" }
-    }
-  }
+      transition: { duration: 0.3, ease: "easeOut" },
+    },
+  },
 };
 
 // Custom hook for scroll-triggered animations
-export const useScrollAnimation = () => {
-  return {
-    initial: { opacity: 0, y: 50 },
-    whileInView: { 
-      opacity: 1, 
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut" }
-    },
-    viewport: { once: true, amount: 0.3 }
-  };
-};
+export const useScrollAnimation = () => ({
+  initial: { opacity: 0, y: 50 },
+  whileInView: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: "easeOut" },
+  },
+  viewport: { once: true, amount: 0.3 },
+});
 
 // Utility functions for creating animated components
-export const createAnimatedComponent = (Component, variant) => {
-  return motion(Component);
-};
+// This function is no longer needed as we directly export motion.component
+// export const createAnimatedComponent = (Component) => motion(Component);
 
 // Pre-configured animated components
 export const AnimatedDiv = motion.div;
@@ -146,7 +143,7 @@ export const AnimatedHeader = motion.header;
 export const AnimatedFooter = motion.footer;
 
 // Counter animation component
-export const AnimatedCounter = ({ end, duration = 2, suffix = "" }) => {
+export function AnimatedCounter({ end, duration = 2, suffix = "" }) {
   const [count, setCount] = React.useState(0);
 
   React.useEffect(() => {
@@ -181,13 +178,14 @@ export const AnimatedCounter = ({ end, duration = 2, suffix = "" }) => {
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
     >
-      {count.toLocaleString()}{suffix}
+      {count.toLocaleString()}
+      {suffix}
     </motion.span>
   );
-};
+}
 
 // Page wrapper with consistent animations
-export const PageWrapper = ({ children, className = "" }) => {
+export function PageWrapper({ children, className = "" }) {
   return (
     <motion.div
       className={className}
@@ -199,29 +197,31 @@ export const PageWrapper = ({ children, className = "" }) => {
       {children}
     </motion.div>
   );
-};
+}
 
 // Section wrapper for scroll animations
-export const ScrollSection = ({ children, className = "", delay = 0 }) => {
+export function ScrollSection({ children, className = "", delay = 0 }) {
   const scrollAnimation = useScrollAnimation();
-  
+
   return (
     <motion.section
       className={className}
-      {...scrollAnimation}
+      initial={scrollAnimation.initial}
+      whileInView={scrollAnimation.whileInView}
+      viewport={scrollAnimation.viewport}
       transition={{
         ...scrollAnimation.whileInView.transition,
-        delay
+        delay,
       }}
     >
       {children}
     </motion.section>
   );
-};
+}
 
 export default {
   animationVariants,
-  //useScrollAnimation,
+  // useScrollAnimation, // Already exported, so no need to export as part of default
   AnimatedDiv,
   AnimatedH1,
   AnimatedH2,
@@ -234,33 +234,27 @@ export default {
   AnimatedFooter,
   AnimatedCounter,
   PageWrapper,
-  ScrollSection
+  ScrollSection,
 };
 
-export const fadeIn = (direction, type, delay, duration) => ({
-  hidden: {
-    x: direction === 'left' ? 100 : direction === 'right' ? -100 : 0,
-    y: direction === 'up' ? 100 : direction === 'down' ? -100 : 0,
-    opacity: 0,
-  },
-  show: {
-    x: 0,
-    y: 0,
-    opacity: 1,
-    transition: {
-      type: type,
-      delay: delay,
-      duration: duration,
-      ease: 'easeOut',
-    },
-  },
-});
+export const fadeIn = (direction, type, delay, duration) => {
+  let x = 0;
+  let y = 0;
 
-export const slideIn = (direction, type, delay, duration) => {
+  if (direction === "left") {
+    x = 100;
+  } else if (direction === "right") {
+    x = -100;
+  } else if (direction === "up") {
+    y = 100;
+  } else if (direction === "down") {
+    y = -100;
+  }
+
   return {
     hidden: {
-      x: direction === 'left' ? '-100%' : direction === 'right' ? '100%' : 0,
-      y: direction === 'up' ? '100%' : direction === 'down' ? '-100%' : 0,
+      x,
+      y,
       opacity: 0,
     },
     show: {
@@ -268,19 +262,54 @@ export const slideIn = (direction, type, delay, duration) => {
       y: 0,
       opacity: 1,
       transition: {
-        type: type,
-        delay: delay,
-        duration: duration,
-        ease: 'easeOut',
+        type,
+        delay,
+        duration,
+        ease: "easeOut",
       },
     },
   };
 };
+
+export const slideIn = (direction, type, delay, duration) => {
+  let x = 0;
+  let y = 0;
+
+  if (direction === "left") {
+    x = "-100%";
+  } else if (direction === "right") {
+    x = "100%";
+  } else if (direction === "up") {
+    y = "100%";
+  } else if (direction === "down") {
+    y = "-100%";
+  }
+
+  return {
+    hidden: {
+      x,
+      y,
+      opacity: 0,
+    },
+    show: {
+      x: 0,
+      y: 0,
+      opacity: 1,
+      transition: {
+        type,
+        delay,
+        duration,
+        ease: "easeOut",
+      },
+    },
+  };
+};
+
 export const staggerContainer = (staggerChildren, delayChildren) => ({
   hidden: {},
   show: {
     transition: {
-      staggerChildren: staggerChildren,
+      staggerChildren,
       delayChildren: delayChildren || 0,
     },
   },

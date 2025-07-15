@@ -6,34 +6,38 @@
 
 /* Custom Fonts */
 @font-face {
-  font-family: 'Roboto'; /* This will be your primary font family */
-  src: url('../public/Fontz/Roboto_Condensed-Regular.woff') format('woff2'), /* Corrected path */
-       url('../public/Fontz/Roboto_Condensed-Medium.woff') format('woff');
+  font-family: "Roboto"; /* This will be your primary font family */
+  src:
+    url("../public/Fontz/Roboto_Condensed-Regular.woff") format("woff2"),
+    /* Corrected path */ url("../public/Fontz/Roboto_Condensed-Medium.woff")
+      format("woff");
   font-weight: 400; /* Use numerical values for consistency, normal is 400 */
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Roboto'; /* Keep the same family name for different weights */
-  src: url('../public/Fontz/Roboto_Condensed-ExtraBold.woff') format('woff2'); /* Corrected path */
+  font-family: "Roboto"; /* Keep the same family name for different weights */
+  src: url("../public/Fontz/Roboto_Condensed-ExtraBold.woff") format("woff2"); /* Corrected path */
   font-weight: 800; /* ExtraBold is typically around 800 */
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'JetBrain'; /* This will be your primary font family */
-  src: url('../public/Fontz/JetBrainsMono-ExtraBold.woff') format('woff2'), /* Corrected path */
-       url('../public/Fontz/JetBrainsMono-Medium.woff') format('woff');
+  font-family: "JetBrain"; /* This will be your primary font family */
+  src:
+    url("../public/Fontz/JetBrainsMono-ExtraBold.woff") format("woff2"),
+    /* Corrected path */ url("../public/Fontz/JetBrainsMono-Medium.woff")
+      format("woff");
   font-weight: 400; /* Use numerical values for consistency, normal is 400 */
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'JetBrain-Regular'; /* Keep the same family name for different weights */
-  src: url('../public/Fontz/Roboto_Condensed-ExtraBold.woff') format('woff2'); /* Corrected path */
+  font-family: "JetBrain-Regular"; /* Keep the same family name for different weights */
+  src: url("../public/Fontz/Roboto_Condensed-ExtraBold.woff") format("woff2"); /* Corrected path */
   font-weight: 800; /* ExtraBold is typically around 800 */
   font-style: normal;
   font-display: swap;
@@ -43,13 +47,13 @@
 body {
   margin: 0;
   /* Set Roboto as the default font for the body */
-  font-family: 'Roboto', sans-serif;
-  font-family: 'JetBrain', sans-serif;
+  font-family: "Roboto", sans-serif;
+  font-family: "JetBrain", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family:
+    source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }

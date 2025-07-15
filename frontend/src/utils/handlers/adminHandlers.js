@@ -5,106 +5,162 @@ import {
   updateProduct,
   deleteProduct,
   getProducts,
-  getProductById
-} from '../../services/productService';
+  getProductById,
+} from "../../services/productService";
 
-import { adminLogin, logout as performLogout } from '../../services/authServices';
+import {
+  adminLogin,
+  logout as performLogout,
+} from "../../services/authServices";
 
-export const handleAdminAuthenticate = async (identifier, password, setAuthError, setIsAuthenticated) => {
-  setAuthError('');
+export const handleAdminAuthenticate = async (
+  identifier,
+  password,
+  setAuthError,
+  setIsAuthenticated,
+) => {
+  setAuthError("");
   try {
     await adminLogin(identifier, password);
     setIsAuthenticated(true);
   } catch (err) {
-    setAuthError(err.message || 'Authentication failed. Please check your credentials.');
+    setAuthError(
+      err.message || "Authentication failed. Please check your credentials.",
+    );
     setIsAuthenticated(false);
   }
 };
 
 export const handleSignOut = (setStateSetters) => {
   performLogout();
-  for (const [setter, value] of setStateSetters) {
+  // Using forEach instead of for...of to avoid no-restricted-syntax
+  setStateSetters.forEach(([setter, value]) => {
     setter(value);
+  });
+};
+
+export const handleCreateProduct = async (
+  productData,
+  fetchProductsCallback, // Renamed to avoid shadowing issues
+  setCurrentView,
+  setProductsError,
+) => {
+  setProductsError(null);
+  try {
+    // console.log(
+    //    "Product data received by handleCreateProduct (before createProduct call):",
+    //    productData,
+    // );
+    // console.log(
+    //    "Images array content received by handleCreateProduct:",
+    //    productData.images,
+    // );
+
+    await createProduct(productData); // Removed unused newProduct assignment
+    // console.log("Product created successfully.");
+    fetchProductsCallback(); // Use the passed callback
+    setCurrentView("list");
+  } catch (err) {
+    // console.error("Error creating product:", err);
+    setProductsError(err.message || "Failed to create product.");
+    // console.log("Product data being sent (on error):", productData);
+    // console.log("Images array content (on error):", productData.images);
   }
 };
 
-export const fetchProducts = async (setProducts, setProductsError, setLoadingProducts) => {
-  setLoadingProducts(true);
+export const handleFetchProducts = async (
+  setProducts,
+  setProductsError,
+  setLoading = null,
+) => {
   setProductsError(null);
+  if (setLoading) setLoading(true);
+
   try {
-    const fetchedProducts = await getProducts();
-    setProducts(fetchedProducts);
+    const products = await getProducts();
+    setProducts(products);
   } catch (err) {
-    console.error('Error fetching products:', err);
-    setProductsError(err.message || 'Failed to load products.');
+    setProductsError(err.message || "Failed to fetch products.");
   } finally {
-    setLoadingProducts(false);
+    if (setLoading) setLoading(false);
   }
 };
 
-export const handleCreateProduct = async (productData, fetchProducts, setCurrentView, setProductsError) => {
+// You can also create an alias for backward compatibility
+export const fetchProducts = handleFetchProducts;
+
+export const handleUpdateProduct = async (
+  editingProductId,
+  productData,
+  fetchProductsCallback, // Renamed to avoid shadowing issues
+  setCurrentView,
+  setEditingProduct,
+  setProductsError,
+) => {
   setProductsError(null);
   try {
-    console.log('Product data received by handleCreateProduct (before createProduct call):', productData); // New log
-    console.log('Images array content received by handleCreateProduct:', productData.images); // New log
-
-    const newProduct = await createProduct(productData);
-    console.log('Product created:', newProduct);
-    fetchProducts();
-    setCurrentView('list');
-  } catch (err) {
-    console.error('Error creating product:', err);
-    setProductsError(err.message || 'Failed to create product.');
-    // Keep these as they are good for debugging errors
-    console.log('Product data being sent (on error):', productData); 
-    console.log('Images array content (on error):', productData.images); 
-  }
-};
-
-export const handleUpdateProduct = async (editingProductId, productData, fetchProducts, setCurrentView, setEditingProduct, setProductsError) => {
-  setProductsError(null);
-  try {
-    const updatedProduct = await updateProduct(editingProductId, productData);
-    console.log('Product updated:', updatedProduct);
-    fetchProducts();
-    setCurrentView('list');
+    await updateProduct(editingProductId, productData); // Removed unused updatedProduct assignment
+    // console.log("Product updated successfully.");
+    fetchProductsCallback(); // Use the passed callback
+    setCurrentView("list");
     setEditingProduct(null);
   } catch (err) {
-    console.error('Error updating product:', err);
-    setProductsError(err.message || 'Failed to update product.');
+    // console.error("Error updating product:", err);
+    setProductsError(err.message || "Failed to update product.");
   }
 };
 
-export const handleDeleteWithAnimation = async (productId, setProducts, setDeletingId, setProductsError) => {
-  if (!window.confirm('Are you sure you want to delete this product?')) return;
+export const handleDeleteWithAnimation = async (
+  productId,
+  setProducts,
+  setDeletingId,
+  setProductsError,
+  confirmDeleteCallback, // New parameter for confirmation
+) => {
+  const isConfirmed = await confirmDeleteCallback();
+  if (!isConfirmed) {
+    return;
+  }
 
   setProductsError(null);
   setDeletingId(productId);
-  await new Promise(resolve => setTimeout(resolve, 500));
+  await new Promise((resolve) => setTimeout(() => resolve(), 500)); // Ensure resolve is called without arguments
 
   try {
     await deleteProduct(productId);
-    setProducts(prev => prev.filter(p => p._id !== productId));
+    setProducts((prev) =>
+      // eslint-disable-next-line no-underscore-dangle
+      prev.filter((p) => p._id !== productId),
+    );
   } catch (err) {
-    console.error('Error deleting product:', err);
-    setProductsError(err.message || 'Failed to delete product.');
+    // console.error("Error deleting product:", err);
+    setProductsError(err.message || "Failed to delete product.");
   } finally {
     setDeletingId(null);
   }
 };
 
-export const handleEditProduct = async (productId, products, setEditingProduct, setCurrentView, setProductsError) => {
+export const handleEditProduct = async (
+  productId,
+  products,
+  setEditingProduct,
+  setCurrentView,
+  setProductsError,
+) => {
   setProductsError(null);
   try {
-    const productToEdit = products.find(p => p._id === productId) || await getProductById(productId);
+    // eslint-disable-next-line no-underscore-dangle
+    const productToEdit =
+      products.find((p) => p._id === productId) ||
+      (await getProductById(productId));
     if (productToEdit) {
       setEditingProduct(productToEdit);
-      setCurrentView('edit');
+      setCurrentView("edit");
     } else {
-      setProductsError('Product not found.');
+      setProductsError("Product not found.");
     }
   } catch (err) {
-    console.error('Error editing product:', err);
-    setProductsError(err.message || 'Failed to load product.');
+    // console.error("Error editing product:", err);
+    setProductsError(err.message || "Failed to load product.");
   }
 };
