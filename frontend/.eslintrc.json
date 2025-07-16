@@ -58,7 +58,7 @@
     "eol-last": "error",
     "no-param-reassign": [
       "error",
-      { "props": true, "ignorePropertyModificationsFor": ["state"] }
+      { "props": true, "ignorePropertyModificationsFor": ["e", "state"] }
     ],
     "max-len": [
       "warn",

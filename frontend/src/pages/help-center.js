@@ -57,51 +57,53 @@ function HelpCenter() {
 
   // Search functionality
   useEffect(() => {
+    let timer; // Declare timer outside the if block
+
     if (searchQuery.trim() === "") {
       setSearchResults([]);
       setIsSearching(false);
-      return;
-    }
+      // No timer was set up, so the cleanup function will just be an empty one.
+    } else {
+      setIsSearching(true);
+      timer = setTimeout(() => {
+        const results = [];
+        const query = searchQuery.toLowerCase();
 
-    setIsSearching(true);
-    const timer = setTimeout(() => {
-      const results = [];
-      const query = searchQuery.toLowerCase();
-
-      helpCategoriesData.forEach((category) => {
-        // Search in category title
-        if (category.title.toLowerCase().includes(query)) {
-          results.push({
-            type: "category",
-            id: category.id,
-            title: category.title,
-            description: category.description,
-            icon: category.icon,
-            color: category.color,
-          });
-        }
-
-        // Search in articles
-        category.articles.forEach((article) => {
-          if (article.title.toLowerCase().includes(query)) {
+        helpCategoriesData.forEach((category) => {
+          if (category.title.toLowerCase().includes(query)) {
             results.push({
-              type: "article",
-              title: article.title,
-              url: article.url,
-              category: category.title,
-              categoryId: category.id,
-              popular: article.popular,
+              type: "category",
+              id: category.id,
+              title: category.title,
+              description: category.description,
+              icon: category.icon,
+              color: category.color,
             });
           }
+
+          category.articles.forEach((article) => {
+            if (article.title.toLowerCase().includes(query)) {
+              results.push({
+                type: "article",
+                title: article.title,
+                url: article.url,
+                category: category.title,
+                categoryId: category.id,
+                popular: article.popular,
+              });
+            }
+          });
         });
-      });
 
-      setSearchResults(results);
-      setIsSearching(false);
-    }, 300);
+        setSearchResults(results);
+        setIsSearching(false);
+      }, 300);
+    }
 
+    // Always return a cleanup function. If timer was never set, it's undefined,
+    // and clearTimeout(undefined) is a no-op, which is fine.
     return () => clearTimeout(timer);
-  }, [searchQuery]);
+  }, [searchQuery]); // Dependency array
 
   const toggleSection = (sectionId) => {
     setExpandedSection(expandedSection === sectionId ? null : sectionId);

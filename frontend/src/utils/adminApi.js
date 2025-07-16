@@ -9,10 +9,12 @@ const api = axios.create({
 // Request interceptor for adding auth token if available
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
+  // Create a new config object to avoid modifying the original parameter directly
+  const newConfig = { ...config };
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    newConfig.headers.Authorization = `Bearer ${token}`;
   }
-  return config;
+  return newConfig;
 });
 
 export default api;

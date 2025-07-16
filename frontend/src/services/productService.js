@@ -1,4 +1,3 @@
-
 // frontend/src/services/productService.js
 import api from "../utils/adminApi"; // Import the configured Axios instance
 

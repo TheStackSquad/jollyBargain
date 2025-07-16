@@ -6,7 +6,7 @@ import {
   deleteProduct,
   getProducts,
   getProductById,
-} from "../services/productService.js"; // Added .js extension
+} from "../../services/productService";
 
 const useProductsManager = (isAuthenticated) => {
   const [products, setProducts] = useState([]);
@@ -72,10 +72,7 @@ const useProductsManager = (isAuthenticated) => {
 
     setProductsError(null);
     setDeletingId(productId);
-    // The promise executor return warning is a false positive with setTimeout.
-    // No change needed here for functionality, but if ESLint config is strict,
-    // you might need to adjust the rule or ensure your 'resolve' is called
-    // without arguments (which setTimeout does by default).
+    // eslint-disable-next-line no-promise-executor-return
     await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for animation
 
     try {

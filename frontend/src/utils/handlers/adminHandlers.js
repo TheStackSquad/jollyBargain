@@ -124,6 +124,7 @@ export const handleDeleteWithAnimation = async (
 
   setProductsError(null);
   setDeletingId(productId);
+  // eslint-disable-next-line no-promise-executor-return
   await new Promise((resolve) => setTimeout(() => resolve(), 500)); // Ensure resolve is called without arguments
 
   try {

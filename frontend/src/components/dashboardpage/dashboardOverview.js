@@ -71,12 +71,14 @@ function DashboardOverview({ userName }) {
         <h3 className="text-2xl font-bold text-gray-800 mb-4">Quick Actions</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <button
+            type="button"
             className="bg-blue-500 text-white py-3 px-6 rounded-lg shadow
           hover:bg-blue-600 transition-colors duration-200 ease-in-out"
           >
             Track My Orders
           </button>
           <button
+            type="button"
             className="bg-gray-200 text-gray-800 py-3 px-6 rounded-lg shadow
           hover:bg-gray-300 transition-colors duration-200 ease-in-out"
           >

@@ -1,6 +1,5 @@
 // frontend/src/components/storepage/featuredDeal.js
 
-
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import StockProgressBar from "./stockProgressBar";
@@ -180,4 +179,3 @@ function FeaturedDeal({ deal, onClaimDeal }) {
 }
 
 export default FeaturedDeal;
-

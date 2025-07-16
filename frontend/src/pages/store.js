@@ -46,7 +46,7 @@ function ShopNowPage() {
         await loadProducts({ page: 1, limit: 12 });
       } catch (err) {
         setError("Failed to load products. Please try again.");
-        console.error("Error loading products:", err);
+        // console.error("Error loading products:", err);
       } finally {
         setIsLoading(false);
       }
@@ -68,7 +68,7 @@ function ShopNowPage() {
         setCurrentPage(1);
       } catch (err) {
         setError("Failed to apply filters. Please try again.");
-        console.error("Error applying filters:", err);
+        //    console.error("Error applying filters:", err);
       } finally {
         setIsLoading(false);
       }
@@ -89,7 +89,7 @@ function ShopNowPage() {
       setCurrentPage(nextPage);
     } catch (err) {
       setError("Failed to load more products. Please try again.");
-      console.error("Error loading more products:", err);
+      //  console.error("Error loading more products:", err);
     }
   }, [currentPage, loadMoreProducts, filters]);
 
@@ -97,7 +97,7 @@ function ShopNowPage() {
   const handleAddToCart = useCallback(
     (product) => {
       addToCart(product);
-      console.log(`Added ${product.name} to cart`);
+      //    console.log(`Added ${product.name} to cart`);
     },
     [addToCart],
   );
@@ -106,7 +106,7 @@ function ShopNowPage() {
   const handleRemoveFromCart = useCallback(
     (productId) => {
       removeFromCart(productId);
-      console.log(`Removed product with ID: ${productId} from cart`);
+      //      console.log(`Removed product with ID: ${productId} from cart`);
     },
     [removeFromCart],
   );
@@ -234,6 +234,7 @@ function ShopNowPage() {
                     <p className="text-sm text-red-700">{error}</p>
                     <div className="mt-2">
                       <button
+                        type="button"
                         onClick={() => window.location.reload()}
                         className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                       >

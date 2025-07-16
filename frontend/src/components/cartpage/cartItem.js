@@ -1,5 +1,5 @@
 // frontend/src/components/cartpage/CartItem.js
-import React from "react";
+import React, { useState } from "react";
 import { Trash2, Minus, Plus, Save } from "lucide-react";
 import {
   MotionDiv,
@@ -8,17 +8,42 @@ import {
   buttonTapVariants,
 } from "../../animation/cartAnimate";
 
-function CartItem({ item, onQuantityChange, onRemoveItem, onSaveForLater }) {
-  // Destructure properties directly from the 'item' prop
-  // CHANGE: 'imageUrls' should be 'images' based on your provided data structure
-  const { _id, title, price, quantity, images } = item;
+function CartItem({
+  item,
+  onQuantityChange,
+  onRemoveItem,
+  onSaveForLater,
+  product,
+}) {
+  // eslint-disable-no-unused-vars
+  const { _id, title, price, quantity } = item;
 
   // Determine the main image URL with a fallback
   // CHANGE: Access the 'url' property from the first object in the 'images' array
-  const mainImageUrl =
-    images && images.length > 0 && images[0].url
-      ? images[0].url // Use the 'url' property of the first image object
-      : `https://placehold.co/100x100/E0E7FF/4F46E5?text=No+Image`;
+  const initialImageUrl =
+    product.images && product.images.length > 0
+      ? product.images[0]
+      : "https://placehold.co/100x100/E0E7FF/4F46E5?text=No+Image";
+
+  const [imageSrc, setImageSrc] = useState(initialImageUrl);
+  // Use a state to track if an error has already occurred to prevent infinite loops.
+  const [hasImageError, setHasImageError] = useState(false);
+
+  // Derive the title for the alt text (with a fallback).
+  const titleAlt = product.title || "Product Image";
+
+  // This function will be called when the image fails to load.
+  const handleImageError = () => {
+    // Only update the source if an error hasn't already been handled
+    // and the current source isn't already the fallback error image.
+    if (
+      !hasImageError &&
+      imageSrc !== `https://placehold.co/100x100/E0E7FF/4F46E5?text=Error`
+    ) {
+      setImageSrc(`https://placehold.co/100x100/E0E7FF/4F46E5?text=Error`);
+      setHasImageError(true); // Mark that an error has occurred for this image
+    }
+  };
 
   return (
     <MotionDiv
@@ -30,15 +55,10 @@ function CartItem({ item, onQuantityChange, onRemoveItem, onSaveForLater }) {
       rounded-xl shadow-sm p-4 mb-4 last:mb-0 transition-all duration-300 ease-in-out"
     >
       <img
-        src={mainImageUrl} // Use the derived mainImageUrl
-        alt={title} // Use title for alt text
+        src={imageSrc} // The image source is now controlled by component state
+        alt={titleAlt}
         className="w-24 h-24 object-cover rounded-lg mr-0 sm:mr-6 mb-4 sm:mb-0 flex-shrink-0"
-        // The onError handler here is less critical now that mainImageUrl has a fallback,
-        // but it can still catch network issues for the provided URL.
-        onError={(e) => {
-          e.target.onerror = null;
-          e.target.src = `https://placehold.co/100x100/E0E7FF/4F46E5?text=Error`;
-        }}
+        onError={handleImageError} // Assign your new error handler
       />
       <div className="flex-grow text-center sm:text-left mb-4 sm:mb-0">
         <h3 className="text-lg font-semibold text-gray-900">{title}</h3>

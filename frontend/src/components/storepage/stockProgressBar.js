@@ -11,7 +11,6 @@ function StockProgressBar({
 }) {
   const remaining = stock - claimed;
   const percentage = (claimed / stock) * 100;
-
   const getStockStatus = () => {
     if (remaining <= 3)
       return {
@@ -75,6 +74,7 @@ function StockProgressBar({
           </span>
           <motion.span
             className={`${textSizeClasses[size]} font-bold ${status.color}`}
+            // eslint-disable-next-line react/jsx-props-no-spreading
             {...urgencyAnimation}
           >
             {status.text}

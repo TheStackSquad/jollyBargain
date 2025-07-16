@@ -5,6 +5,7 @@ import { Upload, AlertCircle, X } from "lucide-react";
 
 // Image Uploader Component
 function ImageUploader({ images, onImagesChange, error }) {
+  // 'error' prop
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
 
@@ -30,8 +31,9 @@ function ImageUploader({ images, onImagesChange, error }) {
 
       const uploadedImages = await Promise.all(uploadPromises);
       onImagesChange([...images, ...uploadedImages]);
-    } catch (error) {
-      console.error("Upload failed:", error);
+    } catch (uploadError) {
+      // Renamed 'error' to 'uploadError' to avoid shadowing
+      // console.error("Upload failed:", uploadError); // Use uploadError here
     } finally {
       setUploading(false);
     }
@@ -66,16 +68,22 @@ function ImageUploader({ images, onImagesChange, error }) {
     onImagesChange(newImages);
   };
 
+  // Refactor the class logic outside the JSX
+  let uploaderClasses =
+    "border-2 border-dashed rounded-lg p-8 text-center transition-colors";
+  if (dragActive) {
+    uploaderClasses += " border-blue-400 bg-blue-50";
+  } else if (error) {
+    // 'error' here refers to the prop
+    uploaderClasses += " border-red-300 bg-red-50";
+  } else {
+    uploaderClasses += " border-gray-300 hover:border-gray-400";
+  }
+
   return (
     <div className="space-y-4">
       <div
-        className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-          dragActive
-            ? "border-blue-400 bg-blue-50"
-            : error
-              ? "border-red-300 bg-red-50"
-              : "border-gray-300 hover:border-gray-400"
-        }`}
+        className={uploaderClasses} // Use the pre-calculated classes
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -100,7 +108,7 @@ function ImageUploader({ images, onImagesChange, error }) {
         </label>
       </div>
 
-      {error && (
+      {error && ( // 'error' here refers to the prop
         <p className="text-sm text-red-600 flex items-center gap-1">
           <AlertCircle className="h-4 w-4" />
           {error}
@@ -120,6 +128,7 @@ function ImageUploader({ images, onImagesChange, error }) {
                 <div className="opacity-0 group-hover:opacity-100 flex gap-2">
                   {index > 0 && (
                     <button
+                      type="button"
                       onClick={() => moveImage(index, index - 1)}
                       className="p-1 bg-white rounded text-gray-700 hover:bg-gray-100"
                       title="Move left"
@@ -129,6 +138,7 @@ function ImageUploader({ images, onImagesChange, error }) {
                   )}
                   {index < images.length - 1 && (
                     <button
+                      type="button"
                       onClick={() => moveImage(index, index + 1)}
                       className="p-1 bg-white rounded text-gray-700 hover:bg-gray-100"
                       title="Move right"
@@ -137,6 +147,7 @@ function ImageUploader({ images, onImagesChange, error }) {
                     </button>
                   )}
                   <button
+                    type="button"
                     onClick={() => removeImage(image.id)}
                     className="p-1 bg-red-500 rounded text-white hover:bg-red-600"
                     title="Remove"

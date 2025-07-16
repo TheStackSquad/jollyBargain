@@ -1,8 +1,46 @@
 // frontend/src/components/storepage/productCard.js
+
 import React from "react";
-import { Star, Heart, ShoppingCart } from "lucide-react";
+import { Heart, ShoppingCart, Star } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { addItemToCart } from "../../reduxStore/cart/cartSlice";
+
+// --- StarRating Component ---
+function StarRating({ rating, size = 16 }) {
+  const fullStars = Math.floor(rating);
+  const hasHalfStar = rating % 1 !== 0;
+  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+  return (
+    <div className="flex items-center">
+      {[...Array(fullStars)].map((_, i) => (
+        <Star
+          key={`full-${rating}-${i}`}
+          size={size}
+          fill="currentColor"
+          className="text-yellow-400"
+        />
+      ))}
+      {hasHalfStar && (
+        <Star
+          key={`half-${rating}`}
+          size={size}
+          fill="currentColor"
+          className="text-yellow-400"
+          style={{ clipPath: "inset(0 50% 0 0)" }}
+        />
+      )}
+      {[...Array(emptyStars)].map((_, i) => (
+        <Star
+          key={`empty-${rating}-${i}`}
+          size={size}
+          stroke="currentColor"
+          className="text-gray-300"
+        />
+      ))}
+    </div>
+  );
+}
 
 function ProductCard({ product, viewMode = "grid" }) {
   const dispatch = useDispatch();
@@ -73,28 +111,15 @@ function ProductCard({ product, viewMode = "grid" }) {
                 </h3>
                 <p className="text-gray-500 mb-2">{brand}</p>
                 <div className="flex items-center mb-2">
-                  <div className="flex items-center">
-                    {[...Array(5)].map((_, i) => (
-                      // Using array index as key is acceptable here as the list is static and never reordered
-                      <Star
-                        key={i}
-                        size={16}
-                        className={
-                          i < Math.floor(displayRating)
-                            ? "text-yellow-400 fill-current"
-                            : "text-gray-300"
-                        }
-                      />
-                    ))}
-                  </div>
-                  <span className="text-sm text-gray-500 ml-2">
+                  <StarRating rating={displayRating} size={16} />
+                  <span className="text-sm text-gray-500 ml-1">
                     ({reviews})
                   </span>
                 </div>
               </div>
 
               <button
-                type="button" // Added explicit type="button"
+                type="button"
                 onClick={handleToggleWishlist}
                 className={`p-2 rounded-full transition-colors ${
                   false // Replace with actual isInWishlist from Redux state later
@@ -119,7 +144,7 @@ function ProductCard({ product, viewMode = "grid" }) {
               </div>
 
               <button
-                type="button" // Added explicit type="button"
+                type="button"
                 onClick={handleAddToCart}
                 className="bg-indigo-600 text-white py-2 px-6 rounded-md hover:bg-indigo-700 transition-colors flex items-center gap-2"
               >
@@ -154,7 +179,7 @@ function ProductCard({ product, viewMode = "grid" }) {
           </span>
         )}
         <button
-          type="button" // Added explicit type="button"
+          type="button"
           onClick={handleToggleWishlist}
           className={`absolute top-2 right-2 p-2 rounded-full transition-colors ${
             false // Replace with actual isInWishlist from Redux state later
@@ -173,20 +198,7 @@ function ProductCard({ product, viewMode = "grid" }) {
         <p className="text-sm text-gray-500 mb-2">{brand}</p>
 
         <div className="flex items-center mb-2">
-          <div className="flex items-center">
-            {[...Array(5)].map((_, i) => (
-              // Using array index as key is acceptable here as the list is static and never reordered
-              <Star
-                key={i}
-                size={12}
-                className={
-                  i < Math.floor(displayRating)
-                    ? "text-yellow-400 fill-current"
-                    : "text-gray-300"
-                }
-              />
-            ))}
-          </div>
+          <StarRating rating={displayRating} size={12} />
           <span className="text-sm text-gray-500 ml-1">({reviews})</span>
         </div>
 
@@ -202,7 +214,7 @@ function ProductCard({ product, viewMode = "grid" }) {
         </div>
 
         <button
-          type="button" // Added explicit type="button"
+          type="button"
           onClick={handleAddToCart}
           className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2"
         >
@@ -215,4 +227,3 @@ function ProductCard({ product, viewMode = "grid" }) {
 }
 
 export default ProductCard;
-

@@ -88,6 +88,7 @@ function Dashboard() {
             {navItems.map((item) => (
               <li key={item.id}>
                 <button
+                  type="button"
                   onClick={() => setActiveTab(item.id)}
                   className={`flex items-center w-full px-4 py-3 rounded-lg text-lg font-medium
                     transition-all duration-300 ease-in-out
@@ -107,6 +108,7 @@ function Dashboard() {
         {/* Logout Button - Assuming it dispatches logoutUser from userSlice */}
         <div className="mt-8">
           <button
+            type="button"
             onClick={() => {
               // Dispatch logout action here
               // dispatch(logoutUser()); // Uncomment when logoutUser is imported and ready

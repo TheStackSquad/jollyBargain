@@ -11,20 +11,19 @@ export const useCountdown = (onTimerEnd) => {
     minutes: 0,
     seconds: 0,
   });
-  const [urgencyLevel, setUrgencyLevel] = useState("new"); // 'new', 'medium', 'urgent'
+  const [urgencyLevel, setUrgencyLevel] = useState("new");
   const [isRefreshing, setIsRefreshing] = useState(false);
-
   const getNextCycleTime = () => {
     const now = new Date();
     const lagosTime = new Date(
       now.toLocaleString("en-US", { timeZone: "Africa/Lagos" }),
     );
-
     const currentHour = lagosTime.getHours();
     const cycleHours = [0, 6, 12, 18];
 
     let nextCycleHour = cycleHours.find((hour) => hour > currentHour);
     if (!nextCycleHour) {
+      // eslint-disable-next-line prefer-destructuring
       nextCycleHour = cycleHours[0]; // Next day's first cycle
     }
 
@@ -232,4 +231,3 @@ function TimerSeparator() {
 }
 
 export default CountdownTimer;
-

@@ -24,7 +24,12 @@ function DealCard({ deal, onClaimDeal, index = 0 }) {
   if (!deal) return null;
 
   const stockStatus = getStockStatus(deal.stock, deal.claimed);
-
+  const { whileHover, whileTap } = dealCardHover;
+  const {
+    initial: urgencyInitial,
+    animate: urgencyAnimate,
+    transition: urgencyTransition,
+  } = urgencyBadge;
   // Use the backend fields directly - no more schema mismatches
   const imageUrl =
     deal.images && deal.images.length > 0
@@ -39,7 +44,8 @@ function DealCard({ deal, onClaimDeal, index = 0 }) {
   return (
     <motion.div
       className="bg-white rounded-xl shadow-lg overflow-hidden"
-      {...dealCardHover}
+      whileHover={whileHover} // Explicitly pass whileHover
+      whileTap={whileTap} // Explicitly pass whileTap
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
@@ -62,7 +68,16 @@ function DealCard({ deal, onClaimDeal, index = 0 }) {
         <div className="absolute top-3 left-3">
           <motion.span
             className="bg-red-500 text-white px-2 py-1 rounded-full text-sm font-bold shadow-lg"
-            {...(stockStatus.urgency === "high" ? urgencyBadge : {})}
+            // Conditionally apply the props
+            initial={
+              stockStatus.urgency === "high" ? urgencyInitial : undefined
+            }
+            animate={
+              stockStatus.urgency === "high" ? urgencyAnimate : undefined
+            }
+            transition={
+              stockStatus.urgency === "high" ? urgencyTransition : undefined
+            }
           >
             {discount}% OFF
           </motion.span>

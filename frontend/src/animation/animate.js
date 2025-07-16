@@ -126,11 +126,7 @@ export const useScrollAnimation = () => ({
   viewport: { once: true, amount: 0.3 },
 });
 
-// Utility functions for creating animated components
-// This function is no longer needed as we directly export motion.component
-// export const createAnimatedComponent = (Component) => motion(Component);
-
-// Pre-configured animated components
+// Pre-configured animated components - these are already named exports
 export const AnimatedDiv = motion.div;
 export const AnimatedH1 = motion.h1;
 export const AnimatedH2 = motion.h2;
@@ -218,24 +214,6 @@ export function ScrollSection({ children, className = "", delay = 0 }) {
     </motion.section>
   );
 }
-
-export default {
-  animationVariants,
-  // useScrollAnimation, // Already exported, so no need to export as part of default
-  AnimatedDiv,
-  AnimatedH1,
-  AnimatedH2,
-  AnimatedH3,
-  AnimatedP,
-  AnimatedButton,
-  AnimatedSection,
-  AnimatedNav,
-  AnimatedHeader,
-  AnimatedFooter,
-  AnimatedCounter,
-  PageWrapper,
-  ScrollSection,
-};
 
 export const fadeIn = (direction, type, delay, duration) => {
   let x = 0;

@@ -187,6 +187,7 @@ function AdminPage() {
             <div className="flex items-center gap-4">
               {currentView === "list" && (
                 <button
+                  type="submit"
                   onClick={() => setCurrentView("create")}
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
                 >
@@ -195,6 +196,7 @@ function AdminPage() {
               )}
               {(currentView === "create" || currentView === "edit") && (
                 <button
+                  type="submit"
                   onClick={() => {
                     setCurrentView("list");
                     setEditingProduct(null);
@@ -205,6 +207,7 @@ function AdminPage() {
                 </button>
               )}
               <button
+                type="submit"
                 onClick={() =>
                   handleSignOut([
                     [setIsAuthenticated, false],

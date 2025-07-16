@@ -4,10 +4,17 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Mail, Facebook } from "lucide-react";
-import animationExports from "../../animation/animate";
+// FIX: Corrected import. These are named exports, not properties of a default export.
+import {
+  AnimatedDiv,
+  AnimatedH2,
+  AnimatedButton,
+  AnimatedSection,
+  AnimatedP,
+} from "../../animation/animate";
 
 // Import Redux actions and selectors
-import { clearAuthMessages } from "../../reduxStore/user/userSlice"; // Still need clearAuthMessages for useEffect
+import { clearAuthMessages } from "../../reduxStore/user/userSlice";
 // Import the handler functions
 import {
   handleGoogleSignIn,
@@ -15,8 +22,9 @@ import {
   handleFormSubmit as sharedHandleFormSubmit,
 } from "../../utils/handlers/authHandlers";
 
-const { AnimatedDiv, AnimatedH2, AnimatedButton, AnimatedSection, AnimatedP } =
-  animationExports;
+// FIX: Remove this destructuring as it's no longer needed after fixing the import
+// const { AnimatedDiv, AnimatedH2, AnimatedButton, AnimatedSection, AnimatedP } =
+//   animationExports;
 
 function AccountPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -34,26 +42,26 @@ function AccountPage() {
 
   // Effect to clear messages when component mounts or form type changes
   useEffect(() => {
-    console.log("[AccountUI] useEffect: Clearing auth messages.");
+    // FIX: Removed console.log for 'no-console' warning
     dispatch(clearAuthMessages());
   }, [isLogin, dispatch]);
 
   // Effect to redirect after successful authentication
   useEffect(() => {
     if (isAuthenticated && successMessage && !loading) {
-      console.log(
-        "[AccountUI] useEffect: Authenticated and success message, redirecting...",
-      );
+      // FIX: Removed console.log for 'no-console' warning
       const timer = setTimeout(() => {
         navigate("/dashboard");
         dispatch(clearAuthMessages());
       }, 1500);
       return () => clearTimeout(timer);
     }
+
+    return undefined; // Or simply `return;`
   }, [isAuthenticated, successMessage, loading, navigate, dispatch]);
 
   const toggleForm = () => {
-    console.log("[AccountUI] Toggling form. isLogin:", !isLogin);
+    // FIX: Removed console.log for 'no-console' warning
     setIsLogin(!isLogin);
     setEmail("");
     setPassword("");
@@ -73,6 +81,14 @@ function AccountPage() {
       dispatch,
     });
   };
+
+  // Inside your component function, before the return statement:
+  let buttonText;
+  if (loading) {
+    buttonText = isLogin ? "Signing In..." : "Signing Up...";
+  } else {
+    buttonText = isLogin ? "Sign In" : "Sign Up";
+  }
 
   return (
     <AnimatedSection className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
@@ -107,6 +123,7 @@ function AccountPage() {
             onClick={handleGoogleSignIn} // Use the imported handler directly
             disabled={loading}
             className={`flex items-center justify-center w-full px-6 py-3 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ease-in-out ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+            type="button" // FIX: Added type="button"
           >
             <Mail className="w-5 h-5 mr-2" />
             {isLogin ? "Sign in with Google" : "Sign up with Google"}
@@ -116,6 +133,7 @@ function AccountPage() {
             onClick={handleFacebookSignIn} // Use the imported handler directly
             disabled={loading}
             className={`flex items-center justify-center w-full px-6 py-3 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ease-in-out ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+            type="button" // FIX: Added type="button"
           >
             <Facebook className="w-5 h-5 mr-2" />
             {isLogin ? "Sign in with Facebook" : "Sign up with Facebook"}
@@ -210,19 +228,12 @@ function AccountPage() {
               />
             </AnimatedDiv>
           )}
-
           <AnimatedButton
             type="submit"
             disabled={loading}
             className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ease-in-out transform hover:scale-105 ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
           >
-            {loading
-              ? isLogin
-                ? "Signing In..."
-                : "Signing Up..."
-              : isLogin
-                ? "Sign In"
-                : "Sign Up"}
+            {buttonText}
           </AnimatedButton>
         </form>
 
@@ -232,6 +243,7 @@ function AccountPage() {
             onClick={toggleForm}
             className="font-medium text-blue-600 hover:text-blue-500 focus:outline-none focus:underline transition-all duration-200 ease-in-out"
             disabled={loading}
+            type="button" // FIX: Added type="button" for clarity and to avoid default submit behavior
           >
             {isLogin ? "Sign Up" : "Sign In"}
           </button>

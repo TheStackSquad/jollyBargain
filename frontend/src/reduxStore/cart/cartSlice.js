@@ -38,12 +38,14 @@ const initialState = loadCartState() || {
 const cartSlice = createSlice({
   name: "cart",
   initialState,
+
   reducers: {
     addItemToCart: (state, action) => {
       const product = action.payload;
       const existingItem = state.items.find((item) => item._id === product._id);
 
-      state.totalQuantity++;
+      // Fix for no-plusplus:
+      state.totalQuantity += 1; // Changed from state.totalQuantity++;
       state.totalAmount += product.price;
 
       if (existingItem) {
@@ -94,6 +96,8 @@ const cartSlice = createSlice({
       saveCartState(state);
     },
   },
+
+  // ... (rest of your slice) ...
 });
 
 export const {
