@@ -90,7 +90,7 @@ function ShippingZones() {
 
     const weight = parseFloat(calculatorData.weight);
     // Simple validation for weight
-    if (isNaN(weight) || weight <= 0) {
+    if (Number.isNaN(weight) || weight <= 0) {
       setCalculatorMessage("Please enter a valid weight (e.g., 2.5).");
       setMessageType("error");
       return;

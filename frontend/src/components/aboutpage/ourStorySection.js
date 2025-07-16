@@ -13,11 +13,19 @@ import {
 } from "../../animation/animate"; // Adjust path
 
 function OurStorySection({ scrollAnimation }) {
+  const { initial, whileInView, viewport } = scrollAnimation;
+
   return (
     <ScrollSection className="py-20 px-4 bg-white">
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <AnimatedDiv {...scrollAnimation}>
+          <AnimatedDiv
+            initial={initial}
+            whileInView={whileInView}
+            viewport={viewport}
+          >
+            {" "}
+            {/* Fixed prop spreading */}
             <AnimatedH2 className="text-4xl font-bold text-gray-900 mb-6">
               Our Story
             </AnimatedH2>
@@ -28,16 +36,20 @@ function OurStorySection({ scrollAnimation }) {
               platform serving hundreds of thousands of happy customers.
             </AnimatedP>
             <AnimatedP className="text-lg text-gray-700 mb-6 leading-relaxed">
-              We believe that great deals shouldn't be hard to find. That's why
-              we've built a platform that brings together the best offers from
+              We believe that great deals shouldn&apos;t be hard to find.
+              That&apos;s why {/* Fixed unescaped apostrophes */}
+              we&apos;ve built a platform that brings together the best offers
+              from {/* Fixed unescaped apostrophes */}
               trusted sellers, all in one convenient place.
             </AnimatedP>
             <Link to="/store">
               {" "}
               {/* Wrapped in Link tag */}
               <AnimatedButton
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-full font-semibold"
-                {...animationVariants.buttonHover}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3
+                rounded-full font-semibold"
+                whileHover={animationVariants.buttonHover.whileHover}
+                whileTap={animationVariants.buttonHover.whileTap}
               >
                 Shop Our Deals
               </AnimatedButton>
@@ -46,7 +58,9 @@ function OurStorySection({ scrollAnimation }) {
 
           <AnimatedDiv
             className="bg-gradient-to-br from-blue-100 to-purple-100 p-8 rounded-2xl"
-            {...scrollAnimation}
+            initial={initial} // Fixed prop spreading
+            whileInView={whileInView} // Fixed prop spreading
+            viewport={viewport} // Fixed prop spreading
           >
             <div className="text-center">
               <div className="text-6xl mb-4">🎯</div>

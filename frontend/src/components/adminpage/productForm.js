@@ -86,15 +86,15 @@ function ProductForm({
         }),
       );
 
-      // Log the FormData content (for debugging, won't show full file data)
-      for (const pair of formDataToSend.entries()) {
-        console.log(`${pair[0]}, ${pair[1]}`);
-      }
+      // // Log the FormData content (for debugging, won't show full file data)
+      // for (const pair of formDataToSend.entries()) {
+      //   // console.log(`${pair[0]}, ${pair[1]}`);
+      // }
 
       await onSubmit(formDataToSend);
-      console.log("Submission successful!");
+      // console.log("Submission successful!");
     } catch (error) {
-      console.error("Submit failed:", error);
+      // console.error("Submit failed:", error);
     } finally {
       setIsSubmitting(false);
     }

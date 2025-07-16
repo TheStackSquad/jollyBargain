@@ -80,7 +80,7 @@ function ShippingPolicy() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          {policyData.map((policy, index) => {
+          {policyData.map((policy) => {
             const IconComponent = policy.icon;
             return (
               <div

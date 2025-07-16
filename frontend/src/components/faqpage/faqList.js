@@ -73,7 +73,7 @@ function FAQList({ searchTerm }) {
           id: 8,
           question: "How do I return an item?",
           answer: `Log into your account, go to "My Orders," select the item you want to return, 
-            and follow the return process. We\'ll provide a prepaid return label for eligible returns.`,
+            and follow the return process. We'll provide a prepaid return label for eligible returns.`,
         },
         {
           id: 9,
@@ -154,9 +154,9 @@ function FAQList({ searchTerm }) {
         ) : (
           // FAQ Categories and Questions
           <div className="space-y-8">
-            {filteredFAQs.map((category, categoryIndex) => (
+            {filteredFAQs.map((category) => (
               <div
-                key={categoryIndex}
+                key={category.category}
                 className="bg-white rounded-xl shadow-lg overflow-hidden"
               >
                 <div className="bg-purple-600 text-white px-6 py-4">
@@ -172,6 +172,7 @@ function FAQList({ searchTerm }) {
                       className="border-b border-gray-200 last:border-b-0"
                     >
                       <button
+                        type="button"
                         onClick={() => toggleExpanded(faq.id)}
                         className="w-full px-6 py-4 text-left hover:bg-gray-50 transition-colors
                         duration-200 flex justify-between items-center"

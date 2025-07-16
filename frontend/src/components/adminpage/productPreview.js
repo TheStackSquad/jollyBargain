@@ -46,12 +46,16 @@ function ProductPreview({ product }) {
     displayProduct.title && displayProduct.title !== "Product Title";
 
   // Fix for no-nested-ternary
-  const statusClassName =
-    displayProduct.status === "active"
-      ? "bg-green-100 text-green-800"
-      : displayProduct.status === "draft"
-        ? "bg-yellow-100 text-yellow-800"
-        : "bg-gray-100 text-gray-800";
+  let statusClassName;
+
+  if (displayProduct.status === "active") {
+    statusClassName = "bg-green-100 text-green-800";
+  } else if (displayProduct.status === "draft") {
+    statusClassName = "bg-yellow-100 text-yellow-800";
+  } else {
+    // Default case for any other status
+    statusClassName = "bg-gray-100 text-gray-800";
+  }
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-6">

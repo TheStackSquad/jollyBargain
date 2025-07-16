@@ -4,7 +4,7 @@ function HelpCategories({
   helpCategories,
   expandedSection,
   toggleSection,
-  AnimatedP,
+  AnimatedP, // Assuming AnimatedP is a motion component that accepts key
   ChevronRightIcon,
   ChevronDownIcon,
 }) {
@@ -26,8 +26,10 @@ function HelpCategories({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
             >
-              <div
-                className="flex items-center justify-between cursor-pointer"
+              {/* Changed div to button for accessibility */}
+              <button
+                type="button" // Explicitly set type to "button"
+                className="flex items-center justify-between cursor-pointer w-full text-left" // Added w-full and text-left
                 onClick={() => toggleSection(category.id)}
               >
                 <div className="flex items-center gap-3">
@@ -48,28 +50,32 @@ function HelpCategories({
                 ) : (
                   <ChevronRightIcon size={20} className="text-gray-600" />
                 )}
-              </div>
+              </button>
 
               {isExpanded && (
                 <div className="mt-4 space-y-2">
-                  {category.articles.map((article, articleIndex) => (
-                    <a
-                      key={articleIndex}
-                      href={article.url}
-                      className="flex items-center justify-between p-3 text-gray-700 hover:text-blue-600
+                  {category.articles.map(
+                    (
+                      article, // Removed articleIndex
+                    ) => (
+                      <a
+                        key={article.id} // Changed key from articleIndex to article.id
+                        href={article.url}
+                        className="flex items-center justify-between p-3 text-gray-700 hover:text-blue-600
                       hover:bg-white rounded-lg transition-colors font-roboto"
-                    >
-                      <span className="flex items-center gap-2">
-                        {article.title}
-                        {article.popular && (
-                          <span className="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">
-                            Popular
-                          </span>
-                        )}
-                      </span>
-                      <ChevronRightIcon size={16} className="text-gray-400" />
-                    </a>
-                  ))}
+                      >
+                        <span className="flex items-center gap-2">
+                          {article.title}
+                          {article.popular && (
+                            <span className="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">
+                              Popular
+                            </span>
+                          )}
+                        </span>
+                        <ChevronRightIcon size={16} className="text-gray-400" />
+                      </a>
+                    ),
+                  )}
                 </div>
               )}
             </AnimatedP>

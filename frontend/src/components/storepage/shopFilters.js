@@ -51,7 +51,7 @@ function ShopFilters({
 
   const handlePriceRangeChange = (value, index) => {
     const newRange = [...filters.priceRange];
-    newRange[index] = parseInt(value);
+    newRange[index] = parseInt(value, 10);
     onFilterChange("priceRange", newRange);
   };
 
@@ -70,6 +70,7 @@ function ShopFilters({
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
           <button
+            type="button"
             onClick={onHideFilters}
             className="lg:hidden text-gray-400 hover:text-gray-600"
           >
@@ -173,14 +174,14 @@ function ShopFilters({
                   value={rating}
                   checked={filters.rating === rating}
                   onChange={(e) =>
-                    onFilterChange("rating", parseInt(e.target.value))
+                    onFilterChange("rating", parseInt(e.target.value, 10))
                   }
                   className="text-indigo-600 focus:ring-indigo-500"
                 />
                 <div className="ml-2 flex items-center">
-                  {[...Array(5)].map((_, i) => (
+                  {Array.from({ length: 5 }, (_, i) => (
                     <Star
-                      key={i}
+                      key={`rating-star-${rating}-${i}`}
                       size={14}
                       className={
                         i < rating
@@ -200,7 +201,7 @@ function ShopFilters({
                 value={0}
                 checked={filters.rating === 0}
                 onChange={(e) =>
-                  onFilterChange("rating", parseInt(e.target.value))
+                  onFilterChange("rating", parseInt(e.target.value, 10))
                 }
                 className="text-indigo-600 focus:ring-indigo-500"
               />

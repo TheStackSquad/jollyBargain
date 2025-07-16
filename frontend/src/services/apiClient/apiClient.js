@@ -85,42 +85,42 @@ axiosInstance.interceptors.response.use(
 );
 
 class ApiClient {
-  // No constructor needed here!
-
-  // The 'class-methods-use-this' warning for these methods is acknowledged.
-  // They are kept as instance methods as the class might evolve to hold instance-specific state.
-  // For now, they directly wrap axiosInstance or localStorage.
-
+  // eslint-disable-next-line class-methods-use-this
   async get(endpoint, config = {}) {
     // Removed unnecessary try/catch wrapper
     const response = await axiosInstance.get(endpoint, config);
     return response;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async post(endpoint, data, config = {}) {
     // Removed unnecessary try/catch wrapper
     const response = await axiosInstance.post(endpoint, data, config);
     return response.data;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async put(endpoint, data, config = {}) {
     // Removed unnecessary try/catch wrapper
     const response = await axiosInstance.put(endpoint, data, config);
     return response.data;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async delete(endpoint, config = {}) {
     // Removed unnecessary try/catch wrapper
     const response = await axiosInstance.delete(endpoint, config);
     return response.data;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async patch(endpoint, data, config = {}) {
     // Removed unnecessary try/catch wrapper
     const response = await axiosInstance.patch(endpoint, data, config);
     return response.data;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   setAuthToken(token) {
     if (token) {
       localStorage.setItem("authToken", token);
@@ -129,6 +129,7 @@ class ApiClient {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   getAuthToken() {
     return localStorage.getItem("authToken");
   }

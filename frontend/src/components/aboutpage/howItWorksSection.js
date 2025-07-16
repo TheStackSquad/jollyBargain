@@ -43,7 +43,9 @@ function HowItWorksSection({ scrollAnimation }) {
       <div className="max-w-6xl mx-auto">
         <AnimatedH2
           className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-16"
-          {...scrollAnimation}
+          initial={scrollAnimation.initial}
+          whileInView={scrollAnimation.whileInView}
+          viewport={scrollAnimation.viewport}
         >
           How It Works
         </AnimatedH2>
@@ -55,9 +57,9 @@ function HowItWorksSection({ scrollAnimation }) {
           whileInView="animate"
           viewport={{ once: true, amount: 0.3 }}
         >
-          {steps.map((step, index) => (
+          {steps.map((step) => (
             <AnimatedDiv
-              key={index}
+              key={step.step}
               className="text-center"
               variants={animationVariants.cardItem}
             >

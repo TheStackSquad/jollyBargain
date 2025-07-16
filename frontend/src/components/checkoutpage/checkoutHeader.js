@@ -25,19 +25,30 @@ function CheckoutHeader({ currentStep }) {
         {steps.map((step) => {
           const isActive = step.id === currentStep;
           const isCompleted = step.id < currentStep;
+
+          // Refactored: Determine the background and shadow classes
+          let stepBackgroundAndShadowClasses = "";
+          if (isActive) {
+            stepBackgroundAndShadowClasses = "bg-indigo-600 shadow-lg";
+          } else if (isCompleted) {
+            stepBackgroundAndShadowClasses = "bg-green-500";
+          } else {
+            stepBackgroundAndShadowClasses = "bg-gray-300";
+          }
+
           return (
             <div key={step.id} className="flex flex-col items-center">
               <div
                 className={`relative w-10 h-10 rounded-full flex items-center justify-center
                   text-white font-bold text-lg transition-all duration-300 ease-in-out
-                  ${isActive ? "bg-indigo-600 shadow-lg" : isCompleted ? "bg-green-500" : "bg-gray-300"}
+                  ${stepBackgroundAndShadowClasses}
                 `}
               >
                 <step.icon className="w-5 h-5" />
                 {isCompleted && (
                   <CheckCircle
                     className="absolute -top-1 -right-1 w-5 h-5 text-green-500
-                  bg-white rounded-full"
+                    bg-white rounded-full"
                   />
                 )}
               </div>

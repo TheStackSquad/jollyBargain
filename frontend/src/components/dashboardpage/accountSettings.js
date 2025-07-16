@@ -187,6 +187,7 @@ function AccountSettings() {
           Manage your shipping and billing addresses.
         </p>
         <button
+          type="submit"
           onClick={handleAddressUpdate}
           className="bg-blue-500 text-white py-2 px-4 rounded-lg shadow hover:bg-blue-600
           transition-colors duration-200 ease-in-out"
@@ -207,6 +208,7 @@ function AccountSettings() {
           Add or remove your saved payment options.
         </p>
         <button
+          type="submit"
           onClick={handlePaymentMethodUpdate}
           className="bg-blue-500 text-white py-2 px-4 rounded-lg shadow hover:bg-blue-600
           transition-colors duration-200 ease-in-out"

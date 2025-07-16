@@ -11,6 +11,7 @@ function ContactForm() {
     subject: "",
     message: "",
   });
+  const [submissionStatus, setSubmissionStatus] = useState(null);
 
   // Handle input changes
   const handleChange = (e) => {
@@ -23,11 +24,17 @@ function ContactForm() {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: Implement form submission logic
-    console.log("Form submitted:", formData);
-    // Reset form after submission
+    // Simulate form submission (replace with actual API call)
+    //  console.log("Form submitted:", formData);
+
+    // Assuming successful submission
+    setSubmissionStatus("success");
     setFormData({ name: "", email: "", subject: "", message: "" });
-    alert("Thank you for your message! We'll get back to you soon.");
+
+    // Optionally hide the message after a few seconds
+    setTimeout(() => {
+      setSubmissionStatus(null);
+    }, 5000);
   };
 
   return (
@@ -49,7 +56,7 @@ function ContactForm() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              Fill out the form below and we'll respond within 24 hours
+              Fill out the form below and we&ampt;ll respond within 24 hours
             </AnimatedP>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -108,7 +115,9 @@ function ContactForm() {
                   value={formData.subject}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 font-roboto"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2
+                  focus:ring-blue-500 focus:border-transparent
+                  transition-all duration-200 font-roboto"
                   placeholder="What's this about?"
                 />
               </div>
@@ -144,6 +153,12 @@ function ContactForm() {
                 </button>
               </div>
             </form>
+
+            {submissionStatus === "success" && (
+              <p style={{ color: "green", marginTop: "10px" }}>
+                Thank you for your message! We&apos;ll get back to you soon.
+              </p>
+            )}
           </div>
         </div>
       </div>

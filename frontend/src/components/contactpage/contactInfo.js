@@ -66,7 +66,8 @@ function ContactInfo() {
             {detail}
           </a>
         );
-      case "address":
+      case "address": {
+        // Wrap case block content in curly braces to avoid 'no-case-declarations'
         const addressQuery = encodeURIComponent(detail);
         return (
           <a
@@ -79,6 +80,7 @@ function ContactInfo() {
             {detail}
           </a>
         );
+      } // Close the curly brace for the case block
       default:
         return <p className={baseClasses}>{detail}</p>;
     }
@@ -108,18 +110,25 @@ function ContactInfo() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {contactDetails.map((item, index) => {
+          {contactDetails.map((item) => {
+            // Removed 'index' from here
             const IconComponent = item.icon;
             return (
               <AnimatedP
-                key={index}
-                className="bg-gray-50 rounded-xl p-6 text-center hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2"
+                key={`${item.title}-${item.type}`} // Using a combination of title and type for a stable key
+                className="bg-gray-50 rounded-xl p-6 text-center hover:shadow-lg
+                transition-all duration-300 transform hover:-translate-y-2"
                 initial={{ opacity: 0, y: 30 }}
+                // Delay based on a new index if needed, or remove if not critical for animation
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
+                transition={{
+                  duration: 0.6,
+                  delay: 0.2 + contactDetails.indexOf(item) * 0.1,
+                }}
               >
                 <div
-                  className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-white shadow-md mb-4 ${item.color}`}
+                  className={`inline-flex items-center justify-center w-16 h-16
+                  rounded-full bg-white shadow-md mb-4 ${item.color}`}
                 >
                   <IconComponent size={32} />
                 </div>
@@ -127,11 +136,17 @@ function ContactInfo() {
                   {item.title}
                 </h3>
                 <div className="space-y-1">
-                  {item.details.map((detail, detailIndex) => (
-                    <div key={detailIndex}>
-                      {createContactLink(detail, item.type)}
-                    </div>
-                  ))}
+                  {item.details.map(
+                    (
+                      detail, // Removed 'detailIndex' from here
+                    ) => (
+                      <div key={detail}>
+                        {" "}
+                        {/* Using 'detail' as the key, assuming it's unique within its parent array */}
+                        {createContactLink(detail, item.type)}
+                      </div>
+                    ),
+                  )}
                 </div>
               </AnimatedP>
             );
@@ -155,14 +170,20 @@ function ContactInfo() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="/faq"
-              className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-roboto font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg
+              hover:bg-blue-700 transition-colors duration-200 font-roboto
+              font-medium focus:outline-none focus:ring-2
+              focus:ring-blue-500 focus:ring-offset-2"
               aria-label="Visit FAQ page"
             >
               Visit FAQ
             </a>
             <a
               href="/help-center"
-              className="inline-block px-6 py-3 bg-white text-blue-600 border-2 border-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition-all duration-200 font-roboto font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="inline-block px-6 py-3 bg-white text-blue-600 border-2 border-blue-600
+              rounded-lg hover:bg-blue-600 hover:text-white transition-all
+              duration-200 font-roboto font-medium focus:outline-none focus:ring-2
+              focus:ring-blue-500 focus:ring-offset-2"
               aria-label="Visit Help Center"
             >
               Help Center

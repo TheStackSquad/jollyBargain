@@ -7,6 +7,7 @@ function HelpHeader({ onBackClick }) {
       <div className="max-w-6xl mx-auto px-6 py-4">
         <div className="flex items-center gap-4">
           <button
+            type="submit"
             onClick={onBackClick}
             className="flex items-center gap-2 text-gray-600 hover:text-gray-800
             transition-colors font-roboto"

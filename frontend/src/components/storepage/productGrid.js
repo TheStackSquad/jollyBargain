@@ -12,13 +12,13 @@ function ProductGrid({
 }) {
   // Use the isLoading prop passed from the parent
   if (isLoading && products.length === 0) {
-    console.log(
-      "Displaying ProductCardSkeletons: isLoading is true and products array is empty.",
-    );
+    // console.log(
+    //   "Displaying ProductCardSkeletons: isLoading is true and products array is empty.",
+    // );
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {Array.from({ length: 6 }).map((_, index) => (
-          <ProductCardSkeleton key={index} />
+        {Array.from({ length: 6 }, (_, index) => (
+          <ProductCardSkeleton key={`product-skeleton-${index}`} />
         ))}
       </div>
     );

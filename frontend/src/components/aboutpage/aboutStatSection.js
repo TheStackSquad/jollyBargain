@@ -34,7 +34,7 @@ function HowItWorksSection({ scrollAnimation }) {
       step: "4",
       title: "Enjoy",
       description: "Fast delivery straight to your doorstep",
-      icon: "📦",
+      icon: "�",
     },
   ];
 
@@ -43,7 +43,11 @@ function HowItWorksSection({ scrollAnimation }) {
       <div className="max-w-6xl mx-auto">
         <AnimatedH2
           className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-16"
-          {...scrollAnimation}
+          // Explicitly passing props instead of spreading scrollAnimation
+          initial={scrollAnimation.initial}
+          whileInView={scrollAnimation.whileInView}
+          viewport={scrollAnimation.viewport}
+          transition={scrollAnimation.transition}
         >
           How It Works
         </AnimatedH2>
@@ -55,9 +59,9 @@ function HowItWorksSection({ scrollAnimation }) {
           whileInView="animate"
           viewport={{ once: true, amount: 0.3 }}
         >
-          {steps.map((step, index) => (
+          {steps.map((step) => (
             <AnimatedDiv
-              key={index}
+              key={step.step} // Using step.step as the unique key
               className="text-center"
               variants={animationVariants.cardItem}
             >

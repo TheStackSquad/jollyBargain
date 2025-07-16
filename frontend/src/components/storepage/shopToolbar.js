@@ -16,6 +16,7 @@ function ShopToolbar({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <button
+            type="submit"
             onClick={onShowFilters}
             className="lg:hidden flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
           >
@@ -53,6 +54,7 @@ function ShopToolbar({
           {/* View Mode Toggle */}
           <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
             <button
+              type="submit"
               onClick={() => onViewModeChange("grid")}
               className={`p-2 transition-colors ${
                 viewMode === "grid"
@@ -64,6 +66,7 @@ function ShopToolbar({
               <Grid size={16} />
             </button>
             <button
+              type="submit"
               onClick={() => onViewModeChange("list")}
               className={`p-2 transition-colors ${
                 viewMode === "list"

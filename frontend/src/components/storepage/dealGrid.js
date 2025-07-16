@@ -64,7 +64,12 @@ function DealsGrid({
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
         >
-          <button className="bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold py-3 px-8 rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+          <button
+            type="button"
+            className="bg-gradient-to-r from-blue-500 to-purple-500
+            text-white font-semibold py-3 px-8 rounded-full hover:shadow-lg
+            transform hover:scale-105 transition-all duration-300"
+          >
             Load More Deals
           </button>
         </motion.div>

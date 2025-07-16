@@ -94,6 +94,7 @@ function FlashDeals() {
   };
 
   // Handle claiming a deal
+  // eslint-disable-next-line no-unused-vars
   const handleClaimDeal = (deal) => {
     // alert(
     //   `Claiming deal: ${deal.title} for ${new Intl.NumberFormat("en-NG", {
@@ -134,12 +135,18 @@ function FlashDeals() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
       {/* Hero Section */}
-      <motion.div className="text-center py-12 px-4" {...heroSection}>
+      <motion.div
+        className="text-center py-12 px-4"
+        initial={heroSection.initial}
+        animate={heroSection.animate}
+        transition={heroSection.transition}
+        // ... and any other props from heroSection
+      >
         <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
           ⚡ <span className="text-red-500">FLASH DEALS</span> ⚡
         </h1>
         <p className="text-xl text-gray-600 mb-8">
-          Incredible savings that won't last long!
+          Incredible savings that won&apos;t last long!
         </p>
         <CountdownTimer onTimerEnd={loadNewDeals} />
       </motion.div>

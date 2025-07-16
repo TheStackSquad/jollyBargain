@@ -197,6 +197,7 @@ function CartSummary({
       {/* Continue Shopping */}
       <div className="mt-4 text-center">
         <button
+          type="submit"
           onClick={onContinueShopping} // Now calls the prop
           className="text-indigo-600 hover:text-indigo-800 text-sm font-medium
           transition-colors duration-150 ease-in-out cursor-pointer"

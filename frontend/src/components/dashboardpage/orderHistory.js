@@ -1,4 +1,5 @@
 // frontend/src/components/dashboardpage/OrderHistory.js
+
 import React from "react";
 import { motion } from "framer-motion";
 import { fadeIn, staggerContainer } from "../../animation/animate"; // Your animation exports
@@ -44,6 +45,20 @@ function OrderHistory() {
     },
   ];
 
+  // Helper function to get status-specific classes
+  const getStatusClasses = (status) => {
+    switch (status) {
+      case "Delivered":
+        return "bg-green-100 text-green-800";
+      case "Shipped":
+        return "bg-blue-100 text-blue-800";
+      case "Processing":
+        return "bg-yellow-100 text-yellow-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
   return (
     <motion.div
       variants={fadeIn("up", "tween", 0.1, 0.6)}
@@ -60,7 +75,7 @@ function OrderHistory() {
         <motion.div variants={staggerContainer(0.1, 0.2)}>
           {orders.map((order, index) => (
             <motion.div
-              key={order.id}
+              key={order.id} // Using order.id as the key, which is unique
               variants={fadeIn("up", "spring", index * 0.1, 0.7)}
               className="bg-white p-6 rounded-xl shadow-md border border-gray-200 mb-4 last:mb-0"
             >
@@ -69,16 +84,7 @@ function OrderHistory() {
                   Order #{order.id}
                 </h3>
                 <span
-                  className={`px-3 py-1 rounded-full text-sm font-medium
-                  ${
-                    order.status === "Delivered"
-                      ? "bg-green-100 text-green-800"
-                      : order.status === "Shipped"
-                        ? "bg-blue-100 text-blue-800"
-                        : order.status === "Processing"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "bg-gray-100 text-gray-800"
-                  }`}
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusClasses(order.status)}`}
                 >
                   {order.status}
                 </span>
@@ -93,22 +99,38 @@ function OrderHistory() {
                   Items:
                 </h4>
                 <ul className="list-disc pl-5 text-gray-600">
-                  {order.items.map((item, itemIndex) => (
-                    <li key={itemIndex}>
-                      {item.name} (x{item.qty}) - ${item.price.toFixed(2)} each
-                    </li>
-                  ))}
+                  {order.items.map(
+                    (
+                      item, // Removed itemIndex from map arguments
+                    ) => (
+                      <li key={item.name}>
+                        {" "}
+                        {/* Using item.name as key */}
+                        {item.name} (x{item.qty}) - ${item.price.toFixed(2)}{" "}
+                        each
+                      </li>
+                    ),
+                  )}
                 </ul>
               </div>
 
               <div className="mt-4 flex flex-wrap gap-3">
-                <button className="bg-blue-500 text-white py-2 px-4 rounded-lg shadow hover:bg-blue-600 transition-colors duration-200 ease-in-out text-sm">
+                <button
+                  type="button" // Added explicit type
+                  className="bg-blue-500 text-white py-2 px-4 rounded-lg shadow hover:bg-blue-600 transition-colors duration-200 ease-in-out text-sm"
+                >
                   Track Order
                 </button>
-                <button className="bg-gray-200 text-gray-800 py-2 px-4 rounded-lg shadow hover:bg-gray-300 transition-colors duration-200 ease-in-out text-sm">
+                <button
+                  type="button" // Added explicit type
+                  className="bg-gray-200 text-gray-800 py-2 px-4 rounded-lg shadow hover:bg-gray-300 transition-colors duration-200 ease-in-out text-sm"
+                >
                   View Invoice
                 </button>
-                <button className="bg-purple-500 text-white py-2 px-4 rounded-lg shadow hover:bg-purple-600 transition-colors duration-200 ease-in-out text-sm">
+                <button
+                  type="button" // Added explicit type
+                  className="bg-purple-500 text-white py-2 px-4 rounded-lg shadow hover:bg-purple-600 transition-colors duration-200 ease-in-out text-sm"
+                >
                   Reorder
                 </button>
               </div>

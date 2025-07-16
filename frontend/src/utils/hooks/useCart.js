@@ -4,7 +4,6 @@ import { useState, useCallback, useEffect } from "react";
 export const useCart = () => {
   const [cart, setCart] = useState([]);
 
-  // Load cart from localStorage on mount
   useEffect(() => {
     const savedCart = localStorage.getItem("cart");
     if (savedCart) {
@@ -16,7 +15,6 @@ export const useCart = () => {
     }
   }, []);
 
-  // Save cart to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);

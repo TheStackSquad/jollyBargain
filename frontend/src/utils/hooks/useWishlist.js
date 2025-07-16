@@ -4,7 +4,6 @@ import { useState, useCallback, useEffect } from "react";
 export const useWishlist = () => {
   const [wishlist, setWishlist] = useState([]);
 
-  // Load wishlist from localStorage on mount
   useEffect(() => {
     const savedWishlist = localStorage.getItem("wishlist");
     if (savedWishlist) {
@@ -16,7 +15,6 @@ export const useWishlist = () => {
     }
   }, []);
 
-  // Save wishlist to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem("wishlist", JSON.stringify(wishlist));
   }, [wishlist]);

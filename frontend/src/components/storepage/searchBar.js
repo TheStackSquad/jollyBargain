@@ -1,5 +1,5 @@
 // frontend/src/components/storepage/searchBar.js
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { debounce } from "lodash";
 
@@ -82,18 +82,30 @@ function SearchBar({
     }).format(price);
 
   const quickPriceFilters = [
-    { label: `Under ${formatPrice(10000)}`, min: "", max: "10000" },
     {
+      id: "under-10k",
+      label: `Under ${formatPrice(10000)}`,
+      min: "",
+      max: "10000",
+    },
+    {
+      id: "10k-50k",
       label: `${formatPrice(10000)} - ${formatPrice(50000)}`,
       min: "10000",
       max: "50000",
     },
     {
+      id: "50k-100k",
       label: `${formatPrice(50000)} - ${formatPrice(100000)}`,
       min: "50000",
       max: "100000",
     },
-    { label: `Above ${formatPrice(100000)}`, min: "100000", max: "" },
+    {
+      id: "above-100k",
+      label: `Above ${formatPrice(100000)}`,
+      min: "100000",
+      max: "",
+    },
   ];
 
   return (
@@ -248,9 +260,9 @@ function SearchBar({
                   Quick Price Filters
                 </label>
                 <div className="grid grid-cols-2 gap-2">
-                  {quickPriceFilters.map((filter, index) => (
+                  {quickPriceFilters.map((filter) => (
                     <button
-                      key={index}
+                      key={filter.id} // Use the unique 'id' from your filter object
                       type="button"
                       onClick={() =>
                         handleFilterChange("priceRange", {
