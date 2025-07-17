@@ -2,8 +2,13 @@
 
 import React from "react";
 import { Heart, ShoppingCart, Star } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addItemToCart } from "../../reduxStore/cart/cartSlice";
+import {
+  addToWishlist,
+  removeFromWishlist,
+  selectIsInWishlist, // Import the selector
+} from "../../reduxStore/wishlist/wishlistSlice";
 
 // --- StarRating Component ---
 function StarRating({ rating, size = 16 }) {
@@ -72,6 +77,8 @@ function ProductCard({ product, viewMode = "grid" }) {
     discount,
   } = product;
 
+  const isInWishlist = useSelector((state) => selectIsInWishlist(state, _id));
+
   const mainImageUrl =
     images && images.length > 0
       ? images[0].url
@@ -84,13 +91,15 @@ function ProductCard({ product, viewMode = "grid" }) {
 
   const handleAddToCart = () => {
     dispatch(addItemToCart(product));
-    console.log(`Dispatched: Added "${title}" to cart.`);
+    // console.log(`Dispatched: Added "${title}" to cart.`);
   };
 
   const handleToggleWishlist = () => {
-    console.log(
-      `Wishlist toggle for product ID: ${_id} (functionality coming soon via Redux)`,
-    );
+    if (isInWishlist) {
+      dispatch(removeFromWishlist(_id)); // Remove using ID
+    } else {
+      dispatch(addToWishlist(product)); // Add the whole product object
+    }
   };
 
   const displayRating = parseFloat(rating) || 0;
@@ -137,12 +146,15 @@ function ProductCard({ product, viewMode = "grid" }) {
                 type="button"
                 onClick={handleToggleWishlist}
                 className={`p-2 rounded-full transition-colors ${
-                  false // Replace with actual isInWishlist from Redux state later
+                  isInWishlist
                     ? "bg-red-500 text-white"
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 }`}
               >
-                <Heart size={20} fill={false ? "currentColor" : "none"} />
+                <Heart
+                  size={20}
+                  fill={isInWishlist ? "currentColor" : "none"}
+                />
               </button>
             </div>
 
@@ -197,12 +209,12 @@ function ProductCard({ product, viewMode = "grid" }) {
           type="button"
           onClick={handleToggleWishlist}
           className={`absolute top-2 right-2 p-2 rounded-full transition-colors ${
-            false // Replace with actual isInWishlist from Redux state later
+            isInWishlist
               ? "bg-red-500 text-white"
               : "bg-white text-gray-600 hover:bg-gray-100"
           }`}
         >
-          <Heart size={16} fill={false ? "currentColor" : "none"} />
+          <Heart size={16} fill={isInWishlist ? "currentColor" : "none"} />
         </button>
       </div>
 

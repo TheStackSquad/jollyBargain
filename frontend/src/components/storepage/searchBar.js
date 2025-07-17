@@ -1,5 +1,5 @@
 // frontend/src/components/storepage/searchBar.js
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import { debounce } from "lodash";
 
@@ -15,11 +15,16 @@ function SearchBar({
   const [showFilters, setShowFilters] = useState(false);
 
   // Debounced search function to avoid too many API calls
+  const debouncedOnSearch = useMemo(
+    () => debounce((filters) => onSearch(filters), 500),
+    [onSearch], // onSearch is a dependency for creating the debounced function
+  );
+
   const debouncedSearch = useCallback(
-    debounce((filters) => {
-      onSearch(filters);
-    }, 500),
-    [onSearch],
+    (filters) => {
+      debouncedOnSearch(filters);
+    },
+    [debouncedOnSearch], // The debounced function is the dependency
   );
 
   // Handle immediate filter changes
@@ -219,103 +224,66 @@ function SearchBar({
           className="overflow-hidden"
         >
           <div className="pt-4 border-t border-gray-200">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Price Range */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Price Range
-                </label>
-                <div className="flex gap-2 items-center">
-                  <input
-                    type="number"
-                    placeholder="Min"
-                    value={priceRange.min}
-                    onChange={(e) =>
-                      handleFilterChange("priceRange", {
-                        ...priceRange,
-                        min: e.target.value,
-                      })
-                    }
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  />
-                  <span className="text-gray-500">-</span>
-                  <input
-                    type="number"
-                    placeholder="Max"
-                    value={priceRange.max}
-                    onChange={(e) =>
-                      handleFilterChange("priceRange", {
-                        ...priceRange,
-                        max: e.target.value,
-                      })
-                    }
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  />
-                </div>
-              </div>
-
-              {/* Quick Price Filters */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Quick Price Filters
-                </label>
-                <div className="grid grid-cols-2 gap-2">
-                  {quickPriceFilters.map((filter) => (
-                    <button
-                      key={filter.id} // Use the unique 'id' from your filter object
-                      type="button"
-                      onClick={() =>
-                        handleFilterChange("priceRange", {
-                          min: filter.min,
-                          max: filter.max,
-                        })
-                      }
-                      className={`px-3 py-2 rounded-lg text-sm transition-colors ${
-                        priceRange.min === filter.min &&
-                        priceRange.max === filter.max
-                          ? "bg-blue-500 text-white"
-                          : "bg-blue-100 text-blue-700 hover:bg-blue-200"
-                      }`}
-                    >
-                      {filter.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
+            {/* Quick Price Filters */}
+            <p className="block text-sm font-medium text-gray-700 mb-2">
+              Quick Price Filters
+            </p>{" "}
+            {/* Changed from <label> to <p> */}
+            <div className="grid grid-cols-2 gap-2">
+              {quickPriceFilters.map((filter) => (
+                <button
+                  key={filter.id} // Use the unique 'id' from your filter object
+                  type="button"
+                  onClick={() =>
+                    handleFilterChange("priceRange", {
+                      min: filter.min,
+                      max: filter.max,
+                    })
+                  }
+                  className={`px-3 py-2 rounded-lg text-sm transition-colors ${
+                    priceRange.min === filter.min &&
+                    priceRange.max === filter.max
+                      ? "bg-blue-500 text-white"
+                      : "bg-blue-100 text-blue-700 hover:bg-blue-200"
+                  }`}
+                >
+                  {filter.label}
+                </button>
+              ))}
             </div>
+          </div>
 
-            {/* Search Button */}
-            <div className="mt-4 pt-4 border-t border-gray-200">
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full md:w-auto px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold rounded-lg hover:shadow-lg transform transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                {isLoading ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
-                    Searching...
-                  </>
-                ) : (
-                  <>
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                      />
-                    </svg>
-                    Search Products
-                  </>
-                )}
-              </button>
-            </div>
+          {/* Search Button */}
+          <div className="mt-4 pt-4 border-t border-gray-200">
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full md:w-auto px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold rounded-lg hover:shadow-lg transform transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {isLoading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+                  Searching...
+                </>
+              ) : (
+                <>
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                  Search Products
+                </>
+              )}
+            </button>
           </div>
         </motion.div>
       </form>

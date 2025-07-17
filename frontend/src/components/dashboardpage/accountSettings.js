@@ -1,7 +1,8 @@
 // frontend/src/components/dashboardpage/AccountSettings.js
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { fadeIn } from "../../animation/animate"; // Your animation exports
+import { fadeIn } from "../../animation/animate";
+import MessageBox from "../common/messageBox";
 
 function AccountSettings() {
   // Simulated user data (replace with actual Redux state data)
@@ -9,32 +10,46 @@ function AccountSettings() {
   const [email, setEmail] = useState("john.doe@example.com");
   const [phone, setPhone] = useState("123-456-7890");
 
+  // State for the custom message box
+  const [messageBox, setMessageBox] = useState({
+    isVisible: false,
+    message: "",
+  });
+
+  const showMessageBox = (message) => {
+    setMessageBox({ isVisible: true, message });
+  };
+
+  const hideMessageBox = () => {
+    setMessageBox({ isVisible: false, message: "" });
+  };
+
   const handleProfileUpdate = (e) => {
     e.preventDefault();
-    console.log("Profile Updated:", { name, email, phone });
     // In a real app, dispatch a Redux action to update user profile on the backend
-    alert("Profile updated successfully! (Simulated)");
+    // alert("Profile updated successfully! (Simulated)"); // Removed
+    showMessageBox("Profile updated successfully! (Simulated)");
   };
 
   const handleChangePassword = (e) => {
     e.preventDefault();
-    console.log("Change Password initiated.");
     // In a real app, dispatch a Redux action to change password on the backend
-    alert("Password change initiated! (Simulated)");
+    // alert("Password change initiated! (Simulated)"); // Removed
+    showMessageBox("Password change initiated! (Simulated)");
   };
 
   const handleAddressUpdate = (e) => {
     e.preventDefault();
-    console.log("Address Updated.");
     // In a real app, manage addresses via Redux actions
-    alert("Address updated successfully! (Simulated)");
+    // alert("Address updated successfully! (Simulated)"); // Removed
+    showMessageBox("Address updated successfully! (Simulated)");
   };
 
   const handlePaymentMethodUpdate = (e) => {
     e.preventDefault();
-    console.log("Payment Method Update initiated.");
     // In a real app, manage payment methods via Redux actions
-    alert("Payment method updated! (Simulated)");
+    // alert("Payment method updated! (Simulated)"); // Removed
+    showMessageBox("Payment method updated! (Simulated)");
   };
 
   return (
@@ -216,6 +231,11 @@ function AccountSettings() {
           Manage Payment Methods
         </button>
       </motion.div>
+      <MessageBox
+        message={messageBox.message}
+        isVisible={messageBox.isVisible}
+        onClose={hideMessageBox}
+      />
     </motion.div>
   );
 }

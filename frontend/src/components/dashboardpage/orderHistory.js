@@ -70,7 +70,7 @@ function OrderHistory() {
       <h2 className="text-4xl font-extrabold text-gray-900 mb-6">My Orders</h2>
 
       {orders.length === 0 ? (
-        <p className="text-gray-600">You haven't placed any orders yet.</p>
+        <p className="text-gray-600">You haven&apos;t placed any orders yet.</p>
       ) : (
         <motion.div variants={staggerContainer(0.1, 0.2)}>
           {orders.map((order, index) => (

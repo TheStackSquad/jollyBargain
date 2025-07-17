@@ -147,8 +147,8 @@ function FAQList({ searchTerm }) {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
             >
-              No FAQs found matching "{searchTerm}". Try different keywords or
-              browse all categories.
+              No FAQs found matching &apos;{searchTerm}. Try different keywords
+              or browse all categories.
             </AnimatedP>
           </div>
         ) : (
@@ -218,8 +218,8 @@ function FAQList({ searchTerm }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            Can&apos;t find what you're looking for? Our customer service team
-            is here to help.
+            Can&apos;t find what you&apos;re looking for? Our customer service
+            team is here to help.
           </AnimatedP>
           <a
             href="/contact"

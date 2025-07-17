@@ -39,7 +39,7 @@ function FeaturedDeal({ deal, onClaimDeal }) {
             🔥 FEATURED DEAL OF THE CYCLE 🔥
           </h2>
           <p className="text-sm opacity-90 mt-1">
-            Limited time offer - Don't miss out!
+            Limited time offer - Don&apos;t miss out!
           </p>
         </div>
 

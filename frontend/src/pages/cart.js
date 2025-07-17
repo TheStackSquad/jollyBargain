@@ -40,10 +40,12 @@ function CartPage() {
     type: "",
     text: "",
   });
-  const [vatRate, setVatRate] = React.useState(0.075);
+  //  eslint-disable-no-unused-vars
+  // const [vatRate, setVatRate] = React.useState(0.075);
+  const vatRate = 0.075;
   const [discountAmount, setDiscountAmount] = React.useState(0); // New state for applied discount
 
-  console.log(setVatRate);
+  // console.log(setVatRate);
 
   // --- FIX STARTS HERE ---
   // Memoize availableCoupons so it doesn't change on every render
@@ -109,9 +111,9 @@ function CartPage() {
   // Handle save for later (simulated) - for now, just removes from cart and shows message
   const handleSaveForLater = (id) => {
     dispatch(removeItemFromCart(id)); // Remove from cart
-    console.log(
-      `Item ${id} removed from cart and simulated as saved for later.`,
-    );
+    // console.log(
+    //   `Item ${id} removed from cart and simulated as saved for later.`,
+    // );
     setCouponMessage({
       type: "success",
       text: "Item moved to saved for later!",
@@ -192,7 +194,7 @@ function CartPage() {
 
   // Handle checkout (smooth redirect)
   const handleCheckout = () => {
-    console.log("Proceeding to checkout!");
+    // console.log("Proceeding to checkout!");
     navigate("/checkout"); // Use navigate for smooth redirection
   };
 

@@ -24,7 +24,7 @@ function ProductGrid({
     );
   }
 
-  console.log("Products successfully loaded. Displaying ProductGrid.");
+  // console.log("Products successfully loaded. Displaying ProductGrid.");
   return (
     <div
       className={`grid gap-6 ${
