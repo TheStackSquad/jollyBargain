@@ -11,36 +11,51 @@ function StarRating({ rating, size = 16 }) {
   const hasHalfStar = rating % 1 !== 0;
   const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
-  return (
-    <div className="flex items-center">
-      {[...Array(fullStars)].map((_, i) => (
+  const renderStars = () => {
+    const starsArray = [];
+
+    // Add full stars
+    for (let i = 0; i < fullStars; i += 1) {
+      starsArray.push(
         <Star
-          key={`full-${rating}-${i}`}
+          key={`full-${i}`}
           size={size}
           fill="currentColor"
           className="text-yellow-400"
-        />
-      ))}
-      {hasHalfStar && (
+        />,
+      );
+    }
+
+    // Add half star if needed
+    if (hasHalfStar) {
+      starsArray.push(
         <Star
-          key={`half-${rating}`}
+          key="half"
           size={size}
           fill="currentColor"
           className="text-yellow-400"
           style={{ clipPath: "inset(0 50% 0 0)" }}
-        />
-      )}
-      {[...Array(emptyStars)].map((_, i) => (
+        />,
+      );
+    }
+
+    // Add empty stars
+    for (let i = 0; i < emptyStars; i += 1) {
+      starsArray.push(
         <Star
-          key={`empty-${rating}-${i}`}
+          key={`empty-${i}`}
           size={size}
-          stroke="currentColor"
+          fill="none"
           className="text-gray-300"
-        />
-      ))}
-    </div>
-  );
-}
+        />,
+      );
+    }
+
+    return starsArray;
+  };
+
+  return <div className="flex items-center">{renderStars()}</div>;
+} // Closing brace for StarRating component
 
 function ProductCard({ product, viewMode = "grid" }) {
   const dispatch = useDispatch();
