@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import CountdownTimer from "../components/countdown";
+import { CountdownTimer } from "../components/countdown";
 import SearchBar from "../components/storepage/searchBar";
 // import SearchResults from '../components/storepage/searchResults';
 import FeaturedDeal from "../components/storepage/featuredDeal";
