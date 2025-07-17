@@ -25,19 +25,19 @@ function Wishlist() {
       imageUrl: "https://placehold.co/100x100/B0C0A0/FFFFFF?text=Speaker",
     },
   ];
-
-  const handleAddToCart = (item) => {
-    console.log(`Adding ${item.name} to cart.`);
+  // eslint-disable-no-unused-var
+  const handleAddToCart = () => {
+    // console.log(`Adding ${item.name} to cart.`);
     // In a real app, dispatch a Redux action to add item to cart
     // Replaced alert with console.log as alerts are discouraged.
-    console.log(`${item.name} added to cart! (Simulated)`);
+    // console.log(`${item.name} added to cart! (Simulated)`);
   };
-
-  const handleRemoveFromWishlist = (item) => {
-    console.log(`Removing ${item.name} from wishlist.`);
+  // eslint-disable-no-unused-var
+  const handleRemoveFromWishlist = () => {
+    // console.log(`Removing ${item.name} from wishlist.`);
     // In a real app, dispatch a Redux action to remove item from wishlist
     // Replaced alert with console.log as alerts are discouraged.
-    console.log(`${item.name} removed from wishlist! (Simulated)`);
+    // console.log(`${item.name} removed from wishlist! (Simulated)`);
   };
 
   return (

@@ -104,8 +104,8 @@ function ContactInfo() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            We're always here to help. Choose the best way to reach us based on
-            your needs.
+            We&apos;re always here to help. Choose the best way to reach us
+            based on your needs.
           </AnimatedP>
         </div>
 
@@ -161,7 +161,7 @@ function ContactInfo() {
           transition={{ duration: 0.6, delay: 0.8 }}
         >
           <h3 className="text-xl font-semibold text-blue-800 mb-2 font-jetbrain">
-            Need Immediate Help?
+            Need Immediate Help&apos;?
           </h3>
           <p className="text-blue-700 mb-4 font-roboto">
             Check out our FAQ section for quick answers to common questions, or

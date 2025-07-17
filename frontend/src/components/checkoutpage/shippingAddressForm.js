@@ -5,13 +5,8 @@ import {
   MotionButton,
   buttonTapVariants,
 } from "../../animation/cartAnimate";
+import MessageBox from "../common/messageBox";
 
-/**
- * Renders the shipping address input form.
- * @param {object} props - The component props.
- * @param {function} props.onNextStep - Callback to proceed to the next step.
- * @param {object} props.initialData - Initial form data.
- */
 function ShippingAddressForm({ onNextStep, initialData = {} }) {
   const [formData, setFormData] = useState({
     fullName: initialData.fullName || "",
@@ -22,6 +17,20 @@ function ShippingAddressForm({ onNextStep, initialData = {} }) {
     zipCode: initialData.zipCode || "",
     country: initialData.country || "",
   });
+
+  // State for the custom message box
+  const [messageBox, setMessageBox] = useState({
+    isVisible: false,
+    message: "",
+  });
+
+  const showMessageBox = (message) => {
+    setMessageBox({ isVisible: true, message });
+  };
+
+  const hideMessageBox = () => {
+    setMessageBox({ isVisible: false, message: "" });
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,7 +51,7 @@ function ShippingAddressForm({ onNextStep, initialData = {} }) {
       onNextStep(formData);
     } else {
       // Using a simple alert here; in a real app, you'd use a more integrated message system or MessageBox
-      alert("Please fill in all required shipping fields.");
+      showMessageBox("Profile updated successfully! (Simulated)");
     }
   };
 
@@ -198,6 +207,12 @@ function ShippingAddressForm({ onNextStep, initialData = {} }) {
           >
             Continue to Payment
           </MotionButton>
+
+          <MessageBox
+            message={messageBox.message}
+            isVisible={messageBox.isVisible}
+            onClose={hideMessageBox}
+          />
         </div>
       </form>
     </MotionDiv>

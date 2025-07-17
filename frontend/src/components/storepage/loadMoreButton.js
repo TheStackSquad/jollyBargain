@@ -7,7 +7,7 @@ function LoadMoreButton({ onLoadMore, hasMore, isLoading }) {
     return (
       <div className="text-center mt-8">
         <p className="text-gray-500 text-sm">
-          You've reached the end of the products
+          You&apos;ve reached the end of the products
         </p>
       </div>
     );
