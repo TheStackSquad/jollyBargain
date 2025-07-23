@@ -1,19 +1,19 @@
 // backend/models/User.js
-import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 const UserSchema = new mongoose.Schema({
   email: {
     type: String,
-    required: [true, 'Please enter your email'],
+    required: [true, "Please enter your email"],
     unique: true, // Email must be unique
     lowercase: true, // Store emails in lowercase
-    match: [/.+\@.+\..+/, 'Please use a valid email address'], // Basic email regex validation
+    match: [/.+\@.+\..+/, "Please use a valid email address"], // Basic email regex validation
   },
   password: {
     type: String,
-    required: [true, 'Please enter a password'],
-    minlength: [6, 'Password must be at least 6 characters long'],
+    required: [true, "Please enter a password"],
+    minlength: [6, "Password must be at least 6 characters long"],
     select: false, // Don't return password in query results by default
   },
   // You might want to add more fields later, e.g., name, role, etc.
@@ -29,9 +29,9 @@ const UserSchema = new mongoose.Schema({
 });
 
 // Mongoose Pre-save hook to hash password before saving
-UserSchema.pre('save', async function(next) {
+UserSchema.pre("save", async function (next) {
   // Only run this function if password was actually modified
-  if (!this.isModified('password')) {
+  if (!this.isModified("password")) {
     return next();
   }
 
@@ -42,8 +42,8 @@ UserSchema.pre('save', async function(next) {
 });
 
 // Method to compare entered password with hashed password in the database
-UserSchema.methods.matchPassword = async function(enteredPassword) {
+UserSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-export default mongoose.model('User', UserSchema);
+export default mongoose.model("User", UserSchema);

@@ -15,7 +15,7 @@ router.post("/process", processPayment);
 router.post(
   "/webhook",
   express.raw({ type: "application/json" }),
-  handleStripeWebhook
+  handleStripeWebhook,
 );
 
 export default router;

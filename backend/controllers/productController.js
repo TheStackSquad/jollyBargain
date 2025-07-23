@@ -1,9 +1,12 @@
 // backend/controllers/productController.js
 
-import Product from '../models/Product.js';
+import Product from "../models/Product.js";
 // Import the image upload and deletion utilities from uploadHandler.js
 // These functions will interact with Cloudinary.
-import { uploadImagesToCloudinary, deleteImageFromCloudinary } from '../backendUtils/uploadHandler.js';
+import {
+  uploadImagesToCloudinary,
+  deleteImageFromCloudinary,
+} from "../backendUtils/uploadHandler.js";
 
 //Get all products
 export const getProducts = async (req, res) => {
@@ -17,10 +20,10 @@ export const getProducts = async (req, res) => {
       data: products,
     });
   } catch (error) {
-    console.error('Error fetching products:', error);
+    console.error("Error fetching products:", error);
     res.status(500).json({
       success: false,
-      message: 'Server Error: Could not retrieve products.',
+      message: "Server Error: Could not retrieve products.",
       error: error.message,
     });
   }
@@ -34,7 +37,7 @@ export const getProductById = async (req, res) => {
     if (!product) {
       return res.status(404).json({
         success: false,
-        message: 'Product not found',
+        message: "Product not found",
       });
     }
 
@@ -43,28 +46,28 @@ export const getProductById = async (req, res) => {
       data: product,
     });
   } catch (error) {
-    console.error('Error fetching product by ID:', error);
+    console.error("Error fetching product by ID:", error);
     // Check for Mongoose CastError (invalid ID format)
-    if (error.name === 'CastError') {
+    if (error.name === "CastError") {
       return res.status(400).json({
         success: false,
-        message: 'Invalid product ID format',
+        message: "Invalid product ID format",
         error: error.message,
       });
     }
     res.status(500).json({
       success: false,
-      message: 'Server Error: Could not retrieve product.',
+      message: "Server Error: Could not retrieve product.",
       error: error.message,
     });
   }
 };
 
-
 // Create a new product
 export const createProduct = async (req, res) => {
   try {
-    const { title, description, price, category, stock, sku, status, tags } = req.body;
+    const { title, description, price, category, stock, sku, status, tags } =
+      req.body;
     let images = []; // Array to store Cloudinary image public_id and url
 
     // If image files are present from Multer, upload them to Cloudinary
@@ -75,10 +78,10 @@ export const createProduct = async (req, res) => {
       // If the schema requires images and none are provided, return an error
       // This check assumes 'images' field in schema is marked as required.
       // If images are optional, remove this block.
-      if (Product.schema.path('images').isRequired && images.length === 0) {
+      if (Product.schema.path("images").isRequired && images.length === 0) {
         return res.status(400).json({
           success: false,
-          message: 'Product images are required.',
+          message: "Product images are required.",
         });
       }
     }
@@ -93,23 +96,30 @@ export const createProduct = async (req, res) => {
       sku,
       status,
       // Ensure tags are stored as an array. Frontend sends as comma-separated string.
-      tags: tags ? (Array.isArray(tags) ? tags : tags.split(',').map(tag => tag.trim()).filter(tag => tag)) : [],
+      tags: tags
+        ? Array.isArray(tags)
+          ? tags
+          : tags
+              .split(",")
+              .map((tag) => tag.trim())
+              .filter((tag) => tag)
+        : [],
       images, // Store the array of { public_id, url } from Cloudinary
     });
 
     res.status(201).json({
       success: true,
-      message: 'Product created successfully',
+      message: "Product created successfully",
       data: product,
     });
   } catch (error) {
-    console.error('Error creating product:', error);
+    console.error("Error creating product:", error);
     // Handle Mongoose validation errors (e.g., required fields missing)
-    if (error.name === 'ValidationError') {
-      const messages = Object.values(error.errors).map(val => val.message);
+    if (error.name === "ValidationError") {
+      const messages = Object.values(error.errors).map((val) => val.message);
       return res.status(400).json({
         success: false,
-        message: 'Validation Error',
+        message: "Validation Error",
         errors: messages,
       });
     }
@@ -117,12 +127,12 @@ export const createProduct = async (req, res) => {
     if (error.code === 11000 && error.keyPattern && error.keyPattern.sku) {
       return res.status(400).json({
         success: false,
-        message: 'Duplicate SKU: A product with this SKU already exists.',
+        message: "Duplicate SKU: A product with this SKU already exists.",
       });
     }
     res.status(500).json({
       success: false,
-      message: 'Server Error: Could not create product.',
+      message: "Server Error: Could not create product.",
       error: error.message,
     });
   }
@@ -132,7 +142,8 @@ export const createProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
   try {
-    const { title, description, price, category, stock, sku, status, tags } = req.body;
+    const { title, description, price, category, stock, sku, status, tags } =
+      req.body;
     const productId = req.params.id;
 
     let product = await Product.findById(productId);
@@ -140,7 +151,7 @@ export const updateProduct = async (req, res) => {
     if (!product) {
       return res.status(404).json({
         success: false,
-        message: 'Product not found',
+        message: "Product not found",
       });
     }
 
@@ -155,7 +166,7 @@ export const updateProduct = async (req, res) => {
 
       // Mark all existing images for deletion from Cloudinary
       // This assumes new uploads replace all old images.
-      product.images.forEach(img => publicIdsToDelete.push(img.public_id));
+      product.images.forEach((img) => publicIdsToDelete.push(img.public_id));
 
       // Replace existing images with the newly uploaded ones
       imagesToStore = newlyUploadedImages;
@@ -168,13 +179,13 @@ export const updateProduct = async (req, res) => {
         try {
           frontendImages = JSON.parse(req.body.images);
           if (!Array.isArray(frontendImages)) {
-            throw new Error('Images data from frontend is not an array.');
+            throw new Error("Images data from frontend is not an array.");
           }
         } catch (parseError) {
-          console.error('Error parsing req.body.images:', parseError);
+          console.error("Error parsing req.body.images:", parseError);
           return res.status(400).json({
             success: false,
-            message: 'Invalid images data format provided.',
+            message: "Invalid images data format provided.",
             error: parseError.message,
           });
         }
@@ -182,9 +193,9 @@ export const updateProduct = async (req, res) => {
 
       // Identify images that were previously stored but are no longer in the frontend's list
       // These are the images to delete from Cloudinary.
-      product.images.forEach(existingImg => {
+      product.images.forEach((existingImg) => {
         const found = frontendImages.some(
-          frontendImg => frontendImg.public_id === existingImg.public_id
+          (frontendImg) => frontendImg.public_id === existingImg.public_id,
         );
         if (!found) {
           publicIdsToDelete.push(existingImg.public_id);
@@ -198,7 +209,10 @@ export const updateProduct = async (req, res) => {
       try {
         await deleteImageFromCloudinary(publicId);
       } catch (deleteError) {
-        console.warn(`Failed to delete image ${publicId} from Cloudinary:`, deleteError.message);
+        console.warn(
+          `Failed to delete image ${publicId} from Cloudinary:`,
+          deleteError.message,
+        );
         // Continue even if a single image deletion fails, to not block product update
       }
     }
@@ -206,14 +220,22 @@ export const updateProduct = async (req, res) => {
 
     // Update product fields from request body
     product.title = title !== undefined ? title : product.title;
-    product.description = description !== undefined ? description : product.description;
+    product.description =
+      description !== undefined ? description : product.description;
     product.price = price !== undefined ? price : product.price;
     product.category = category !== undefined ? category : product.category;
     product.stock = stock !== undefined ? stock : product.stock;
     product.sku = sku !== undefined ? sku : product.sku;
     product.status = status !== undefined ? status : product.status;
     // Update tags, ensuring it's an array
-    product.tags = tags ? (Array.isArray(tags) ? tags : tags.split(',').map(tag => tag.trim()).filter(tag => tag)) : [];
+    product.tags = tags
+      ? Array.isArray(tags)
+        ? tags
+        : tags
+            .split(",")
+            .map((tag) => tag.trim())
+            .filter((tag) => tag)
+      : [];
     product.images = imagesToStore; // Assign the final images array
 
     // Save the updated product document
@@ -221,35 +243,35 @@ export const updateProduct = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: 'Product updated successfully',
+      message: "Product updated successfully",
       data: product,
     });
   } catch (error) {
-    console.error('Error updating product:', error);
-    if (error.name === 'CastError') {
+    console.error("Error updating product:", error);
+    if (error.name === "CastError") {
       return res.status(400).json({
         success: false,
-        message: 'Invalid product ID format',
+        message: "Invalid product ID format",
         error: error.message,
       });
     }
-    if (error.name === 'ValidationError') {
-      const messages = Object.values(error.errors).map(val => val.message);
+    if (error.name === "ValidationError") {
+      const messages = Object.values(error.errors).map((val) => val.message);
       return res.status(400).json({
         success: false,
-        message: 'Validation Error',
+        message: "Validation Error",
         errors: messages,
       });
     }
     if (error.code === 11000 && error.keyPattern && error.keyPattern.sku) {
       return res.status(400).json({
         success: false,
-        message: 'Duplicate SKU: A product with this SKU already exists.',
+        message: "Duplicate SKU: A product with this SKU already exists.",
       });
     }
     res.status(500).json({
       success: false,
-      message: 'Server Error: Could not update product.',
+      message: "Server Error: Could not update product.",
       error: error.message,
     });
   }
@@ -264,7 +286,7 @@ export const deleteProduct = async (req, res) => {
     if (!product) {
       return res.status(404).json({
         success: false,
-        message: 'Product not found',
+        message: "Product not found",
       });
     }
 
@@ -273,7 +295,10 @@ export const deleteProduct = async (req, res) => {
       try {
         await deleteImageFromCloudinary(image.public_id);
       } catch (deleteError) {
-        console.warn(`Failed to delete image ${image.public_id} from Cloudinary:`, deleteError.message);
+        console.warn(
+          `Failed to delete image ${image.public_id} from Cloudinary:`,
+          deleteError.message,
+        );
         // Log the warning but continue to delete the product
       }
     }
@@ -283,20 +308,20 @@ export const deleteProduct = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: 'Product deleted successfully',
+      message: "Product deleted successfully",
     });
   } catch (error) {
-    console.error('Error deleting product:', error);
-    if (error.name === 'CastError') {
+    console.error("Error deleting product:", error);
+    if (error.name === "CastError") {
       return res.status(400).json({
         success: false,
-        message: 'Invalid product ID format',
+        message: "Invalid product ID format",
         error: error.message,
       });
     }
     res.status(500).json({
       success: false,
-      message: 'Server Error: Could not delete product.',
+      message: "Server Error: Could not delete product.",
       error: error.message,
     });
   }
