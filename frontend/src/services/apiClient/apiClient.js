@@ -1,4 +1,4 @@
-// frontend/src/services/apiClient.js
+// frontend/src/services/apiClient/apiClient.js
 import axios from "axios"; // Import axios
 
 const API_BASE_URL =

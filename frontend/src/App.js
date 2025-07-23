@@ -147,7 +147,7 @@ function App() {
               element={
                 <div
                   className="flex items-center justify-center
-                                min-h-screen bg-gray-50"
+                                 min-h-screen bg-gray-50"
                 >
                   <div className="text-center">
                     <h2 className="text-6xl font-bold text-gray-800 mb-4">
