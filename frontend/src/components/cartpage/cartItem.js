@@ -18,19 +18,16 @@ function CartItem({
   // eslint-disable-no-unused-vars
   const { _id, title, price, quantity } = item;
 
-  // Determine the main image URL with a fallback
-  // CHANGE: Access the 'url' property from the first object in the 'images' array
   const initialImageUrl =
-    product.images && product.images.length > 0
-      ? product.images[0]
-      : "https://placehold.co/100x100/E0E7FF/4F46E5?text=No+Image";
+    product?.images?.[0]?.url ??
+    "https://placehold.co/100x100/E0E7FF/4F46E5?text=No+Image";
 
   const [imageSrc, setImageSrc] = useState(initialImageUrl);
   // Use a state to track if an error has already occurred to prevent infinite loops.
   const [hasImageError, setHasImageError] = useState(false);
 
   // Derive the title for the alt text (with a fallback).
-  const titleAlt = product.title || "Product Image";
+  const titleAlt = product?.title || "Product Image";
 
   // This function will be called when the image fails to load.
   const handleImageError = () => {

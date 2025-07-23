@@ -34,10 +34,14 @@
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "no-console": "warn",
     "import/no-cycle": ["error", { "maxDepth": 1 }],
-    "import/extensions": ["error", "ignorePackages", {
-      "js": "never",
-      "jsx": "never"
-    }],
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never"
+      }
+    ],
     "react-hooks/exhaustive-deps": "warn",
     "import/no-extraneous-dependencies": [
       "error",
