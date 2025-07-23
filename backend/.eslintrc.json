@@ -1,0 +1,31 @@
+// backend/.eslintrc.json
+{
+  "env": {
+    "node": true, // Node.js environment
+    "es2021": true // ES2021 syntax
+  },
+  "extends": [
+    "eslint:recommended",
+    "airbnb-base" // Airbnb base rules for Node.js
+  ],
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-console": "warn", // Allow console.log in development, warn in production
+    "func-names": "off", // Allow anonymous functions
+    //"no-underscore-dangle": "off", // Allow leading underscores for _id, etc.
+    "consistent-return": "off", // Often useful to disable for API endpoints that don't always return a value
+    "class-methods-use-this": "off", // If you have methods in classes that don't use `this`
+    "no-param-reassign": "off", // Often needed for modifying request/response objects in middleware
+    "import/prefer-default-export": "off", // Often useful to disable for utilities or single exports
+    "no-underscore-dangle": ["error", { "allow": ["_id"] }],
+    "radix": "off" // If you frequently parse integers without providing a radix
+  }
+}
+{
+  "rules": {
+  
+  }
+}
