@@ -1,4 +1,4 @@
-// frontend/src/components/motion/cartAnimate.js
+// frontend/src/animation/cartAnimate.js
 import { motion } from "framer-motion";
 
 // Variants for individual cart items entering/exiting

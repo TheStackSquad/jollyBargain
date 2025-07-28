@@ -7,9 +7,8 @@ dotenv.config(); // Load environment variables from .env file
 // Check if the Stripe secret key is defined
 if (!process.env.STRIPE_SECRET_KEY) {
   console.error(
-    "FATAL ERROR: STRIPE_SECRET_KEY is not defined in environment variables."
+    "FATAL ERROR: STRIPE_SECRET_KEY is not defined in environment variables.",
   );
-
 }
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {

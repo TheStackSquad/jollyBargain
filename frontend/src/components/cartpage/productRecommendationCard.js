@@ -6,20 +6,13 @@ import {
   recommendationCardVariants,
   buttonTapVariants,
 } from "../../animation/cartAnimate";
-import MessageBox from "./messageBox";
 
-/**
- * Renders a single product recommendation card.
- * @param {object} props - The component props.
- * @param {object} props.product - The product object.
- * @param {function} props.onAddToCart - Callback to add product to cart.
- * @param {function} props.onShowMessageBox - Function to show the message box.
- */
 function ProductRecommendationCard({ product, onAddToCart, onShowMessageBox }) {
   return (
     <MotionDiv
       variants={recommendationCardVariants}
-      className="bg-white rounded-xl shadow-md overflow-hidden transform hover:scale-105 transition-all duration-300 ease-in-out border border-gray-100"
+      className="bg-white rounded-xl shadow-md overflow-hidden transform
+      hover:scale-105 transition-all duration-300 ease-in-out border border-gray-100"
     >
       <img
         src={product.image}

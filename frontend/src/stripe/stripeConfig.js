@@ -1,4 +1,4 @@
-//frontend/src/stripe/stripeConfig.js
+// frontend/src/stripe/stripeConfig.js
 
 import { loadStripe } from "@stripe/stripe-js";
 

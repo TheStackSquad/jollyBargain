@@ -1,4 +1,5 @@
 // frontend/src/components/cartpage/CartItem.js
+
 import React, { useState } from "react";
 import { Trash2, Minus, Plus, Save } from "lucide-react";
 import {
@@ -8,37 +9,19 @@ import {
   buttonTapVariants,
 } from "../../animation/cartAnimate";
 
-function CartItem({
-  item,
-  onQuantityChange,
-  onRemoveItem,
-  onSaveForLater,
-  product,
-}) {
-  // eslint-disable-no-unused-vars
-  const { _id, title, price, quantity } = item;
+function CartItem({ item, onQuantityChange, onRemoveItem, onSaveForLater }) {
+  const { _id, title, price, quantity, images } = item;
 
-  const initialImageUrl =
-    product?.images?.[0]?.url ??
+  const fallbackImage =
     "https://placehold.co/100x100/E0E7FF/4F46E5?text=No+Image";
-
-  const [imageSrc, setImageSrc] = useState(initialImageUrl);
-  // Use a state to track if an error has already occurred to prevent infinite loops.
+  const errorImage = "https://placehold.co/100x100/E0E7FF/4F46E5?text=Error";
+  const [imageSrc, setImageSrc] = useState(images?.[0]?.url || fallbackImage);
   const [hasImageError, setHasImageError] = useState(false);
 
-  // Derive the title for the alt text (with a fallback).
-  const titleAlt = product?.title || "Product Image";
-
-  // This function will be called when the image fails to load.
   const handleImageError = () => {
-    // Only update the source if an error hasn't already been handled
-    // and the current source isn't already the fallback error image.
-    if (
-      !hasImageError &&
-      imageSrc !== `https://placehold.co/100x100/E0E7FF/4F46E5?text=Error`
-    ) {
-      setImageSrc(`https://placehold.co/100x100/E0E7FF/4F46E5?text=Error`);
-      setHasImageError(true); // Mark that an error has occurred for this image
+    if (!hasImageError && imageSrc !== errorImage) {
+      setImageSrc(errorImage);
+      setHasImageError(true);
     }
   };
 
@@ -52,26 +35,27 @@ function CartItem({
       rounded-xl shadow-sm p-4 mb-4 last:mb-0 transition-all duration-300 ease-in-out"
     >
       <img
-        src={imageSrc} // The image source is now controlled by component state
-        alt={titleAlt}
+        src={imageSrc}
+        alt={title || "Product Image"}
         className="w-24 h-24 object-cover rounded-lg mr-0 sm:mr-6 mb-4 sm:mb-0 flex-shrink-0"
-        onError={handleImageError} // Assign your new error handler
+        onError={handleImageError}
       />
+
       <div className="flex-grow text-center sm:text-left mb-4 sm:mb-0">
         <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-        <p className="text-gray-600">Price: ${price.toFixed(2)}</p>
+        <p className="text-gray-600">Price: ₦{price.toLocaleString()}</p>
         <p className="text-gray-700 font-medium">
-          Subtotal: ${(price * quantity).toFixed(2)}
+          Subtotal: ₦{(price * quantity).toLocaleString()}
         </p>
       </div>
+
       <div className="flex items-center space-x-2 mr-0 sm:mr-6 mb-4 sm:mb-0">
         <MotionButton
           variants={buttonTapVariants}
           whileHover="hover"
           whileTap="tap"
           onClick={() => onQuantityChange(_id, -1)}
-          className="p-2 bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors
-          duration-150 ease-in-out"
+          className="p-2 bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200"
           aria-label={`Decrease quantity of ${title}`}
         >
           <Minus className="w-4 h-4" />
@@ -84,22 +68,20 @@ function CartItem({
           whileHover="hover"
           whileTap="tap"
           onClick={() => onQuantityChange(_id, 1)}
-          className="p-2 bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200
-          transition-colors duration-150
-          ease-in-out"
+          className="p-2 bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200"
           aria-label={`Increase quantity of ${title}`}
         >
           <Plus className="w-4 h-4" />
         </MotionButton>
       </div>
+
       <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
         <MotionButton
           variants={buttonTapVariants}
           whileHover="hover"
           whileTap="tap"
           onClick={() => onSaveForLater(_id)}
-          className="p-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600 transition-colors
-          duration-150 ease-in-out flex items-center justify-center"
+          className="p-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600 flex items-center justify-center"
           aria-label={`Save ${title} for later`}
         >
           <Save className="w-5 h-5" />
@@ -109,8 +91,7 @@ function CartItem({
           whileHover="hover"
           whileTap="tap"
           onClick={() => onRemoveItem(_id)}
-          className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors
-          duration-150 ease-in-out flex items-center justify-center"
+          className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600 flex items-center justify-center"
           aria-label={`Remove ${title} from cart`}
         >
           <Trash2 className="w-5 h-5" />

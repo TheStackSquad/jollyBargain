@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 
 function usePaymentFormLogic(onNextStep, initialData = {}) {
-  const stripe = useStripe();
-  const elements = useElements();
+  const stripe = useStripe(); // This is the 'stripe' object
+  const elements = useElements(); // This is the 'elements' object
   const submittedRef = useRef(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -31,12 +31,59 @@ function usePaymentFormLogic(onNextStep, initialData = {}) {
 
     setIsLoading(true);
     submittedRef.current = true;
+    setCardError(""); // Clear previous card errors
 
-    // Additional Stripe validations or token generation here (if any)
+    // **IMPORTANT:** Add checks for stripe and elements availability
+    if (!stripe || !elements) {
+      // Stripe.js has not yet loaded.
+      // Make sure to disable form submission until Stripe.js has loaded.
+      setIsLoading(false);
+      submittedRef.current = false;
+      // Optionally, set an error message for the user
+      setCardError("Stripe is not loaded. Please try again in a moment.");
+      return;
+    }
+
+    const cardElement = elements.getElement(CardElement);
+
+    if (!cardElement) {
+      setCardError("Card element not found.");
+      setIsLoading(false);
+      submittedRef.current = false;
+      return;
+    }
+
     try {
-      onNextStep({ ...formData });
+      // **THIS IS WHERE YOU'LL LIKELY USE 'stripe'**
+      // Example: Create a PaymentMethod
+      const { paymentMethod, error } = await stripe.createPaymentMethod({
+        type: "card",
+        card: cardElement,
+        billing_details: {
+          name: formData.cardName, // Use the cardName from your form data
+          // Add other billing details if you collect them (e.g., email, address)
+        },
+      });
+
+      if (error) {
+        setCardError(error.message);
+        setIsLoading(false);
+        submittedRef.current = false;
+        return; // Stop if there's an error from Stripe
+      }
+
+      // If successful, you'll get a paymentMethod.id
+      // You would then send this paymentMethod.id to your backend
+      // for confirmation or to create a PaymentIntent.
+      //  console.log("PaymentMethod created:", paymentMethod);
+
+      // Call onNextStep with the payment method details or other relevant data
+      // For example, you might pass the paymentMethod.id to your next step
+      onNextStep({ ...formData, paymentMethodId: paymentMethod.id });
     } catch (err) {
-      console.error("Payment submission failed:", err);
+      //   console.error("Payment submission failed:", err);
+      // You might want to set a generic error if the catch block is reached
+      setCardError("An unexpected error occurred during payment processing.");
     } finally {
       setIsLoading(false);
       submittedRef.current = false;

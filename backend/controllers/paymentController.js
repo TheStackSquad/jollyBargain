@@ -47,19 +47,19 @@ export const processPayment = async (req, res) => {
 
     const amountInSmallestUnit = Math.round(order.totalPrice * 100);
     console.log(
-      `Order total price: ${order.totalPrice}, converted to smallest unit: ${amountInSmallestUnit}`
+      `Order total price: ${order.totalPrice}, converted to smallest unit: ${amountInSmallestUnit}`,
     );
     console.log(
       `Received amount: ${amount}, converted to smallest unit: ${Math.round(
-        amount * 100
-      )}`
+        amount * 100,
+      )}`,
     );
 
     if (amountInSmallestUnit !== Math.round(amount * 100)) {
       console.warn(
         `Amount mismatch for order ${orderId}: Expected ${amountInSmallestUnit}, Received ${Math.round(
-          amount * 100
-        )}. Possible tampering detected.`
+          amount * 100,
+        )}. Possible tampering detected.`,
       );
       return res.status(400).json({
         success: false,
@@ -103,16 +103,16 @@ export const processPayment = async (req, res) => {
 
     if (paymentIntent.payment_method) {
       console.log(
-        `Retrieving payment method details for: ${paymentIntent.payment_method}`
+        `Retrieving payment method details for: ${paymentIntent.payment_method}`,
       );
       const pm = await stripe.paymentMethods.retrieve(
-        paymentIntent.payment_method
+        paymentIntent.payment_method,
       );
       if (pm.card) {
         cardLast4 = pm.card.last4;
         cardBrand = pm.card.brand;
         console.log(
-          `Card details retrieved: Last4=${cardLast4}, Brand=${cardBrand}`
+          `Card details retrieved: Last4=${cardLast4}, Brand=${cardBrand}`,
         );
       } else {
         console.log("Payment method does not contain card details.");
@@ -125,7 +125,7 @@ export const processPayment = async (req, res) => {
       paymentStatus = "succeeded";
       transactionId = paymentIntent.id;
       console.log(
-        `PaymentIntent status: SUCCEEDED. Transaction ID: ${transactionId}`
+        `PaymentIntent status: SUCCEEDED. Transaction ID: ${transactionId}`,
       );
 
       console.log(`Updating order ${orderId} status to paid.`);
@@ -168,7 +168,7 @@ export const processPayment = async (req, res) => {
     } else if (paymentIntent.status === "requires_action") {
       paymentStatus = "pending";
       console.log(
-        `PaymentIntent status: REQUIRES_ACTION. Client Secret: ${paymentIntent.client_secret}`
+        `PaymentIntent status: REQUIRES_ACTION. Client Secret: ${paymentIntent.client_secret}`,
       );
 
       console.log("Creating new Payment record with pending status.");
@@ -188,7 +188,7 @@ export const processPayment = async (req, res) => {
       await newPayment.save();
       console.log(
         "New Payment record saved with pending status:",
-        newPayment._id
+        newPayment._id,
       );
 
       res.status(200).json({
@@ -203,7 +203,7 @@ export const processPayment = async (req, res) => {
       console.log(
         `PaymentIntent status: FAILED. Last error: ${
           paymentIntent.last_payment_error?.message || "N/A"
-        }`
+        }`,
       );
 
       console.log("Creating new Payment record with failed status.");
@@ -223,7 +223,7 @@ export const processPayment = async (req, res) => {
       await newPayment.save();
       console.log(
         "New Payment record saved with failed status:",
-        newPayment._id
+        newPayment._id,
       );
 
       res.status(400).json({
@@ -266,19 +266,19 @@ export const handleStripeWebhook = async (req, res) => {
     // It's highly recommended to store this in an environment variable
     if (!process.env.STRIPE_WEBHOOK_SECRET) {
       console.error(
-        "STRIPE_WEBHOOK_SECRET is not set in environment variables!"
+        "STRIPE_WEBHOOK_SECRET is not set in environment variables!",
       );
       throw new Error("Stripe Webhook Secret is missing.");
     }
     event = stripe.webhooks.constructEvent(
       req.body,
       sig,
-      process.env.STRIPE_WEBHOOK_SECRET
+      process.env.STRIPE_WEBHOOK_SECRET,
     );
     console.log(`Stripe event constructed successfully. Type: ${event.type}`);
   } catch (err) {
     console.error(
-      `Webhook Error: ${err.message}. Raw body: ${JSON.stringify(req.body)}`
+      `Webhook Error: ${err.message}. Raw body: ${JSON.stringify(req.body)}`,
     );
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
@@ -289,10 +289,10 @@ export const handleStripeWebhook = async (req, res) => {
     case "payment_intent.succeeded":
       const paymentIntentSucceeded = event.data.object;
       console.log(
-        `PaymentIntent for ${paymentIntentSucceeded.amount} was successful! Intent ID: ${paymentIntentSucceeded.id}`
+        `PaymentIntent for ${paymentIntentSucceeded.amount} was successful! Intent ID: ${paymentIntentSucceeded.id}`,
       );
       console.log(
-        `Metadata: Order ID=${paymentIntentSucceeded.metadata?.order_id}, User ID=${paymentIntentSucceeded.metadata?.user_id}`
+        `Metadata: Order ID=${paymentIntentSucceeded.metadata?.order_id}, User ID=${paymentIntentSucceeded.metadata?.user_id}`,
       );
       // Then define and call a function to update your database
       // For example: updateOrderPaymentStatus(paymentIntentSucceeded.metadata.order_id, 'succeeded');
@@ -325,10 +325,10 @@ export const handleStripeWebhook = async (req, res) => {
     case "payment_intent.payment_failed":
       const paymentIntentFailed = event.data.object;
       console.log(
-        `PaymentIntent failed: ${paymentIntentFailed.last_payment_error?.message}. Intent ID: ${paymentIntentFailed.id}`
+        `PaymentIntent failed: ${paymentIntentFailed.last_payment_error?.message}. Intent ID: ${paymentIntentFailed.id}`,
       );
       console.log(
-        `Metadata: Order ID=${paymentIntentFailed.metadata?.order_id}, User ID=${paymentIntentFailed.metadata?.user_id}`
+        `Metadata: Order ID=${paymentIntentFailed.metadata?.order_id}, User ID=${paymentIntentFailed.metadata?.user_id}`,
       );
       // Update your database to reflect failed payment
       // For example: updateOrderPaymentStatus(paymentIntentFailed.metadata.order_id, 'failed');
@@ -337,7 +337,7 @@ export const handleStripeWebhook = async (req, res) => {
       const paymentIntentProcessing = event.data.object;
       console.log(`PaymentIntent processing: ${paymentIntentProcessing.id}`);
       console.log(
-        `Metadata: Order ID=${paymentIntentProcessing.metadata?.order_id}, User ID=${paymentIntentProcessing.metadata?.user_id}`
+        `Metadata: Order ID=${paymentIntentProcessing.metadata?.order_id}, User ID=${paymentIntentProcessing.metadata?.user_id}`,
       );
       // Update your database to reflect processing payment
       // For example: updateOrderPaymentStatus(paymentIntentProcessing.metadata.order_id, 'processing');
@@ -345,14 +345,14 @@ export const handleStripeWebhook = async (req, res) => {
     case "charge.succeeded":
       const chargeSucceeded = event.data.object;
       console.log(
-        `Charge succeeded: ${chargeSucceeded.id}. Amount: ${chargeSucceeded.amount}. Payment Intent: ${chargeSucceeded.payment_intent}`
+        `Charge succeeded: ${chargeSucceeded.id}. Amount: ${chargeSucceeded.amount}. Payment Intent: ${chargeSucceeded.payment_intent}`,
       );
       // This event can also be used to confirm payment success, often follows payment_intent.succeeded
       break;
     case "charge.failed":
       const chargeFailed = event.data.object;
       console.log(
-        `Charge failed: ${chargeFailed.id}. Failure code: ${chargeFailed.failure_code}. Failure message: ${chargeFailed.failure_message}. Payment Intent: ${chargeFailed.payment_intent}`
+        `Charge failed: ${chargeFailed.id}. Failure code: ${chargeFailed.failure_code}. Failure message: ${chargeFailed.failure_message}. Payment Intent: ${chargeFailed.payment_intent}`,
       );
       // This event can also be used to confirm payment failure
       break;
@@ -360,7 +360,7 @@ export const handleStripeWebhook = async (req, res) => {
     default:
       console.log(
         `Unhandled event type ${event.type}. Full event object:`,
-        event
+        event,
       );
   }
 

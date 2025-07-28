@@ -11,7 +11,6 @@ function ShippingAddressForm({ onNextStep, initialData = {} }) {
   const [formData, setFormData] = useState({
     fullName: initialData.fullName || "",
     addressLine1: initialData.addressLine1 || "",
-    addressLine2: initialData.addressLine2 || "",
     city: initialData.city || "",
     state: initialData.state || "",
     zipCode: initialData.zipCode || "",
@@ -106,7 +105,7 @@ function ShippingAddressForm({ onNextStep, initialData = {} }) {
             required
           />
         </div>
-        <div className="col-span-full">
+        {/* <div className="col-span-full">
           <label
             htmlFor="addressLine2"
             className="block text-sm font-medium text-gray-700"
@@ -122,7 +121,7 @@ function ShippingAddressForm({ onNextStep, initialData = {} }) {
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500
             focus:ring-indigo-500 p-2"
           />
-        </div>
+        </div> */}
         <div>
           <label
             htmlFor="city"

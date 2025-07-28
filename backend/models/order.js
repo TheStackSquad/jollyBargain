@@ -136,7 +136,7 @@ const orderSchema = new mongoose.Schema(
   {
     timestamps: true, // Adds createdAt and updatedAt fields
     collection: "orders", // Explicitly name the collection
-  }
+  },
 );
 
 // Add indexes for faster lookups

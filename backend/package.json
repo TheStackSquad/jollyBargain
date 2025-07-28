@@ -8,7 +8,7 @@
     "dev": "nodemon index.js",
     "create-admin": "node scripts/createAdmin.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-     "lint": "eslint \"**/*.js\"" 
+    "lint": "eslint \"**/*.js\""
   },
   "keywords": [
     "ecommerce",

@@ -27,11 +27,13 @@ const getBodyText = (status) => {
   }
 };
 
-const StatusText = ({ status }) => (
-  <div className="text-center">
-    <h2 className="text-2xl font-semibold mb-2">{getTitleText(status)}</h2>
-    <p className="text-gray-600 text-sm">{getBodyText(status)}</p>
-  </div>
-);
+function StatusText({ status }) {
+  return (
+    <div className="text-center">
+      <h2 className="text-2xl font-semibold mb-2">{getTitleText(status)}</h2>
+      <p className="text-gray-600 text-sm">{getBodyText(status)}</p>
+    </div>
+  );
+}
 
 export default StatusText;

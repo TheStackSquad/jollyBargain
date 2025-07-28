@@ -36,7 +36,7 @@ function CartSummary({
 
   return (
     <div
-      className="lg:col-span-1 bg-gray-50 p-6 rounded-xl shadow-inner
+      className="lg:col-span-2 bg-gray-50 p-6 rounded-xl shadow-inner
     border border-gray-200"
     >
       <MotionDiv
