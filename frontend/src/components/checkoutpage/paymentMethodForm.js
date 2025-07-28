@@ -43,9 +43,12 @@ function PaymentMethodForm({ onNextStep, onPrevStep, initialData = {} }) {
       formData.expiryDate &&
       formData.cvc
     ) {
+      // console.log(
+      //   "PaymentMethodForm: Submitting data to parent via onNextStep:",
+      //   formData,
+      // ); // ADDED LOG
       onNextStep(formData);
     } else {
-      // Using a simple alert here; in a real app, you'd use a more integrated message system or MessageBox
       showMessageBox("Please fill in all required payment fields.");
     }
   };

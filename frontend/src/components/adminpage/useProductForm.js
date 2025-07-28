@@ -32,14 +32,14 @@ const useProductForm = (initialProduct = null) => {
     const newErrors = {};
 
     if (!formData.title.trim()) newErrors.title = "Title is required";
-    if (!formData.price || isNaN(formData.price) || formData.price <= 0)
+    if (!formData.price || Number.isNaN(formData.price) || formData.price <= 0)
       newErrors.price = "Valid price is required";
     if (!formData.category.trim()) newErrors.category = "Category is required";
     if (!formData.description.trim())
       newErrors.description = "Description is required";
     if (formData.images.length === 0)
       newErrors.images = "At least one image is required";
-    if (!formData.stock || isNaN(formData.stock) || formData.stock < 0)
+    if (!formData.stock || Number.isNaN(formData.stock) || formData.stock < 0)
       newErrors.stock = "Valid stock quantity is required";
 
     setErrors(newErrors);

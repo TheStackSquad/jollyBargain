@@ -112,8 +112,12 @@ function PaymentStatusPage() {
             break;
         }
       })
-      .catch((error) => {
-        console.error("Error retrieving PaymentIntent:", error);
+      .catch((err) => {
+        // eslint-disable-next-line no-console
+        if (process.env.NODE_ENV === "development") {
+          console.error("Error retrieving PaymentIntent:", err);
+        }
+
         setPaymentStatus("failed");
         setPaymentMessage(
           "Failed to confirm payment status due to a network error. Please contact support.",

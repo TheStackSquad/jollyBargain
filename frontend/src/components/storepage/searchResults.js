@@ -56,7 +56,7 @@ function SearchResults({
             <div className="flex flex-wrap gap-2 text-sm text-gray-600">
               {searchQuery.searchTerm && (
                 <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                  "{searchQuery.searchTerm}"
+                  &ldquo;{searchQuery.searchTerm}
                 </span>
               )}
               {searchQuery.category && searchQuery.category !== "all" && (
@@ -121,8 +121,8 @@ function SearchResults({
             No products found
           </h3>
           <p className="text-gray-600">
-            Try adjusting your search terms or filters to find what you're
-            looking for.
+            `Try adjusting your search terms or filters to find what you&apos;re
+            looking for.`
           </p>
         </div>
       ) : (
@@ -159,6 +159,7 @@ function SearchResults({
 
             <div className="flex items-center gap-2">
               <button
+                type="button"
                 onClick={() => onPageChange(pagination.currentPage - 1)}
                 disabled={!pagination.hasPrevPage}
                 className="px-3 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
@@ -174,6 +175,7 @@ function SearchResults({
 
                   return (
                     <button
+                      type="button"
                       key={pageNum}
                       onClick={() => onPageChange(pageNum)}
                       className={`px-3 py-2 rounded-lg ${
@@ -189,6 +191,7 @@ function SearchResults({
               </div>
 
               <button
+                type="button"
                 onClick={() => onPageChange(pagination.currentPage + 1)}
                 disabled={!pagination.hasNextPage}
                 className="px-3 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"

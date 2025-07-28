@@ -1,7 +1,7 @@
 // frontend/component/paymentStatusPortal/statusIcon.js
 import React from "react";
 
-const StatusIcon = ({ status }) => {
+function StatusIcon({ status }) {
   switch (status) {
     case "succeeded":
       return (
@@ -41,6 +41,6 @@ const StatusIcon = ({ status }) => {
         </svg>
       );
   }
-};
+}
 
 export default StatusIcon;

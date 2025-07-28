@@ -1,6 +1,6 @@
 // frontend/src/utils/handlers/paymentHandlers.js
 import { validatePaymentForm } from "../validation/paymentValidation";
-import { apiClient } from "../../services/apiClient"; // Ensure this path is correct
+import { apiClient } from "../../services/apiClient/apiClient";
 
 export const handlePaymentFormChange = (e, setFormData) => {
   const { name, value } = e.target;
@@ -37,8 +37,8 @@ export const handlePaymentFormSubmit = async (
 
     // Simulate tokenization or just send relevant (non-sensitive) data
     const paymentDataToSend = {
-      orderId: orderId, // Pass the actual order ID
-      amount: amount, // Pass the actual amount
+      orderId, // Pass the actual order ID
+      amount, // Pass the actual amount
       currency: "USD", // Or dynamically get this
       paymentMethodType: "credit_card",
       // In a real app, formData.cardNumber, expiryDate, cvc would be sent to the PAYMENT GATEWAY
@@ -63,7 +63,7 @@ export const handlePaymentFormSubmit = async (
       showMessageBox(response.message || "Payment failed. Please try again.");
     }
   } catch (error) {
-    console.error("Payment submission error:", error);
+    // console.error("Payment submission error:", error);
     showMessageBox(
       error.message || "An error occurred during payment processing.",
     );
