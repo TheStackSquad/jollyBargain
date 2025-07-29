@@ -24,6 +24,7 @@ function ShopNowPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   // Custom hooks
   const {
@@ -36,6 +37,23 @@ function ShopNowPage() {
   const { filters, updateFilter, resetFilters } = useFilters();
   const { cart, addToCart, removeFromCart } = useCart();
   const { wishlist, toggleWishlist } = useWishlist();
+
+  // Handle responsive breakpoints
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+
+      // Auto-hide filters on mobile when screen size changes
+      if (mobile && showFilters) {
+        setShowFilters(false);
+      }
+    };
+
+    handleResize(); // Check initial size
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [showFilters]);
 
   // Load initial data
   useEffect(() => {
@@ -119,27 +137,39 @@ function ShopNowPage() {
     [toggleWishlist],
   );
 
+  // Handle filter toggle for mobile
+  const handleFilterToggle = useCallback(() => {
+    setShowFilters(!showFilters);
+  }, [showFilters]);
+
+  // Close filters when clicking outside (mobile)
+  const handleOverlayClick = useCallback(() => {
+    if (isMobile) {
+      setShowFilters(false);
+    }
+  }, [isMobile]);
+
   if (isLoading && filteredProducts.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-center"
+          className="text-center max-w-sm mx-auto"
         >
           <div className="flex justify-center">
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-              className="h-16 w-16 border-4 border-indigo-500 border-t-transparent rounded-full"
+              className="h-12 w-12 sm:h-16 sm:w-16 border-4 border-indigo-500 border-t-transparent rounded-full"
             />
           </div>
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="mt-6 text-lg font-medium text-gray-700"
+            className="mt-4 sm:mt-6 text-base sm:text-lg font-medium text-gray-700"
           >
             Loading our finest products...
           </motion.p>
@@ -147,7 +177,7 @@ function ShopNowPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="mt-2 text-sm text-gray-500"
+            className="mt-2 text-xs sm:text-sm text-gray-500 px-4"
           >
             Just a moment while we prepare your shopping experience
           </motion.p>
@@ -170,17 +200,54 @@ function ShopNowPage() {
         cartCount={cart.length}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex gap-8">
-          {/* Filters Sidebar with enhanced animation */}
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+        {/* Mobile Filter Overlay */}
+        <AnimatePresence>
+          {showFilters && isMobile && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+              onClick={handleOverlayClick}
+            />
+          )}
+        </AnimatePresence>
+
+        {/* Container that changes layout based on screen size */}
+        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8">
+          {/* Filters Section - Stacks on top for mobile/tablet */}
           <AnimatePresence>
             {showFilters && (
               <motion.div
-                initial={{ x: -300, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: -300, opacity: 0 }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className="hidden lg:block"
+                initial={{
+                  x: isMobile ? -320 : 0,
+                  opacity: isMobile ? 0 : 1,
+                  height: isMobile ? 0 : "auto",
+                }}
+                animate={{
+                  x: 0,
+                  opacity: 1,
+                  height: "auto",
+                }}
+                exit={{
+                  x: isMobile ? -320 : 0,
+                  opacity: isMobile ? 0 : 1,
+                  height: isMobile ? 0 : "auto",
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 30,
+                }}
+                className={`
+              ${
+                isMobile
+                  ? "fixed top-0 left-0 h-full w-80 max-w-[90vw] bg-white z-50 shadow-2xl overflow-y-auto"
+                  : "w-full lg:w-72 xl:w-80 lg:flex-shrink-0"
+              }
+            `}
               >
                 <ShopFilters
                   filters={filters}
@@ -193,11 +260,12 @@ function ShopNowPage() {
             )}
           </AnimatePresence>
 
-          {/* Main Content Area */}
-          <div className="flex-1">
+          {/* Main Content Area - Stacks below filters on mobile/tablet */}
+          <div className="flex-1 min-w-0 w-full">
+            {/* Toolbar */}
             <motion.div
               variants={fadeIn("up", "tween", 0.1, 0.5)}
-              className="bg-white rounded-xl shadow-sm p-6 mb-6"
+              className="bg-white rounded-lg sm:rounded-xl shadow-sm p-3 sm:p-4 lg:p-6 mb-4 sm:mb-6"
             >
               <ShopToolbar
                 viewMode={viewMode}
@@ -206,18 +274,21 @@ function ShopNowPage() {
                 onSortChange={(sortBy) => updateFilter("sortBy", sortBy)}
                 productsCount={filteredProducts ? filteredProducts.length : 0}
                 totalProducts={totalProducts}
-                onShowFilters={() => setShowFilters(true)}
+                onShowFilters={handleFilterToggle}
+                showFilters={showFilters}
+                isMobile={isMobile}
               />
             </motion.div>
 
+            {/* Error State */}
             {error && (
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-red-50 border-l-4 border-red-500 rounded-lg p-4 mb-6 shadow-sm"
+                className="bg-red-50 border-l-4 border-red-500 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6 shadow-sm"
               >
-                <div className="flex">
-                  <div className="flex-shrink-0">
+                <div className="flex flex-col sm:flex-row">
+                  <div className="flex-shrink-0 mb-2 sm:mb-0">
                     <svg
                       className="h-5 w-5 text-red-500"
                       viewBox="0 0 20 20"
@@ -230,13 +301,13 @@ function ShopNowPage() {
                       />
                     </svg>
                   </div>
-                  <div className="ml-3">
-                    <p className="text-sm text-red-700">{error}</p>
+                  <div className="sm:ml-3 flex-1">
+                    <p className="text-sm text-red-700 break-words">{error}</p>
                     <div className="mt-2">
                       <button
                         type="button"
                         onClick={() => window.location.reload()}
-                        className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                        className="inline-flex items-center px-3 py-1.5 sm:py-1 border border-transparent text-xs sm:text-sm font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
                       >
                         Retry
                       </button>
@@ -246,11 +317,12 @@ function ShopNowPage() {
               </motion.div>
             )}
 
+            {/* Products or Empty State */}
             {filteredProducts && filteredProducts.length > 0 ? (
               <>
                 <motion.div
                   variants={fadeIn("up", "tween", 0.2, 0.75)}
-                  className="mb-8"
+                  className="mb-6 sm:mb-8"
                 >
                   <ProductGrid
                     products={filteredProducts}
@@ -261,6 +333,7 @@ function ShopNowPage() {
                     wishlist={wishlist}
                     cart={cart}
                     isLoading={isLoading}
+                    isMobile={isMobile}
                   />
                 </motion.div>
 
@@ -273,13 +346,14 @@ function ShopNowPage() {
                     onLoadMore={handleLoadMore}
                     hasMore={filteredProducts.length < totalProducts}
                     isLoading={isLoading}
+                    isMobile={isMobile}
                   />
                 </motion.div>
               </>
             ) : (
               <motion.div
                 variants={slideIn("up", "tween", 0.2, 0.75)}
-                className="bg-white rounded-xl shadow-sm overflow-hidden"
+                className="bg-white rounded-lg sm:rounded-xl shadow-sm overflow-hidden"
               >
                 <EmptyState
                   onClearFilters={resetFilters}
@@ -290,12 +364,44 @@ function ShopNowPage() {
                       value !== "" &&
                       (Array.isArray(value) ? value.length > 0 : true),
                   )}
+                  isMobile={isMobile}
                 />
               </motion.div>
             )}
           </div>
         </div>
       </div>
+
+      {/* Mobile Filter Toggle FAB */}
+      {isMobile && (
+        <AnimatePresence>
+          {!showFilters && (
+            <motion.button
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              onClick={handleFilterToggle}
+              className="fixed bottom-20 right-4 bg-indigo-600 hover:bg-indigo-700 text-white p-3 rounded-full shadow-lg z-30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              aria-label="Open filters"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"
+                />
+              </svg>
+            </motion.button>
+          )}
+        </AnimatePresence>
+      )}
     </motion.div>
   );
 }

@@ -30,6 +30,8 @@ import HelpCenter from "./pages/help-center";
 import Dashboard from "./pages/dashboard";
 // Import the new CartIconWithCount component
 import CartIconWithCount from "./components/common/cartIconWithCount";
+// Import the new DropdownNavbar component
+import DropdownNavbar from "./components/common/dropdownNavbar";
 
 // Define custom paths for specific links - maps display names to actual routes
 const getLinkPath = (linkName) => {
@@ -48,6 +50,8 @@ const getLinkPath = (linkName) => {
       return "/faq"; // Future FAQ page
     case "Shipping Info":
       return "/shipping"; // Future shipping info page
+    case "Login":
+      return "/login"; // Login page
     default:
       // Fallback: convert to lowercase and replace spaces with hyphens
       return `/${linkName.toLowerCase().replace(" ", "-")}`;
@@ -94,28 +98,41 @@ function App() {
             </AnimatedH1>
           </Link>
 
-          {/* Navigation menu - cart and login links */}
-          <nav>
+          {/* Main Navigation menu - for desktop */}
+          <nav className="hidden md:block">
             <ul className="flex space-x-6">
-              <li>
-                {/* Use the new CartIconWithCount component here */}
-                <CartIconWithCount />
-              </li>
-              <li>
-                <Link
-                  to="/login"
-                  className="flex items-center text-white hover:text-blue-200
-                             font-roboto transition-colors duration-300
-                             hover:scale-105 transform"
-                >
-                  <User size={20} className="md:mr-2" />{" "}
-                  {/* Optional: remove margin on mobile */}
-                  <span className="hidden md:block">Login</span>{" "}
-                  {/* Hide 'Login' text on mobile */}
-                </Link>
-              </li>
+              {["Home", "Deals", "Categories", "About Us", "Contact Us"].map(
+                (link) => (
+                  <li key={link}>
+                    <Link
+                      to={getLinkPath(link)}
+                      className="text-white hover:text-blue-200
+                               font-roboto transition-colors duration-300
+                               hover:scale-105 transform"
+                    >
+                      {link}
+                    </Link>
+                  </li>
+                ),
+              )}
             </ul>
           </nav>
+
+          {/* Cart and Login links (always visible) */}
+          <div className="flex items-center space-x-6">
+            <CartIconWithCount />
+            <Link
+              to="/login"
+              className="flex items-center text-white hover:text-blue-200
+                         font-roboto transition-colors duration-300
+                         hover:scale-105 transform"
+            >
+              <User size={20} className="md:mr-2" />{" "}
+              <span className="hidden md:block">Login</span>{" "}
+            </Link>
+            {/* Dropdown Navbar for mobile/small screens */}
+            <DropdownNavbar getLinkPath={getLinkPath} />
+          </div>
         </AnimatedHeader>
 
         {/* Main Content - padded to account for fixed header */}
@@ -147,7 +164,7 @@ function App() {
               element={
                 <div
                   className="flex items-center justify-center
-                                 min-h-screen bg-gray-50"
+                               min-h-screen bg-gray-50"
                 >
                   <div className="text-center">
                     <h2 className="text-6xl font-bold text-gray-800 mb-4">
